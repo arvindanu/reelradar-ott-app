@@ -273,6 +273,16 @@ export default function Home() {
   const [wishlistReady, setWishlistReady] = useState(false);
 
   useEffect(() => {
+    try {
+      const pending = window.sessionStorage.getItem('reelradar-timeliner-open-title');
+      if (!pending) return;
+      window.sessionStorage.removeItem('reelradar-timeliner-open-title');
+      const title = normalizeTitle(JSON.parse(pending));
+      if (title) setSelected(title);
+    } catch { /* Ignore an invalid one-time Timeliner handoff. */ }
+  }, []);
+
+  useEffect(() => {
     let active = true;
     setProvider('');
     fetch(`/api/discover?providers=1&region=${encodeURIComponent(region)}`, { cache: 'no-store' })
@@ -373,6 +383,7 @@ export default function Home() {
     { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
     { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
     { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
+    { key: 'timeliner', label: 'Timeliner', action: () => { window.location.assign('/timeliner'); } },
   ];
 
   useEffect(() => {
@@ -469,6 +480,7 @@ export default function Home() {
       {item.key === 'wishlist' && <Heart size={17} />}
       {item.key === 'collide' && <GitMerge size={17} />}
       {item.key === 'roulette' && <Dices size={17} />}
+      {item.key === 'timeliner' && <Clock3 size={17} />}
       {item.label}
     </button>
   ))}
