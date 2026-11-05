@@ -57,6 +57,24 @@ const SHARED_GENRES = [
 ] as const;
 const WISHLIST_STORAGE_KEY = 'reelradar-wishlist-v1';
 
+function getProviderWatchUrl(providerName: string, title: string, fallback: string | null) {
+  const query = encodeURIComponent(title);
+  const name = providerName.toLowerCase();
+  if (name.includes('netflix')) return `https://www.netflix.com/search?q=${query}`;
+  if (name.includes('prime video') || name.includes('amazon prime')) return `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${query}`;
+  if (name.includes('disney')) return `https://www.disneyplus.com/search?q=${query}`;
+  if (name.includes('apple tv')) return `https://tv.apple.com/search?term=${query}`;
+  if (name.includes('hulu')) return `https://www.hulu.com/search?q=${query}`;
+  if (name.includes('max')) return `https://www.max.com/search?q=${query}`;
+  if (name.includes('paramount')) return `https://www.paramountplus.com/search/?query=${query}`;
+  if (name.includes('peacock')) return `https://www.peacocktv.com/search?q=${query}`;
+  if (name.includes('crunchyroll')) return `https://www.crunchyroll.com/search?q=${query}`;
+  if (name.includes('hotstar')) return `https://www.hotstar.com/in/search?q=${query}`;
+  if (name.includes('zee5')) return `https://www.zee5.com/search?q=${query}`;
+  if (name.includes('sonyliv')) return `https://www.sonyliv.com/search?q=${query}`;
+  return fallback ?? `https://www.google.com/search?q=${encodeURIComponent(`${title} ${providerName} streaming`)}`;
+}
+
 const LANG_LABEL: Record<string, string> = Object.fromEntries(LANGUAGES.map(x => [x.code, x.label]));
 const getLanguageLabel = (language?: string | null) => !language ? 'Unknown language' : (LANG_LABEL[language] ?? language.toUpperCase());
 
@@ -135,7 +153,11 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
       </div>
       <div className="modal-bottom"><div><span className="eyebrow">WHERE TO WATCH</span><h3>Available on your platforms</h3></div>
         {item.watchLink && <a className="provider-link" href={item.watchLink} target="_blank" rel="noreferrer">All options <ArrowUpRight size={14} /></a>}</div>
-      {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <div className="modal-provider" key={p.id}>{p.logo && <img src={p.logo} alt="" />}<span>{p.name}</span></div>)}
+      {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <a className="modal-provider" key={p.id}
+          href={getProviderWatchUrl(p.name, item.title, item.watchLink)} target="_blank" rel="noopener noreferrer"
+          aria-label={`Search for ${item.title} on ${p.name}`} title={`Find ${item.title} on ${p.name}`}>
+          {p.logo && <img src={p.logo} alt="" />}<span>{p.name}</span><ExternalLink size={12} />
+        </a>)}
         </div> : <p className="no-provider">No streaming availability was returned for this country. Try changing your region.</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 9, padding: '0 24px 18px' }}>
           <button type="button" aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`}
