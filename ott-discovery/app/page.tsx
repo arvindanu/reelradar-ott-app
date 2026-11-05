@@ -373,10 +373,7 @@ export default function Home() {
             <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
           )}
         </div>
-        <button type="button" className="filter-chip" onClick={() => setShowWishlist(value => !value)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, borderColor: showWishlist ? '#DFFF00' : undefined, color: showWishlist ? '#DFFF00' : undefined }}>
-          <Heart size={14} fill={showWishlist ? 'currentColor' : 'none'} />({wishlist.length})
-        </button>
+        
       </div>
       <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
