@@ -492,7 +492,8 @@ export default function Home() {
         .rr-showcase-content :global(.searchbar) { width:min(100%,720px); margin-top:5px; }
         @media (max-width:760px) {
           .rr-showcase-intro { padding:34px 16px 28px; }
-          .rr-showcase-heading { align-items:flex-start; margin-bottom:12px; }
+          .rr-showcase-heading { align-items:center; justify-content:center; text-align:center; margin-bottom:12px; }
+          .rr-showcase-heading > div { width:100%; text-align:center; }
           .rr-showcase-title { margin:0; font-size:23px; letter-spacing:.12em; }
           .rr-live-label { padding:7px 9px; font-size:8px; }
           .rr-featured-rail { position:relative; display:block; height:calc(100vw * 1.08); max-height:440px; min-height:350px; margin:0 -16px; padding:8px 0 18px; overflow:hidden; perspective:900px; touch-action:pan-y; }
