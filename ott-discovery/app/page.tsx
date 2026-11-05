@@ -597,6 +597,84 @@ export default function Home() {
           .mobile-drawer-links button.nav-active { box-shadow:inset 3px 0 #DFFF00; }
         }
         @media (prefers-reduced-motion:reduce) { .mobile-drawer-overlay,.mobile-navigation-drawer { transition:none !important; } }
+
+        /* Desktop-only layout polish: distribute discovery controls across the feed. */
+        @media (min-width: 1100px) {
+          .rr-showcase-heading {
+            justify-content: center !important;
+            text-align: center !important;
+            margin-bottom: 22px !important;
+          }
+          .rr-showcase-heading > div {
+            width: 100%;
+            text-align: center !important;
+          }
+          .rr-showcase-title {
+            text-align: center;
+          }
+          .rr-showcase-content :global(.searchbar) {
+            width: min(100%, 900px) !important;
+            margin: 5px auto 0 !important;
+          }
+          .rr-showcase-content :global(.intro-foot) {
+            width: min(100%, 900px);
+            margin: 24px auto 0 !important;
+            justify-content: center !important;
+          }
+          .catalog-section {
+            width: min(100% - 10vw, 1700px);
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .catalog-section .filter-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 24px;
+          }
+          .catalog-section .language-filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+          }
+          .catalog-section .catalog-controls,
+          .catalog-section .discovery-filter-wrap {
+            display: inline-flex;
+            vertical-align: top;
+            box-sizing: border-box;
+            width: calc(25% - 18px);
+            min-width: 0;
+            margin: 28px 18px 26px 0;
+          }
+          .catalog-section .catalog-controls {
+            align-items: center;
+            justify-content: center;
+          }
+          .catalog-section .availability-toggle {
+            width: 100%;
+            max-width: 360px;
+          }
+          .catalog-section .availability-toggle button {
+            flex: 1;
+          }
+          .catalog-section .discovery-filter-wrap {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          .catalog-section .discovery-filter-wrap label {
+            white-space: nowrap;
+          }
+          .catalog-section .discovery-filter-select {
+            width: 100%;
+            min-width: 0;
+          }
+          .catalog-section .discovery-filter-wrap:last-of-type {
+            margin-right: 0;
+          }
+        }
       `}</style>
       <style jsx>{`
         .rr-showcase-intro { display:block; position:relative; overflow:hidden; padding:52px max(5vw, 24px) 38px; }
