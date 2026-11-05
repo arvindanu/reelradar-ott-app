@@ -1,5 +1,5 @@
 export const LANGUAGES = [
-  { code: 'ml', label: 'Malayalam' }, { code: 'ta', label: 'Tamil' },
+  { code: 'ml', label: 'Malayalam' }, { code: 'ta', label: 'Tamil' },{ code: 'hi', label: 'Hindi' },
   { code: 'te', label: 'Telugu' }, { code: 'kn', label: 'Kannada' },
   { code: 'en', label: 'English' }, { code: 'es', label: 'Spanish' },
   { code: 'de', label: 'German' }, { code: 'ja', label: 'Japanese' },
