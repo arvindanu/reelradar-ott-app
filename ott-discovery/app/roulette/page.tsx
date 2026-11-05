@@ -184,7 +184,7 @@ export default function MovieRoulettePage() {
       @media(prefers-reduced-motion:reduce){.roulette-result-backdrop,.roulette-result{animation:none!important}.roulette-spin:not(:disabled):hover{transform:none}}
     `}</style>
 
-    <header className="roulette-top"><Link href="/" className="roulette-back"><ArrowLeft size={16}/> Back to REELRADAR</Link><nav className="roulette-route-nav"><Link href="/">Discover</Link><Link href="/collide">Movie Collide</Link><Link href="/roulette" className="active"><Dices size={14}/> Movie Roulette</Link></nav><span className="roulette-brand">REEL<b>RADAR</b></span></header>
+    <header className="roulette-top"><Link href="/" className="roulette-back"><ArrowLeft size={16}/></Link><nav className="roulette-route-nav"><Link href="/">Discover</Link><Link href="/collide">Movie Collide</Link><Link href="/roulette" className="active"><Dices size={14}/> Movie Roulette</Link></nav><span className="roulette-brand">REELRADAR</span></header>
     <div className="roulette-heading"><span className="roulette-kicker">LET FATE PICK YOUR NEXT WATCH</span><h1>MOVIE ROULETTE</h1><p>Set your mood. Spin the wheel. Find your next obsession.</p></div>
 
     <div className="roulette-layout">
