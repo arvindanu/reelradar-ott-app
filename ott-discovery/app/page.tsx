@@ -193,6 +193,8 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [items, setItems] = useState<Title[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   const [error, setError] = useState('');
   const [selected, setSelected] = useState<Title | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -223,11 +225,37 @@ export default function Home() {
   }, [mode, language, region, search, filter, page, availability]);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    if (!loading && showSplash) {
+      const timer = window.setTimeout(() => setShowSplash(false), 700);
+      return () => window.clearTimeout(timer);
+    }
+  }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
   const tabs: [Mode, string][] = [['all', 'Discover'], ['movie', 'Movies'], ['tv', 'Series'], ['documentary', 'Documentaries']];
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
 
   return <main className="site-shell">
+    {showSplash && <div
+      className="splash-screen"
+      role="status"
+      aria-label="Loading REELRADAR"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999999,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#08090d',
+      }}
+    >
+      <div className="splash-brand-mark"><Clapperboard size={38} strokeWidth={1.7} /></div>
+      <div className="splash-wordmark">REEL<span>RADAR</span></div>
+      <div className="splash-loader"><span /></div>
+      <p>PREPARING YOUR NEXT WATCH</p>
+    </div>}
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
       <nav className="desktop-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setSearch(''); setQuery(''); setPage(1); }} type="button">{l}</button>)}</nav>
