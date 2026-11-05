@@ -124,7 +124,19 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
     <section className="detail-modal" onMouseDown={e => e.stopPropagation()}>
       <button className="modal-close" onClick={close} aria-label="Close" type="button"><X size={18} /></button>
       <div className="modal-hero" style={item.backdrop ? { backgroundImage: `linear-gradient(90deg,rgba(8,9,13,.98),rgba(8,9,13,.58)),url(${item.backdrop})` } : {}}>
-        <div style={{ display: 'flex', gap: 9, marginBottom: 16 }}>
+        <div className="modal-copy">
+          <span className="eyebrow">{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'} · {item.year || 'Release date TBA'}</span>
+          <h2>{item.title}</h2>
+          <div className="modal-stats">{item.rating !== null && <span><Star size={14} fill="currentColor" /> {item.rating.toFixed(1)} / 10</span>}<span>{getLanguageLabel(item.language)}</span></div>
+          <p>{item.overview || 'Synopsis not available yet.'}</p>
+          <a className="primary-cta" href={trailer} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> Watch trailer on YouTube <ExternalLink size={14} /></a>
+        </div>
+      </div>
+      <div className="modal-bottom"><div><span className="eyebrow">WHERE TO WATCH</span><h3>Available on your platforms</h3></div>
+        {item.watchLink && <a className="provider-link" href={item.watchLink} target="_blank" rel="noreferrer">All options <ArrowUpRight size={14} /></a>}</div>
+      {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <div className="modal-provider" key={p.id}>{p.logo && <img src={p.logo} alt="" />}<span>{p.name}</span></div>)}
+        </div> : <p className="no-provider">No streaming availability was returned for this country. Try changing your region.</p>}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 9, padding: '0 24px 18px' }}>
           <button type="button" aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`}
             onClick={() => onToggleWishlist(item)}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: isWishlisted ? '#DFFF00' : '#fff', cursor: 'pointer', fontWeight: 700 }}>
@@ -144,19 +156,7 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: '#fff', cursor: 'pointer', fontWeight: 700 }}>
             <Share2 size={15} /> Share
           </button>
-        </div>
-        <div className="modal-copy">
-          <span className="eyebrow">{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'} · {item.year || 'Release date TBA'}</span>
-          <h2>{item.title}</h2>
-          <div className="modal-stats">{item.rating !== null && <span><Star size={14} fill="currentColor" /> {item.rating.toFixed(1)} / 10</span>}<span>{getLanguageLabel(item.language)}</span></div>
-          <p>{item.overview || 'Synopsis not available yet.'}</p>
-          <a className="primary-cta" href={trailer} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> Watch trailer on YouTube <ExternalLink size={14} /></a>
-        </div>
       </div>
-      <div className="modal-bottom"><div><span className="eyebrow">WHERE TO WATCH</span><h3>Available on your platforms</h3></div>
-        {item.watchLink && <a className="provider-link" href={item.watchLink} target="_blank" rel="noreferrer">All options <ArrowUpRight size={14} /></a>}</div>
-      {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <div className="modal-provider" key={p.id}>{p.logo && <img src={p.logo} alt="" />}<span>{p.name}</span></div>)}
-        </div> : <p className="no-provider">No streaming availability was returned for this country. Try changing your region.</p>}
       {item.trailerThumb && <a className="trailer-preview" href={trailer} target="_blank" rel="noreferrer"><img src={item.trailerThumb} alt="Trailer thumbnail" /><span className="trailer-play"><Play fill="currentColor" /></span><span>PLAY OFFICIAL TRAILER</span></a>}
 
       <div className="full-details">
