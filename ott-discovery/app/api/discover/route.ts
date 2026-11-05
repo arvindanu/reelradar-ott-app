@@ -368,7 +368,8 @@ function buildDiscoverParams(
   region: string,
   page: number,
   documentary: boolean,
-  availability: 'ott' | 'all' | 'theatre'
+  availability: 'ott' | 'all' | 'theatre',
+  genre: string
 ): {
   params: Record<string, string>;
   note?: string;
@@ -389,6 +390,8 @@ function buildDiscoverParams(
 
   if (documentary) {
     params.with_genres = DOCUMENTARY_GENRE;
+  } else if (genre) {
+    params.with_genres = genre;
   }
 
   if (config.minDate) {
@@ -877,6 +880,8 @@ export async function GET(request: NextRequest) {
       : 'all') as 'ott' | 'all' | 'theatre';
 
     const documentary = type === 'documentary';
+    const genreValue = (search.get('genre') ?? '').trim();
+    const genre = /^\d+$/.test(genreValue) ? genreValue : '';
 
     const kinds: MediaKind[] =
       availability === 'theatre'
@@ -910,10 +915,14 @@ export async function GET(request: NextRequest) {
               const documentaryMatches =
                 !documentary ||
                 (item.genre_ids ?? []).includes(99);
+              const genreMatches =
+                !genre ||
+                (item.genre_ids ?? []).includes(Number(genre));
 
               return (
                 languageMatches &&
-                documentaryMatches
+                documentaryMatches &&
+                genreMatches
               );
             })
             .map((item: AnyRecord) => ({
@@ -928,7 +937,7 @@ export async function GET(request: NextRequest) {
     } else {
       requests = await Promise.all(
         kinds.map(async kind => {
-          if (filter === 'trending') {
+          if (filter === 'trending' && !genre) {
             const data = await tmdb(
               `/trending/${kind}/week`,
               {
@@ -969,7 +978,8 @@ export async function GET(request: NextRequest) {
             region,
             page,
             documentary,
-            availability
+            availability,
+            genre
           );
 
           if (config.note && !notes.includes(config.note)) {
