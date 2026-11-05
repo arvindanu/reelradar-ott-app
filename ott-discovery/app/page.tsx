@@ -496,16 +496,16 @@ export default function Home() {
           .rr-showcase-title { margin:0; font-size:23px; letter-spacing:.12em; }
           .rr-live-label { padding:7px 9px; font-size:8px; }
           .rr-featured-rail { position:relative; display:block; height:calc(100vw * 1.08); max-height:440px; min-height:350px; margin:0 -16px; padding:8px 0 18px; overflow:hidden; perspective:900px; touch-action:pan-y; }
-          .rr-featured-card { position:absolute; left:50%; top:8px; width:min(78vw,340px); height:auto; aspect-ratio:3 / 4; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1) rotateY(-4deg) rotateZ(-.5deg); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.25); background:rgba(15,17,22,.96); box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.28); backdrop-filter:none; -webkit-backdrop-filter:none; transition:transform .32s ease,opacity .28s ease; }
-          .rr-featured-card:nth-child(even) { transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); }
+          .rr-featured-card { position:absolute; left:50%; top:8px; width:min(78vw,340px); height:auto; aspect-ratio:3 / 4; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.25); background:rgba(15,17,22,.96); box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.28); backdrop-filter:none; -webkit-backdrop-filter:none; transition:transform .38s cubic-bezier(.2,.75,.25,1),opacity .34s ease,filter .34s ease; }
+          .rr-featured-card:nth-child(even) { transform:translateX(-50%) translateY(0) scale(1); }
           .rr-featured-stack-card { z-index:calc(20 - var(--stack-depth, 0)); }
           .rr-stack-position-0 { z-index:10; }
           .rr-featured-card.rr-stack-position-3,.rr-featured-card.rr-stack-position-4,.rr-featured-card.rr-stack-position-5,.rr-featured-card.rr-stack-position-6 { display:none; }
-          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94) rotateY(3deg) rotateZ(1deg); filter:brightness(.78); pointer-events:none; }
-          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-3deg) rotateZ(-1deg); filter:brightness(.58); pointer-events:none; }
-          .rr-featured-card.rr-card-exiting { transform:translateX(calc(-50% + 115px)) translateY(-22px) scale(.78) rotateZ(13deg) rotateY(22deg); opacity:0; filter:blur(18px) brightness(1.8); box-shadow:0 0 70px rgba(223,255,0,.35); }
+          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94); filter:brightness(.78); pointer-events:none; }
+          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88); filter:brightness(.58); pointer-events:none; }
+          .rr-featured-card.rr-card-exiting { transform:translateX(calc(-50% - 125px)) translateY(0) scale(.96); opacity:0; filter:blur(9px); box-shadow:0 0 24px rgba(223,255,0,.12); pointer-events:none; }
           .rr-stack-position-0:not(.rr-card-exiting) { animation:rr-card-pop .48s cubic-bezier(.16,1,.3,1) both; }
-          @keyframes rr-card-pop { from { opacity:.45; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-12deg); filter:blur(8px); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); filter:blur(0); } }
+          @keyframes rr-card-pop { from { opacity:.55; transform:translateX(-50%) translateY(25px) scale(.88); filter:blur(5px); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1); filter:blur(0); } }
           .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateX(-50%) translateY(-3px) scale(1.01); }
           .rr-featured-copy { left:16px; right:16px; bottom:16px; gap:8px; }
           .rr-featured-copy strong { font-size:clamp(20px,6vw,27px); line-height:1.05; }
