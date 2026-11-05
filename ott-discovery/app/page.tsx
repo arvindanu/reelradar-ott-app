@@ -255,7 +255,6 @@ export default function Home() {
   const [items, setItems] = useState<Title[]>([]);
   const [featuredTitles, setFeaturedTitles] = useState<Title[]>([]);
   const [mobileFeaturedIndex, setMobileFeaturedIndex] = useState(0);
-  const [mobileCardExiting, setMobileCardExiting] = useState(false);
   const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
@@ -419,14 +418,20 @@ export default function Home() {
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
-  const advanceMobileFeatured = () => {
-    if (mobileCardExiting || featuredTitles.length < 2) return;
-    setMobileCardExiting(true);
-    window.setTimeout(() => {
-      setMobileFeaturedIndex(current => (current + 1) % featuredTitles.length);
-      setMobileCardExiting(false);
-    }, 420);
+  const moveFeatured = (direction: number) => {
+    if (featuredTitles.length < 2) return;
+    setMobileFeaturedIndex(current =>
+      (current + direction + featuredTitles.length) % featuredTitles.length
+    );
   };
+  const visibleFeaturedOffsets = [0, -1, 1, -2, 2]
+    .filter((offset, index, offsets) => {
+      const itemIndex = (mobileFeaturedIndex + offset + featuredTitles.length) % featuredTitles.length;
+      return offsets.findIndex(candidate =>
+        (mobileFeaturedIndex + candidate + featuredTitles.length) % featuredTitles.length === itemIndex
+      ) === index;
+    })
+    .sort((a, b) => a - b);
 
   return <main className="site-shell">
     {showSplash && <div
@@ -494,26 +499,48 @@ export default function Home() {
             <h1 className="rr-showcase-title">TRENDING NOW</h1>
           </div>
         </div>
-        <div className="rr-featured-rail" aria-label="Popular movies and series. Swipe the top card to explore.">
-          {featuredTitles.length ? Array.from({ length: featuredTitles.length }, (_, stackIndex) => {
-            const item = featuredTitles[(mobileFeaturedIndex + stackIndex) % featuredTitles.length];
+        <div
+          className="rr-featured-rail"
+          aria-label="Popular movies and series. Swipe or use the arrows to explore."
+          onTouchStart={event => setMobileTouchStartX(event.touches[0].clientX)}
+          onTouchEnd={event => {
+            if (mobileTouchStartX === null) return;
+            const delta = event.changedTouches[0].clientX - mobileTouchStartX;
+            if (Math.abs(delta) > 35) moveFeatured(delta < 0 ? 1 : -1);
+            setMobileTouchStartX(null);
+          }}
+        >
+          {featuredTitles.length ? visibleFeaturedOffsets.map(offset => {
+            const itemIndex = (mobileFeaturedIndex + offset + featuredTitles.length) % featuredTitles.length;
+            const item = featuredTitles[itemIndex];
             const isWishlisted = wishlist.some(saved => saved.id === item.id && saved.mediaType === item.mediaType);
             return <div
-              className={`rr-featured-card rr-featured-card-${stackIndex} rr-featured-stack-card rr-stack-position-${stackIndex} ${stackIndex === 0 && mobileCardExiting ? 'rr-card-exiting' : ''}`}
+              className={`rr-featured-card rr-featured-card-${offset + 2} rr-featured-cover-card rr-cover-position-${offset + 2}`}
               key={`${item.mediaType}-${item.id}`}
-              role="button" tabIndex={stackIndex === 0 ? 0 : -1}
-              onClick={() => { if (stackIndex === 0) setSelected(item); }}
-              onTouchStart={stackIndex === 0 ? event => setMobileTouchStartX(event.touches[0].clientX) : undefined}
-              onTouchEnd={stackIndex === 0 ? event => {
-                if (mobileTouchStartX !== null && Math.abs(event.changedTouches[0].clientX - mobileTouchStartX) > 45) { event.preventDefault(); advanceMobileFeatured(); }
-                setMobileTouchStartX(null);
-              } : undefined}
-              onKeyDown={stackIndex === 0 ? event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected(item); } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); advanceMobileFeatured(); } } : undefined}
-              aria-label={`Explore ${item.title}. Swipe to see the next title.`}
+              role="button"
+              tabIndex={offset === 0 ? 0 : -1}
+              aria-hidden={offset !== 0}
+              onClick={() => {
+                if (offset === 0) setSelected(item);
+                else moveFeatured(offset);
+              }}
+              onKeyDown={event => {
+                if (offset === 0 && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault();
+                  setSelected(item);
+                } else if (offset === 0 && event.key === 'ArrowLeft') {
+                  event.preventDefault();
+                  moveFeatured(-1);
+                } else if (offset === 0 && event.key === 'ArrowRight') {
+                  event.preventDefault();
+                  moveFeatured(1);
+                }
+              }}
+              aria-label={`${item.title}${offset === 0 ? ', selected title' : ', move to center'}`}
             >
               <span className="rr-featured-image">
                 {item.poster || item.backdrop
-                  ? <img src={item.poster || item.backdrop || ''} alt="" loading={stackIndex === 0 ? 'eager' : 'lazy'} decoding="async" />
+                  ? <img src={item.poster || item.backdrop || ''} alt="" loading={offset === 0 ? 'eager' : 'lazy'} decoding="async" />
                   : <span className="rr-featured-fallback"><Film size={30} /></span>}
               </span>
               <span className="rr-featured-shade" />
@@ -531,7 +558,11 @@ export default function Home() {
                 </span>
               </span>
             </div>;
-          }) : <div className="rr-featured-card rr-featured-skeleton" aria-hidden="true" />}
+          }) : <div className="rr-featured-card rr-featured-skeleton" />}
+          {featuredTitles.length > 1 && <>
+            <button className="rr-cover-arrow rr-cover-prev" type="button" aria-label="Previous featured title" onClick={() => moveFeatured(-1)}>‹</button>
+            <button className="rr-cover-arrow rr-cover-next" type="button" aria-label="Next featured title" onClick={() => moveFeatured(1)}>›</button>
+          </>}
         </div>
         <form className="searchbar" onSubmit={submitSearch}>
           <Search size={19} />
@@ -566,10 +597,41 @@ export default function Home() {
         .rr-showcase-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; }
         .rr-showcase-title { margin:14px 0 5px; font-size:clamp(28px,3.4vw,44px); line-height:1.02; letter-spacing:.04em; font-weight:850; color:#DFFF00; }
         .rr-live-label { display:flex; align-items:center; gap:9px; padding:9px 12px; border:1px solid rgba(223,255,0,.18); border-radius:999px; color:#cbd0d8; font-size:10px; letter-spacing:.16em; white-space:nowrap; }
-        .rr-featured-rail { display:flex; align-items:stretch; gap:16px; padding:14px 8px 26px; overflow-x:auto; overflow-y:hidden; perspective:1200px; scrollbar-width:thin; scrollbar-color:rgba(223,255,0,.35) transparent; scroll-snap-type:x mandatory; }
-        .rr-featured-card { position:relative; isolation:isolate; flex:1 0 0; min-width:0; height:clamp(190px,19vw,260px); overflow:hidden; border:1px solid rgba(255,255,255,.17); border-radius:18px; padding:0; text-align:left; color:#fff; background:rgba(255,255,255,.055); box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.16); transform:rotateY(-5deg) translateZ(0); transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease; cursor:pointer; scroll-snap-align:center; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
-        .rr-featured-card:nth-child(even) { transform:rotateY(5deg) translateY(8px); }
-        .rr-featured-card:hover,.rr-featured-card:focus-visible { z-index:2; transform:translateY(-9px) rotateY(0) scale(1.035); border-color:rgba(223,255,0,.65); box-shadow:0 28px 58px rgba(0,0,0,.6),0 0 26px rgba(223,255,0,.1),inset 0 1px 0 rgba(255,255,255,.24); outline:none; }
+        .rr-featured-rail {
+          position:relative; display:flex; align-items:center; justify-content:center;
+          width:100%; height:clamp(360px,36vw,500px); margin:0 auto 18px;
+          overflow:hidden; perspective:1500px; transform-style:preserve-3d;
+          touch-action:pan-y; isolation:isolate;
+        }
+        .rr-featured-card {
+          position:absolute; left:50%; top:50%; width:clamp(230px,25vw,340px);
+          height:clamp(300px,32vw,430px); min-width:0; overflow:hidden;
+          border:1px solid rgba(255,255,255,.2); border-radius:22px; padding:0;
+          text-align:left; color:#fff; background:rgba(255,255,255,.055);
+          box-shadow:0 24px 65px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.16);
+          transform-origin:center center; cursor:pointer; backdrop-filter:blur(18px);
+          -webkit-backdrop-filter:blur(18px);
+          transition:transform .72s cubic-bezier(.22,1,.36,1), opacity .55s ease,
+            filter .55s ease, box-shadow .55s ease, border-color .55s ease;
+          will-change:transform,opacity,filter;
+        }
+        .rr-cover-position-2 { z-index:5; transform:translate(-50%,-50%) translateX(0) rotateY(0) scale(1); opacity:1; filter:none; border-color:rgba(223,255,0,.48); box-shadow:0 32px 80px rgba(0,0,0,.68),0 0 32px rgba(223,255,0,.09),inset 0 1px 0 rgba(255,255,255,.2); }
+        .rr-cover-position-1 { z-index:4; transform:translate(-50%,-50%) translateX(-74%) rotateY(32deg) scale(.78); opacity:.72; filter:brightness(.62) saturate(.75); }
+        .rr-cover-position-3 { z-index:4; transform:translate(-50%,-50%) translateX(74%) rotateY(-32deg) scale(.78); opacity:.72; filter:brightness(.62) saturate(.75); }
+        .rr-cover-position-0 { z-index:2; transform:translate(-50%,-50%) translateX(-118%) rotateY(42deg) scale(.62); opacity:.32; filter:brightness(.38) saturate(.55); }
+        .rr-cover-position-4 { z-index:2; transform:translate(-50%,-50%) translateX(118%) rotateY(-42deg) scale(.62); opacity:.32; filter:brightness(.38) saturate(.55); }
+        .rr-featured-card:hover,.rr-featured-card:focus-visible { border-color:rgba(223,255,0,.65); outline:none; }
+        .rr-cover-position-2:hover,.rr-cover-position-2:focus-visible { box-shadow:0 36px 88px rgba(0,0,0,.72),0 0 34px rgba(223,255,0,.13); }
+        .rr-cover-arrow {
+          position:absolute; z-index:8; top:50%; display:grid; place-items:center;
+          width:42px; height:42px; transform:translateY(-50%); border:1px solid rgba(255,255,255,.2);
+          border-radius:50%; background:rgba(8,9,13,.72); color:#fff; font-size:30px;
+          line-height:1; cursor:pointer; backdrop-filter:blur(12px);
+          transition:background .2s ease,border-color .2s ease,transform .2s ease;
+        }
+        .rr-cover-arrow:hover { background:rgba(223,255,0,.16); border-color:rgba(223,255,0,.55); }
+        .rr-cover-prev { left:3%; }
+        .rr-cover-next { right:3%; }
         .rr-featured-image,.rr-featured-image img,.rr-featured-fallback { position:absolute; inset:0; width:100%; height:100%; }
         .rr-featured-image img { object-fit:cover; transition:transform .55s ease; }
         .rr-featured-card:hover .rr-featured-image img { transform:scale(1.07); }
@@ -594,18 +656,15 @@ export default function Home() {
           .rr-showcase-heading > div { width:100%; text-align:center; }
           .rr-showcase-title { margin:0; font-size:23px; letter-spacing:.12em; }
           .rr-live-label { padding:7px 9px; font-size:8px; }
-          .rr-featured-rail { position:relative; display:block; height:calc(100vw * 1.08); max-height:440px; min-height:350px; margin:0 -16px; padding:8px 0 18px; overflow:hidden; perspective:900px; touch-action:pan-y; }
-          .rr-featured-card { position:absolute; left:50%; top:8px; width:min(78vw,340px); height:auto; aspect-ratio:3 / 4; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.25); background:rgba(15,17,22,.96); box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.28); backdrop-filter:none; -webkit-backdrop-filter:none; transition:transform .38s cubic-bezier(.2,.75,.25,1),opacity .34s ease,filter .34s ease; }
-          .rr-featured-card:nth-child(even) { transform:translateX(-50%) translateY(0) scale(1); }
-          .rr-featured-stack-card { z-index:calc(20 - var(--stack-depth, 0)); }
-          .rr-stack-position-0 { z-index:10; }
-          .rr-featured-card.rr-stack-position-3,.rr-featured-card.rr-stack-position-4,.rr-featured-card.rr-stack-position-5,.rr-featured-card.rr-stack-position-6 { display:none; }
-          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94); filter:brightness(.78); pointer-events:none; }
-          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88); filter:brightness(.58); pointer-events:none; }
-          .rr-featured-card.rr-card-exiting { transform:translateX(calc(-50% - 125px)) translateY(0) scale(.96); opacity:0; filter:blur(9px); box-shadow:0 0 24px rgba(223,255,0,.12); pointer-events:none; }
-          .rr-stack-position-0:not(.rr-card-exiting) { animation:rr-card-pop .48s cubic-bezier(.16,1,.3,1) both; }
-          @keyframes rr-card-pop { from { opacity:.55; transform:translateX(-50%) translateY(25px) scale(.88); filter:blur(5px); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1); filter:blur(0); } }
-          .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateX(-50%) translateY(-3px) scale(1.01); }
+          .rr-featured-rail { height:calc(100vw * 1.08); max-height:440px; min-height:350px; margin:0 -16px 12px; width:calc(100% + 32px); }
+          .rr-featured-card { width:min(67vw,310px); height:auto; aspect-ratio:3 / 4; border-radius:22px; backdrop-filter:none; -webkit-backdrop-filter:none; }
+          .rr-cover-position-1 { transform:translate(-50%,-50%) translateX(-67%) rotateY(35deg) scale(.76); opacity:.68; }
+          .rr-cover-position-3 { transform:translate(-50%,-50%) translateX(67%) rotateY(-35deg) scale(.76); opacity:.68; }
+          .rr-cover-position-0 { transform:translate(-50%,-50%) translateX(-105%) rotateY(45deg) scale(.58); opacity:.2; }
+          .rr-cover-position-4 { transform:translate(-50%,-50%) translateX(105%) rotateY(-45deg) scale(.58); opacity:.2; }
+          .rr-cover-arrow { width:36px; height:36px; font-size:25px; top:auto; bottom:8px; transform:none; }
+          .rr-cover-prev { left:calc(50% - 48px); }
+          .rr-cover-next { right:calc(50% - 48px); }
           .rr-featured-copy { left:16px; right:16px; bottom:16px; gap:8px; }
           .rr-featured-copy strong { font-size:clamp(20px,6vw,27px); line-height:1.05; }
           .rr-featured-copy small { font-size:11px; letter-spacing:.02em; }
@@ -618,7 +677,7 @@ export default function Home() {
           .rr-featured-glass { background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 30%,rgba(255,255,255,.025) 70%); }
           .rr-showcase-content :global(.searchbar) { margin-top:0; }
         }
-        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; animation:none !important; } }
+        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none !important; animation:none !important; } .rr-cover-arrow { transition:none !important; } }
 
 
 
