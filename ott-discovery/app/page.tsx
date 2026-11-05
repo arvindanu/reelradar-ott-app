@@ -413,47 +413,47 @@ export default function Home() {
       <div className="intro-content rr-showcase-content">
         <div className="rr-showcase-heading">
           <div>
-            <div className="eyebrow intro-kicker"><Sparkles size={13} /> YOUR NEXT OBSESSION STARTS HERE</div>
-            <h1 className="rr-showcase-title">Trending <span>right now.</span></h1>
-            <p className="rr-showcase-subtitle">The titles everyone's watching, all in one place.</p>
+            <h1 className="rr-showcase-title">TRENDING NOW</h1>
           </div>
-          <span className="rr-live-label"><span className="live-dot" /> LIVE TRENDING</span>
         </div>
         <div className="rr-featured-rail" aria-label="Popular movies and series. Swipe the top card to explore.">
-          {featuredTitles.length ? featuredTitles.map((_, stackIndex) => {
+          {featuredTitles.length ? Array.from({ length: featuredTitles.length }, (_, stackIndex) => {
             const item = featuredTitles[(mobileFeaturedIndex + stackIndex) % featuredTitles.length];
-            return <button
-              className={`rr-featured-card rr-featured-card-${stackIndex % 5} rr-featured-stack-card rr-stack-position-${stackIndex} ${stackIndex === 0 && mobileCardExiting ? 'rr-card-exiting' : ''}`}
+            const isWishlisted = wishlist.some(saved => saved.id === item.id && saved.mediaType === item.mediaType);
+            return <div
+              className={`rr-featured-card rr-featured-card-${stackIndex} rr-featured-stack-card rr-stack-position-${stackIndex} ${stackIndex === 0 && mobileCardExiting ? 'rr-card-exiting' : ''}`}
               key={`${item.mediaType}-${item.id}`}
-              type="button"
-              onClick={() => setSelected(item)}
+              role="button" tabIndex={stackIndex === 0 ? 0 : -1}
+              onClick={() => { if (stackIndex === 0) setSelected(item); }}
               onTouchStart={stackIndex === 0 ? event => setMobileTouchStartX(event.touches[0].clientX) : undefined}
               onTouchEnd={stackIndex === 0 ? event => {
                 if (mobileTouchStartX !== null && Math.abs(event.changedTouches[0].clientX - mobileTouchStartX) > 45) { event.preventDefault(); advanceMobileFeatured(); }
                 setMobileTouchStartX(null);
               } : undefined}
-              onKeyDown={stackIndex === 0 ? event => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); advanceMobileFeatured(); } } : undefined}
-              aria-label={`Open ${item.title}. Swipe to see the next title.`}
+              onKeyDown={stackIndex === 0 ? event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected(item); } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); advanceMobileFeatured(); } } : undefined}
+              aria-label={`Explore ${item.title}. Swipe to see the next title.`}
             >
               <span className="rr-featured-image">
-                {item.backdrop || item.poster
-                  ? <img src={item.backdrop || item.poster || ''} alt="" />
+                {item.poster || item.backdrop
+                  ? <img src={item.poster || item.backdrop || ''} alt="" loading={stackIndex === 0 ? 'eager' : 'lazy'} decoding="async" />
                   : <span className="rr-featured-fallback"><Film size={30} /></span>}
               </span>
               <span className="rr-featured-shade" />
               <span className="rr-featured-glass" />
               <span className="rr-featured-topline">
                 <span>{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'}</span>
-                {item.rating !== null && <span><Star size={11} fill="currentColor" /> {item.rating.toFixed(1)}</span>}
+                {item.rating !== null && <span><Star size={11} fill="currentColor" /> IMDb {item.rating.toFixed(1)}</span>}
               </span>
               <span className="rr-featured-copy">
                 <strong>{item.title}</strong>
-                <small>{item.year || 'Coming soon'} <span>·</span> EXPLORE TITLE <ArrowUpRight size={11} /></small>
+                <small>{item.year || 'Coming soon'} <span>·</span> {getLanguageLabel(item.language)}</small>
+                <span className="rr-featured-actions">
+                  <button type="button" className="rr-read-more" onClick={event => { event.stopPropagation(); setSelected(item); }}>READ MORE <ArrowUpRight size={13} /></button>
+                  <button type="button" className={`rr-featured-wishlist ${isWishlisted ? 'is-saved' : ''}`} aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`} onClick={event => { event.stopPropagation(); toggleWishlist(item); }}><Heart size={19} fill={isWishlisted ? 'currentColor' : 'none'} /></button>
+                </span>
               </span>
-            </button>;
-          }) : Array.from({ length: 5 }).map((_, index) => (
-            <div className="rr-featured-card rr-featured-skeleton" key={index} aria-hidden="true" />
-          ))}
+            </div>;
+          }) : <div className="rr-featured-card rr-featured-skeleton" aria-hidden="true" />}
         </div>
         <form className="searchbar" onSubmit={submitSearch}>
           <Search size={19} />
@@ -466,9 +466,7 @@ export default function Home() {
         .rr-showcase-intro { display:block; position:relative; overflow:hidden; padding:52px max(5vw, 24px) 38px; }
         .rr-showcase-content { position:relative; z-index:1; width:100%; max-width:1500px; margin:0 auto; }
         .rr-showcase-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; }
-        .rr-showcase-title { margin:14px 0 5px; font-size:clamp(34px,4.2vw,58px); line-height:1.02; letter-spacing:-.055em; font-weight:850; color:#f5f5f5; }
-        .rr-showcase-title span { color:#DFFF00; }
-        .rr-showcase-subtitle { margin:0; color:#9ca3b4; font-size:15px; }
+        .rr-showcase-title { margin:14px 0 5px; font-size:clamp(28px,3.4vw,44px); line-height:1.02; letter-spacing:.04em; font-weight:850; color:#DFFF00; }
         .rr-live-label { display:flex; align-items:center; gap:9px; padding:9px 12px; border:1px solid rgba(223,255,0,.18); border-radius:999px; color:#cbd0d8; font-size:10px; letter-spacing:.16em; white-space:nowrap; }
         .rr-featured-rail { display:flex; align-items:stretch; gap:16px; padding:14px 8px 26px; overflow-x:auto; overflow-y:hidden; perspective:1200px; scrollbar-width:thin; scrollbar-color:rgba(223,255,0,.35) transparent; scroll-snap-type:x mandatory; }
         .rr-featured-card { position:relative; isolation:isolate; flex:1 0 0; min-width:0; height:clamp(190px,19vw,260px); overflow:hidden; border:1px solid rgba(255,255,255,.17); border-radius:18px; padding:0; text-align:left; color:#fff; background:rgba(255,255,255,.055); box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.16); transform:rotateY(-5deg) translateZ(0); transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease; cursor:pointer; scroll-snap-align:center; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
@@ -481,9 +479,11 @@ export default function Home() {
         .rr-featured-shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,6,9,.12),rgba(5,6,9,.08) 36%,rgba(5,6,9,.94)); }
         .rr-featured-glass { position:absolute; inset:0; pointer-events:none; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 28%,rgba(255,255,255,.025) 62%,rgba(223,255,0,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 0 35px rgba(255,255,255,.035); }
         .rr-featured-topline { position:absolute; top:13px; left:13px; right:13px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-        .rr-featured-topline span { display:inline-flex; align-items:center; gap:4px; padding:6px 8px; border:1px solid rgba(255,255,255,.17); border-radius:7px; background:rgba(8,9,13,.55); backdrop-filter:blur(12px); font-size:9px; font-weight:800; letter-spacing:.1em; }
+        .rr-featured-topline span { display:inline-flex; align-items:center; gap:4px; padding:6px 8px; border:1px solid rgba(255,255,255,.17); border-radius:7px; background:rgba(8,9,13,.72); backdrop-filter:blur(12px); font-size:9px; font-weight:800; letter-spacing:.1em; }
+        @media (max-width:760px) { .rr-featured-topline span { backdrop-filter:none; -webkit-backdrop-filter:none; } }
         .rr-featured-topline span:last-child { color:#DFFF00; }
         .rr-featured-copy { position:absolute; left:15px; right:15px; bottom:15px; display:flex; flex-direction:column; gap:7px; }
+        .rr-featured-actions { display:none; }
         .rr-featured-copy strong { font-size:clamp(14px,1.25vw,19px); line-height:1.15; font-weight:800; text-shadow:0 2px 12px #000; }
         .rr-featured-copy small { display:flex; align-items:center; gap:6px; color:#c4c8d0; font-size:9px; letter-spacing:.11em; }
         .rr-featured-copy small svg { color:#DFFF00; }
@@ -493,23 +493,30 @@ export default function Home() {
         @media (max-width:760px) {
           .rr-showcase-intro { padding:34px 16px 28px; }
           .rr-showcase-heading { align-items:flex-start; margin-bottom:12px; }
-          .rr-showcase-title { font-size:36px; }
-          .rr-showcase-subtitle { max-width:260px; font-size:13px; }
+          .rr-showcase-title { margin:0; font-size:23px; letter-spacing:.12em; }
           .rr-live-label { padding:7px 9px; font-size:8px; }
-          .rr-featured-rail { position:relative; display:block; height:min(132vw,560px); min-height:430px; margin:0 -16px; padding:12px 0 20px; overflow:hidden; perspective:1400px; touch-action:pan-y; }
-          .rr-featured-card { position:absolute; left:50%; top:12px; width:min(68vw,310px); height:auto; aspect-ratio:3 / 5; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.26); background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.035) 42%,rgba(8,9,13,.72)); box-shadow:0 28px 70px rgba(0,0,0,.66),0 0 34px rgba(223,255,0,.07),inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 28px rgba(255,255,255,.06); backdrop-filter:blur(24px) saturate(135%); -webkit-backdrop-filter:blur(24px) saturate(135%); transition:transform .48s cubic-bezier(.2,.8,.2,1),opacity .42s ease,filter .42s ease,box-shadow .42s ease; }
+          .rr-featured-rail { position:relative; display:block; height:calc(100vw * 1.08); max-height:440px; min-height:350px; margin:0 -16px; padding:8px 0 18px; overflow:hidden; perspective:900px; touch-action:pan-y; }
+          .rr-featured-card { position:absolute; left:50%; top:8px; width:min(78vw,340px); height:auto; aspect-ratio:3 / 4; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1) rotateY(-4deg) rotateZ(-.5deg); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.25); background:rgba(15,17,22,.96); box-shadow:0 18px 38px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.28); backdrop-filter:none; -webkit-backdrop-filter:none; transition:transform .32s ease,opacity .28s ease; }
           .rr-featured-card:nth-child(even) { transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); }
           .rr-featured-stack-card { z-index:calc(20 - var(--stack-depth, 0)); }
           .rr-stack-position-0 { z-index:10; }
-          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94) rotateY(8deg) rotateZ(2deg); filter:brightness(.72) blur(.25px); pointer-events:none; }
-          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-8deg) rotateZ(-2deg); filter:brightness(.48) blur(.7px); pointer-events:none; }
-          .rr-stack-position-3,.rr-stack-position-4,.rr-stack-position-5,.rr-stack-position-6 { opacity:0; pointer-events:none; }
+          .rr-featured-card.rr-stack-position-3,.rr-featured-card.rr-stack-position-4,.rr-featured-card.rr-stack-position-5,.rr-featured-card.rr-stack-position-6 { display:none; }
+          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94) rotateY(3deg) rotateZ(1deg); filter:brightness(.78); pointer-events:none; }
+          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-3deg) rotateZ(-1deg); filter:brightness(.58); pointer-events:none; }
           .rr-featured-card.rr-card-exiting { transform:translateX(calc(-50% + 115px)) translateY(-22px) scale(.78) rotateZ(13deg) rotateY(22deg); opacity:0; filter:blur(18px) brightness(1.8); box-shadow:0 0 70px rgba(223,255,0,.35); }
           .rr-stack-position-0:not(.rr-card-exiting) { animation:rr-card-pop .48s cubic-bezier(.16,1,.3,1) both; }
           @keyframes rr-card-pop { from { opacity:.45; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-12deg); filter:blur(8px); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); filter:blur(0); } }
           .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateX(-50%) translateY(-3px) scale(1.01); }
-          .rr-featured-copy strong { font-size:21px; }
-          .rr-featured-copy small { font-size:9px; }
+          .rr-featured-copy { left:16px; right:16px; bottom:16px; gap:8px; }
+          .rr-featured-copy strong { font-size:clamp(20px,6vw,27px); line-height:1.05; }
+          .rr-featured-copy small { font-size:11px; letter-spacing:.02em; }
+          .rr-featured-actions { display:flex; align-items:center; gap:10px; margin-top:5px; }
+          .rr-read-more,.rr-featured-wishlist { display:inline-flex; align-items:center; justify-content:center; min-height:46px; border:1px solid rgba(255,255,255,.25); border-radius:13px; color:#fff; background:rgba(255,255,255,.13); box-shadow:inset 0 1px 0 rgba(255,255,255,.2); cursor:pointer; }
+          .rr-read-more { flex:1; gap:8px; font-size:13px; font-weight:800; letter-spacing:.08em; }
+          .rr-read-more svg { color:#DFFF00; }
+          .rr-featured-wishlist { width:52px; color:#fff; }
+          .rr-featured-wishlist.is-saved { color:#DFFF00; border-color:rgba(223,255,0,.55); }
+          .rr-featured-glass { background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 30%,rgba(255,255,255,.025) 70%); }
           .rr-showcase-content :global(.searchbar) { margin-top:0; }
         }
         @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; animation:none !important; } }
