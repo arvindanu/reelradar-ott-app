@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Tv, BookOpen } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Tv, BookOpen, Dices } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -372,6 +372,7 @@ export default function Home() {
     ...tabs.map(([value, label]) => ({ key: value, label, action: () => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); } })),
     { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
     { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
+    { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
   ];
 
   useEffect(() => {
@@ -439,7 +440,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.key === 'roulette' && <Dices size={15} />} {item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -456,8 +457,8 @@ export default function Home() {
       key={item.key}
       className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
       onClick={() => {
-        item.action();
         setMobileMenu(false);
+        item.action();
       }}
       type="button"
     >
@@ -467,6 +468,7 @@ export default function Home() {
       {item.key === 'documentary' && <BookOpen size={17} />}
       {item.key === 'wishlist' && <Heart size={17} />}
       {item.key === 'collide' && <GitMerge size={17} />}
+      {item.key === 'roulette' && <Dices size={17} />}
       {item.label}
     </button>
   ))}
