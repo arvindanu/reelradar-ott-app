@@ -3,7 +3,7 @@ export const LANGUAGES = [
   { code: 'te', label: 'Telugu' }, { code: 'kn', label: 'Kannada' },
   { code: 'en', label: 'English' }, { code: 'es', label: 'Spanish' },
   { code: 'de', label: 'German' }, { code: 'ja', label: 'Japanese' },
-  { code: 'zh', label: 'Chinese' }, { code: 'ko', label: 'Korean' }
+  { code: 'zh', label: 'Chinese' }, { code: 'ko', label: 'Korean' },{ code: 'TH', label: 'Thailand' }
 ] as const;
 export const COUNTRIES = [
   { code: 'IN', label: 'India' }, { code: 'US', label: 'United States' },
