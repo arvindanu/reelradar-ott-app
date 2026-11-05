@@ -369,7 +369,8 @@ function buildDiscoverParams(
   page: number,
   documentary: boolean,
   availability: 'ott' | 'all' | 'theatre',
-  genre: string
+  genre: string,
+  provider: string
 ): {
   params: Record<string, string>;
   note?: string;
@@ -434,9 +435,16 @@ function buildDiscoverParams(
     params.with_release_type = config.releaseType;
   }
 
-  if (availability === 'ott') {
+  if (availability === 'ott' || provider) {
     params.watch_region = region;
+  }
+
+  if (availability === 'ott') {
     params.with_watch_monetization_types = 'flatrate|free|ads';
+  }
+
+  if (provider) {
+    params.with_watch_providers = provider;
   }
 
   if (availability === 'theatre') {
@@ -858,6 +866,35 @@ export async function GET(request: NextRequest) {
       ? regionValue
       : 'IN';
 
+    const providersOnly = search.get('providers') === '1';
+
+    if (providersOnly) {
+      const [moviesFirst, seriesFirst] = await Promise.all([
+        tmdb('/watch/providers/movie', { watch_region: region, language: 'en-US', page: '1' }),
+        tmdb('/watch/providers/tv', { watch_region: region, language: 'en-US', page: '1' }),
+      ]);
+      const providerPages = await Promise.all([
+        ...Array.from({ length: Math.max(0, (moviesFirst.total_pages ?? 1) - 1) }, (_, index) =>
+          tmdb('/watch/providers/movie', { watch_region: region, language: 'en-US', page: String(index + 2) })),
+        ...Array.from({ length: Math.max(0, (seriesFirst.total_pages ?? 1) - 1) }, (_, index) =>
+          tmdb('/watch/providers/tv', { watch_region: region, language: 'en-US', page: String(index + 2) })),
+      ]);
+      const allProviders = [
+        ...(moviesFirst.results ?? []), ...(seriesFirst.results ?? []),
+        ...providerPages.flatMap((result: AnyRecord) => result.results ?? []),
+      ];
+      const combined = allProviders
+        .filter((item: AnyRecord, index: number, array: AnyRecord[]) =>
+          array.findIndex(entry => entry.provider_id === item.provider_id) === index)
+        .sort((a: AnyRecord, b: AnyRecord) => (a.display_priority ?? 999) - (b.display_priority ?? 999));
+      return NextResponse.json({ providers: combined.map((item: AnyRecord) => ({
+        id: item.provider_id, name: item.provider_name, logo: getImage(item.logo_path, 'w92'),
+      })) });
+    }
+
+    const providerValue = (search.get('provider') ?? '').trim();
+    const provider = /^\d+$/.test(providerValue) ? providerValue : '';
+
     const query = (
       search.get('query') ?? ''
     ).trim();
@@ -937,7 +974,7 @@ export async function GET(request: NextRequest) {
     } else {
       requests = await Promise.all(
         kinds.map(async kind => {
-          if (filter === 'trending' && !genre) {
+          if (filter === 'trending' && !genre && !provider) {
             const data = await tmdb(
               `/trending/${kind}/week`,
               {
@@ -979,7 +1016,8 @@ export async function GET(request: NextRequest) {
             page,
             documentary,
             availability,
-            genre
+            genre,
+            provider
           );
 
           if (config.note && !notes.includes(config.note)) {
@@ -1052,9 +1090,12 @@ export async function GET(request: NextRequest) {
         )
       )
     );
-    const results = availability === 'ott'
-      ? enriched.filter((item: AnyRecord) => (item.providers ?? []).length > 0).slice(0, 18)
+    const providerFiltered = provider
+      ? enriched.filter((item: AnyRecord) => (item.providers ?? []).some((entry: AnyRecord) => entry.id === Number(provider)))
       : enriched;
+    const results = availability === 'ott'
+      ? providerFiltered.filter((item: AnyRecord) => (item.providers ?? []).length > 0).slice(0, 18)
+      : providerFiltered.slice(0, 18);
 
     return NextResponse.json(
       {

@@ -5,6 +5,7 @@ import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
+type PlatformOption = { id: number; name: string; logo: string | null };
 type Person = { id: number; name: string; role?: string; character?: string; profile?: string | null };
 type Title = {
   id: number; mediaType: 'movie' | 'tv'; title: string; overview: string;
@@ -236,8 +237,23 @@ export default function Home() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [availability, setAvailability] = useState<Availability>('all');
   const [genre, setGenre] = useState('');
+  const [provider, setProvider] = useState('');
+  const [platforms, setPlatforms] = useState<PlatformOption[]>([]);
   const [wishlist, setWishlist] = useState<Title[]>([]);
   const [wishlistReady, setWishlistReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    setProvider('');
+    fetch(`/api/discover?providers=1&region=${encodeURIComponent(region)}`, { cache: 'no-store' })
+      .then(async response => {
+        if (!response.ok) throw new Error('Could not load streaming platforms');
+        const data = await response.json();
+        if (active) setPlatforms(Array.isArray(data.providers) ? data.providers : []);
+      })
+      .catch(() => { if (active) setPlatforms([]); });
+    return () => { active = false; };
+  }, [region]);
   const [showWishlist, setShowWishlist] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -275,7 +291,7 @@ export default function Home() {
   const load = useCallback(async () => {
     setLoading(true); setError('');
     try {
-      const params = new URLSearchParams({ type: mode, language, region, query: search, filter, page: String(page), availability, genre });
+      const params = new URLSearchParams({ type: mode, language, region, query: search, filter, page: String(page), availability, genre, provider });
       const res = await fetch(`/api/discover?${params.toString()}`, { cache: 'no-store' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not load titles.');
@@ -291,7 +307,7 @@ export default function Home() {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
       setItems([]);
     } finally { setLoading(false); }
-  }, [mode, language, region, search, filter, page, availability, genre]);
+  }, [mode, language, region, search, filter, page, availability, genre, provider]);
 
   useEffect(() => { void load(); }, [load]);
   useEffect(() => {
@@ -337,7 +353,7 @@ export default function Home() {
         <button className="mobile-menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu" type="button"><Menu /></button>
       </div>
     </header>
-    {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /></button></nav>}
+    {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /> My Wishlist ({wishlist.length})</button></nav>}
     <section className="intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
       <div className="intro-content"><div className="eyebrow intro-kicker"><Sparkles size={13} /> YOUR NEXT OBSESSION STARTS HERE</div>
@@ -373,6 +389,10 @@ export default function Home() {
             <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
           )}
         </div>
+        <button type="button" className="filter-chip" onClick={() => setShowWishlist(value => !value)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, borderColor: showWishlist ? '#DFFF00' : undefined, color: showWishlist ? '#DFFF00' : undefined }}>
+          <Heart size={14} fill={showWishlist ? 'currentColor' : 'none'} /> My Wishlist ({wishlist.length})
+        </button>
       </div>
       <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
@@ -388,6 +408,14 @@ export default function Home() {
           {availableGenres.slice(0, 8).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}
         </select>
       </div>
+      <div className="discovery-filter-wrap">
+        <label htmlFor="platform-filter">Streaming platform</label>
+        <select id="platform-filter" className="discovery-filter-select" value={provider}
+          onChange={e => { setProvider(e.target.value); setPage(1); setShowWishlist(false); }}>
+          <option value="">All available platforms</option>
+          {platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}</option>)}
+        </select>
+      </div>
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
         : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>)
@@ -395,7 +423,7 @@ export default function Home() {
         : error ? <div className="empty-state"><div className="empty-icon"><Radio size={25} /></div><h3>Could not load titles</h3><p>{error}</p>
           <span>Check the TMDB environment variables and deployment logs.</span><button className="retry-button" onClick={() => void load()} type="button">Try again</button></div>
         : displayedItems.length === 0 ? <div className="empty-state"><div className="empty-icon"><Search size={25} /></div><h3>No titles found</h3><p>Try another language, filter or search term.</p>
-          <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); setAvailability('all'); setGenre(''); setShowWishlist(false); setPage(1); }} type="button">Clear filters</button></div>
+          <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); setAvailability('all'); setGenre(''); setProvider(''); setShowWishlist(false); setPage(1); }} type="button">Clear filters</button></div>
         : <><div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>
           <div className="pagination-wrap" aria-label="Pagination">
             <button type="button" disabled={page <= 1 || loading} onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: document.querySelector('.catalog-section')?.getBoundingClientRect().top ?? 0, behavior: 'smooth' }); }}>Previous</button>
