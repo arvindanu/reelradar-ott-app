@@ -8,12 +8,11 @@ export default function TimelinerHeader() {
       <header className="tl-topbar">
         <Link href="/" className="tl-back">
           <ArrowLeft size={17} />
-          <span>Back to REELRADAR</span>
+          <span></span>
         </Link>
 
-        <Link href="/" className="tl-wordmark">
-          <Film size={18} />
-          <span>REEL<b>RADAR</b></span>
+        <Link href="/" className="tl-wordmark">          
+          <span>REELRADAR</span>
         </Link>
       </header>
 
