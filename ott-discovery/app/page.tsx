@@ -353,7 +353,7 @@ export default function Home() {
         <button className="mobile-menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu" type="button"><Menu /></button>
       </div>
     </header>
-    {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /> My Wishlist ({wishlist.length})</button></nav>}
+    {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /></button></nav>}
     <section className="intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
       <div className="intro-content"><div className="eyebrow intro-kicker"><Sparkles size={13} /> YOUR NEXT OBSESSION STARTS HERE</div>
@@ -389,10 +389,6 @@ export default function Home() {
             <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
           )}
         </div>
-        <button type="button" className="filter-chip" onClick={() => setShowWishlist(value => !value)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, borderColor: showWishlist ? '#DFFF00' : undefined, color: showWishlist ? '#DFFF00' : undefined }}>
-          <Heart size={14} fill={showWishlist ? 'currentColor' : 'none'} /> My Wishlist ({wishlist.length})
-        </button>
       </div>
       <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
