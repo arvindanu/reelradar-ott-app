@@ -251,6 +251,7 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
   const [items, setItems] = useState<Title[]>([]);
+  const [featuredTitles, setFeaturedTitles] = useState<Title[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
@@ -276,6 +277,26 @@ export default function Home() {
       .catch(() => { if (active) setPlatforms([]); });
     return () => { active = false; };
   }, [region]);
+
+  useEffect(() => {
+    let active = true;
+    const params = new URLSearchParams({
+      type: 'all', language: '', region, query: '', filter: 'Trending Now',
+      page: '1', availability: 'all', genre: '', provider: ''
+    });
+    fetch(`/api/discover?${params.toString()}`, { cache: 'no-store' })
+      .then(async response => {
+        if (!response.ok) throw new Error('Could not load trending titles');
+        const data = await response.json();
+        const trending = Array.isArray(data.results)
+          ? data.results.map(normalizeTitle).filter((item: Title | null): item is Title => item !== null)
+          : [];
+        if (active) setFeaturedTitles(trending.slice(0, 7));
+      })
+      .catch(() => { if (active) setFeaturedTitles([]); });
+    return () => { active = false; };
+  }, [region]);
+
   const [showWishlist, setShowWishlist] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -376,21 +397,93 @@ export default function Home() {
       </div>
     </header>
     {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /></button></nav>}
-    <section className="intro" id="top">
+    <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
-      <div className="intro-content"><div className="eyebrow intro-kicker"><Sparkles size={13} /> YOUR NEXT OBSESSION STARTS HERE</div>
-        <h1>Less scrolling.<br /><span>More watching.</span></h1>
-        <p>Every story worth watching, across every language and platform.</p>
-        <form className="searchbar" onSubmit={submitSearch}><Search size={19} />
+      <div className="intro-content rr-showcase-content">
+        <div className="rr-showcase-heading">
+          <div>
+            <div className="eyebrow intro-kicker"><Sparkles size={13} /> YOUR NEXT OBSESSION STARTS HERE</div>
+            <h1 className="rr-showcase-title">Trending <span>right now.</span></h1>
+            <p className="rr-showcase-subtitle">The titles everyone's watching, all in one place.</p>
+          </div>
+          <span className="rr-live-label"><span className="live-dot" /> LIVE TRENDING</span>
+        </div>
+        <div className="rr-featured-rail" aria-label="Popular movies and series. Swipe to explore.">
+          {featuredTitles.length ? featuredTitles.map((item, index) => (
+            <button
+              className={`rr-featured-card rr-featured-card-${index % 5}`}
+              key={`${item.mediaType}-${item.id}`}
+              type="button"
+              onClick={() => setSelected(item)}
+              aria-label={`Open ${item.title}`}
+            >
+              <span className="rr-featured-image">
+                {item.backdrop || item.poster
+                  ? <img src={item.backdrop || item.poster || ''} alt="" />
+                  : <span className="rr-featured-fallback"><Film size={30} /></span>}
+              </span>
+              <span className="rr-featured-shade" />
+              <span className="rr-featured-topline">
+                <span>{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'}</span>
+                {item.rating !== null && <span><Star size={11} fill="currentColor" /> {item.rating.toFixed(1)}</span>}
+              </span>
+              <span className="rr-featured-copy">
+                <strong>{item.title}</strong>
+                <small>{item.year || 'Coming soon'} <span>·</span> EXPLORE TITLE <ArrowUpRight size={11} /></small>
+              </span>
+            </button>
+          )) : Array.from({ length: 5 }).map((_, index) => (
+            <div className="rr-featured-card rr-featured-skeleton" key={index} aria-hidden="true" />
+          ))}
+        </div>
+        <form className="searchbar" onSubmit={submitSearch}>
+          <Search size={19} />
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search movies, series, documentaries…" />
           <button type="submit">Explore <ArrowUpRight size={15} /></button>
         </form>
         <div className="intro-foot"><span><span className="live-dot" /> FRESH RELEASES</span><span>11 LANGUAGES</span><span>ONE DISCOVERY SPACE</span></div>
       </div>
-      <div className="intro-art"><div className="art-orbit orbit-a" /><div className="art-orbit orbit-b" />
-        <div className="art-glass"><Clapperboard size={44} /><span>THE WORLD<br />OF STORIES</span><small>CURATED FOR YOU</small></div>
-        <div className="floating-chip chip-a">✦ &nbsp; New this week</div><div className="floating-chip chip-b">11 languages</div>
-      </div>
+      <style jsx>{`
+        .rr-showcase-intro { display:block; position:relative; overflow:hidden; padding:52px max(5vw, 24px) 38px; }
+        .rr-showcase-content { position:relative; z-index:1; width:100%; max-width:1500px; margin:0 auto; }
+        .rr-showcase-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; }
+        .rr-showcase-title { margin:14px 0 5px; font-size:clamp(34px,4.2vw,58px); line-height:1.02; letter-spacing:-.055em; font-weight:850; color:#f5f5f5; }
+        .rr-showcase-title span { color:#DFFF00; }
+        .rr-showcase-subtitle { margin:0; color:#9ca3b4; font-size:15px; }
+        .rr-live-label { display:flex; align-items:center; gap:9px; padding:9px 12px; border:1px solid rgba(223,255,0,.18); border-radius:999px; color:#cbd0d8; font-size:10px; letter-spacing:.16em; white-space:nowrap; }
+        .rr-featured-rail { display:flex; align-items:stretch; gap:16px; padding:14px 8px 26px; overflow-x:auto; overflow-y:hidden; perspective:1200px; scrollbar-width:thin; scrollbar-color:rgba(223,255,0,.35) transparent; scroll-snap-type:x mandatory; }
+        .rr-featured-card { position:relative; isolation:isolate; flex:1 0 0; min-width:0; height:clamp(190px,19vw,260px); overflow:hidden; border:1px solid rgba(255,255,255,.17); border-radius:18px; padding:0; text-align:left; color:#fff; background:rgba(255,255,255,.055); box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.16); transform:rotateY(-5deg) translateZ(0); transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease; cursor:pointer; scroll-snap-align:center; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+        .rr-featured-card:nth-child(even) { transform:rotateY(5deg) translateY(8px); }
+        .rr-featured-card:hover,.rr-featured-card:focus-visible { z-index:2; transform:translateY(-9px) rotateY(0) scale(1.035); border-color:rgba(223,255,0,.65); box-shadow:0 28px 58px rgba(0,0,0,.6),0 0 26px rgba(223,255,0,.1),inset 0 1px 0 rgba(255,255,255,.24); outline:none; }
+        .rr-featured-image,.rr-featured-image img,.rr-featured-fallback { position:absolute; inset:0; width:100%; height:100%; }
+        .rr-featured-image img { object-fit:cover; transition:transform .55s ease; }
+        .rr-featured-card:hover .rr-featured-image img { transform:scale(1.07); }
+        .rr-featured-fallback { display:grid; place-items:center; color:#DFFF00; background:linear-gradient(135deg,#22252c,#090a0d); }
+        .rr-featured-shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,6,9,.12),rgba(5,6,9,.08) 36%,rgba(5,6,9,.94)); }
+        .rr-featured-topline { position:absolute; top:13px; left:13px; right:13px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+        .rr-featured-topline span { display:inline-flex; align-items:center; gap:4px; padding:6px 8px; border:1px solid rgba(255,255,255,.17); border-radius:7px; background:rgba(8,9,13,.55); backdrop-filter:blur(12px); font-size:9px; font-weight:800; letter-spacing:.1em; }
+        .rr-featured-topline span:last-child { color:#DFFF00; }
+        .rr-featured-copy { position:absolute; left:15px; right:15px; bottom:15px; display:flex; flex-direction:column; gap:7px; }
+        .rr-featured-copy strong { font-size:clamp(14px,1.25vw,19px); line-height:1.15; font-weight:800; text-shadow:0 2px 12px #000; }
+        .rr-featured-copy small { display:flex; align-items:center; gap:6px; color:#c4c8d0; font-size:9px; letter-spacing:.11em; }
+        .rr-featured-copy small svg { color:#DFFF00; }
+        .rr-featured-skeleton { pointer-events:none; background:linear-gradient(110deg,rgba(255,255,255,.04) 8%,rgba(255,255,255,.1) 18%,rgba(255,255,255,.04) 33%); background-size:200% 100%; animation:rr-shimmer 1.5s linear infinite; }
+        @keyframes rr-shimmer { to { background-position-x:-200%; } }
+        .rr-showcase-content :global(.searchbar) { width:min(100%,720px); margin-top:5px; }
+        @media (max-width:760px) {
+          .rr-showcase-intro { padding:34px 16px 28px; }
+          .rr-showcase-heading { align-items:flex-start; margin-bottom:12px; }
+          .rr-showcase-title { font-size:36px; }
+          .rr-showcase-subtitle { max-width:260px; font-size:13px; }
+          .rr-live-label { padding:7px 9px; font-size:8px; }
+          .rr-featured-rail { gap:13px; margin:0 -16px; padding:14px 20px 22px; }
+          .rr-featured-card { flex:0 0 78vw; max-width:340px; height:230px; transform:none; }
+          .rr-featured-card:nth-child(even) { transform:none; }
+          .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateY(-4px) scale(1.01); }
+          .rr-showcase-content :global(.searchbar) { margin-top:0; }
+        }
+        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; } }
+      `}</style>
     </section>
     <section className="catalog-section">
       <div className="section-heading"><div><div className="eyebrow">THE DISCOVERY FEED</div>
