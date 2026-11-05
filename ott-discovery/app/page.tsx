@@ -252,6 +252,9 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [items, setItems] = useState<Title[]>([]);
   const [featuredTitles, setFeaturedTitles] = useState<Title[]>([]);
+  const [mobileFeaturedIndex, setMobileFeaturedIndex] = useState(0);
+  const [mobileCardExiting, setMobileCardExiting] = useState(false);
+  const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
@@ -291,7 +294,7 @@ export default function Home() {
         const trending = Array.isArray(data.results)
           ? data.results.map(normalizeTitle).filter((item: Title | null): item is Title => item !== null)
           : [];
-        if (active) setFeaturedTitles(trending.slice(0, 7));
+        if (active) { setFeaturedTitles(trending.slice(0, 7)); setMobileFeaturedIndex(0); }
       })
       .catch(() => { if (active) setFeaturedTitles([]); });
     return () => { active = false; };
@@ -364,6 +367,14 @@ export default function Home() {
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
+  const advanceMobileFeatured = () => {
+    if (mobileCardExiting || featuredTitles.length < 2) return;
+    setMobileCardExiting(true);
+    window.setTimeout(() => {
+      setMobileFeaturedIndex(current => (current + 1) % featuredTitles.length);
+      setMobileCardExiting(false);
+    }, 420);
+  };
 
   return <main className="site-shell">
     {showSplash && <div
@@ -408,14 +419,21 @@ export default function Home() {
           </div>
           <span className="rr-live-label"><span className="live-dot" /> LIVE TRENDING</span>
         </div>
-        <div className="rr-featured-rail" aria-label="Popular movies and series. Swipe to explore.">
-          {featuredTitles.length ? featuredTitles.map((item, index) => (
-            <button
-              className={`rr-featured-card rr-featured-card-${index % 5}`}
+        <div className="rr-featured-rail" aria-label="Popular movies and series. Swipe the top card to explore.">
+          {featuredTitles.length ? featuredTitles.map((_, stackIndex) => {
+            const item = featuredTitles[(mobileFeaturedIndex + stackIndex) % featuredTitles.length];
+            return <button
+              className={`rr-featured-card rr-featured-card-${stackIndex % 5} rr-featured-stack-card rr-stack-position-${stackIndex} ${stackIndex === 0 && mobileCardExiting ? 'rr-card-exiting' : ''}`}
               key={`${item.mediaType}-${item.id}`}
               type="button"
               onClick={() => setSelected(item)}
-              aria-label={`Open ${item.title}`}
+              onTouchStart={stackIndex === 0 ? event => setMobileTouchStartX(event.touches[0].clientX) : undefined}
+              onTouchEnd={stackIndex === 0 ? event => {
+                if (mobileTouchStartX !== null && Math.abs(event.changedTouches[0].clientX - mobileTouchStartX) > 45) { event.preventDefault(); advanceMobileFeatured(); }
+                setMobileTouchStartX(null);
+              } : undefined}
+              onKeyDown={stackIndex === 0 ? event => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); advanceMobileFeatured(); } } : undefined}
+              aria-label={`Open ${item.title}. Swipe to see the next title.`}
             >
               <span className="rr-featured-image">
                 {item.backdrop || item.poster
@@ -423,6 +441,7 @@ export default function Home() {
                   : <span className="rr-featured-fallback"><Film size={30} /></span>}
               </span>
               <span className="rr-featured-shade" />
+              <span className="rr-featured-glass" />
               <span className="rr-featured-topline">
                 <span>{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'}</span>
                 {item.rating !== null && <span><Star size={11} fill="currentColor" /> {item.rating.toFixed(1)}</span>}
@@ -431,8 +450,8 @@ export default function Home() {
                 <strong>{item.title}</strong>
                 <small>{item.year || 'Coming soon'} <span>·</span> EXPLORE TITLE <ArrowUpRight size={11} /></small>
               </span>
-            </button>
-          )) : Array.from({ length: 5 }).map((_, index) => (
+            </button>;
+          }) : Array.from({ length: 5 }).map((_, index) => (
             <div className="rr-featured-card rr-featured-skeleton" key={index} aria-hidden="true" />
           ))}
         </div>
@@ -460,6 +479,7 @@ export default function Home() {
         .rr-featured-card:hover .rr-featured-image img { transform:scale(1.07); }
         .rr-featured-fallback { display:grid; place-items:center; color:#DFFF00; background:linear-gradient(135deg,#22252c,#090a0d); }
         .rr-featured-shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(5,6,9,.12),rgba(5,6,9,.08) 36%,rgba(5,6,9,.94)); }
+        .rr-featured-glass { position:absolute; inset:0; pointer-events:none; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 28%,rgba(255,255,255,.025) 62%,rgba(223,255,0,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 0 35px rgba(255,255,255,.035); }
         .rr-featured-topline { position:absolute; top:13px; left:13px; right:13px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
         .rr-featured-topline span { display:inline-flex; align-items:center; gap:4px; padding:6px 8px; border:1px solid rgba(255,255,255,.17); border-radius:7px; background:rgba(8,9,13,.55); backdrop-filter:blur(12px); font-size:9px; font-weight:800; letter-spacing:.1em; }
         .rr-featured-topline span:last-child { color:#DFFF00; }
@@ -476,13 +496,23 @@ export default function Home() {
           .rr-showcase-title { font-size:36px; }
           .rr-showcase-subtitle { max-width:260px; font-size:13px; }
           .rr-live-label { padding:7px 9px; font-size:8px; }
-          .rr-featured-rail { gap:13px; margin:0 -16px; padding:14px 20px 22px; }
-          .rr-featured-card { flex:0 0 78vw; max-width:340px; height:230px; transform:none; }
-          .rr-featured-card:nth-child(even) { transform:none; }
-          .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateY(-4px) scale(1.01); }
+          .rr-featured-rail { position:relative; display:block; height:min(132vw,560px); min-height:430px; margin:0 -16px; padding:12px 0 20px; overflow:hidden; perspective:1400px; touch-action:pan-y; }
+          .rr-featured-card { position:absolute; left:50%; top:12px; width:min(68vw,310px); height:auto; aspect-ratio:3 / 5; max-width:none; min-width:0; flex:none; transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); transform-origin:center center; border-radius:24px; border:1px solid rgba(255,255,255,.26); background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.035) 42%,rgba(8,9,13,.72)); box-shadow:0 28px 70px rgba(0,0,0,.66),0 0 34px rgba(223,255,0,.07),inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 28px rgba(255,255,255,.06); backdrop-filter:blur(24px) saturate(135%); -webkit-backdrop-filter:blur(24px) saturate(135%); transition:transform .48s cubic-bezier(.2,.8,.2,1),opacity .42s ease,filter .42s ease,box-shadow .42s ease; }
+          .rr-featured-card:nth-child(even) { transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); }
+          .rr-featured-stack-card { z-index:calc(20 - var(--stack-depth, 0)); }
+          .rr-stack-position-0 { z-index:10; }
+          .rr-featured-card.rr-stack-position-1 { z-index:9; transform:translateX(-50%) translateY(13px) scale(.94) rotateY(8deg) rotateZ(2deg); filter:brightness(.72) blur(.25px); pointer-events:none; }
+          .rr-featured-card.rr-stack-position-2 { z-index:8; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-8deg) rotateZ(-2deg); filter:brightness(.48) blur(.7px); pointer-events:none; }
+          .rr-stack-position-3,.rr-stack-position-4,.rr-stack-position-5,.rr-stack-position-6 { opacity:0; pointer-events:none; }
+          .rr-featured-card.rr-card-exiting { transform:translateX(calc(-50% + 115px)) translateY(-22px) scale(.78) rotateZ(13deg) rotateY(22deg); opacity:0; filter:blur(18px) brightness(1.8); box-shadow:0 0 70px rgba(223,255,0,.35); }
+          .rr-stack-position-0:not(.rr-card-exiting) { animation:rr-card-pop .48s cubic-bezier(.16,1,.3,1) both; }
+          @keyframes rr-card-pop { from { opacity:.45; transform:translateX(-50%) translateY(25px) scale(.88) rotateY(-12deg); filter:blur(8px); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1) rotateY(-7deg) rotateZ(-1deg); filter:blur(0); } }
+          .rr-featured-card:hover,.rr-featured-card:focus-visible { transform:translateX(-50%) translateY(-3px) scale(1.01); }
+          .rr-featured-copy strong { font-size:21px; }
+          .rr-featured-copy small { font-size:9px; }
           .rr-showcase-content :global(.searchbar) { margin-top:0; }
         }
-        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; } }
+        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; animation:none !important; } }
       `}</style>
     </section>
     <section className="catalog-section">
