@@ -33,6 +33,7 @@ export default function MovieRoulettePage() {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState<Title | null>(null);
+  const [zoomingWinnerKey, setZoomingWinnerKey] = useState<string | null>(null);
   const [history, setHistory] = useState<Title[]>([]);
   const [mute, setMute] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -109,12 +110,14 @@ export default function MovieRoulettePage() {
     }
     const result = full ?? item;
     setWinner(result);
+    setZoomingWinnerKey(null);
+    setSpinning(false);
     setHistory(current => [result, ...current.filter(x => !(x.id === result.id && x.mediaType === result.mediaType))].slice(0, 6));
   }, []);
 
   const spin = useCallback((initialVelocity = 0) => {
     if (spinning || pool.length < 2) return;
-    setWinner(null); setSpinning(true);
+    setWinner(null); setZoomingWinnerKey(null); setSpinning(true);
     const previous = history[0];
     const candidates = pool.filter(x => !(previous && x.id === previous.id && x.mediaType === previous.mediaType));
     const choice = candidates[Math.floor(Math.random() * candidates.length)] ?? pool[0];
@@ -135,9 +138,13 @@ export default function MovieRoulettePage() {
       if (currentSlice !== previousSlice) { previousSlice = currentSlice; playTick(); }
       if (t < 1) requestAnimationFrame(frame);
       else {
-        setRotation(end + (reducedMotion ? 0 : 3));
-        setSpinning(false);
-        spinTimerRef.current = window.setTimeout(() => { setRotation(end); void reveal(choice); }, reducedMotion ? 80 : 220);
+        // Land exactly on the chosen title, hold it in the center, then zoom it forward
+        // before opening the existing full result card.
+        setRotation(end);
+        setZoomingWinnerKey(`${choice.mediaType}-${choice.id}`);
+        spinTimerRef.current = window.setTimeout(() => {
+          void reveal(choice);
+        }, reducedMotion ? 100 : 720);
       }
     };
     requestAnimationFrame(frame);
@@ -176,12 +183,13 @@ export default function MovieRoulettePage() {
     <style jsx global>{`
       .roulette-page{min-height:100vh;background:radial-gradient(ellipse at 50% 22%,rgba(91,83,32,.16),transparent 42%),#08090d;color:#f5f6f8;padding:26px clamp(16px,4vw,56px) 64px;font-family:inherit;overflow:hidden}
       .roulette-top{max-width:1180px;margin:0 auto 30px;display:flex;align-items:center;justify-content:space-between;gap:16px}.roulette-route-nav{display:flex;align-items:center;gap:18px}.roulette-route-nav a{display:flex;align-items:center;gap:6px;color:#9ba1ad;text-decoration:none;font-size:12px;font-weight:700}.roulette-route-nav a.active{color:#eaff72}.roulette-back{display:inline-flex;align-items:center;gap:8px;color:#aeb3bf;text-decoration:none;font-size:13px;font-weight:700}.roulette-brand{font-size:13px;letter-spacing:.2em;color:#aeb3bf}.roulette-brand b{color:#dfff00}.roulette-heading{text-align:center;margin:18px auto 24px}.roulette-kicker{font-size:10px;letter-spacing:.28em;color:#dfff00;font-weight:800}.roulette-heading h1{font-size:clamp(32px,5vw,56px);letter-spacing:-.055em;margin:9px 0 8px;font-weight:900}.roulette-heading p{color:#9ba1ad;margin:0;font-size:14px}
-      .roulette-layout{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:30px;align-items:start}.roulette-stage{min-width:0;display:flex;flex-direction:column;align-items:center}.roulette-card-stage{width:min(100%,760px);height:clamp(360px,43vw,510px);position:relative;perspective:1400px;overflow:hidden;touch-action:pan-y;user-select:none;margin:5px auto 18px;isolation:isolate}
+      .roulette-layout{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:30px;align-items:start}.roulette-stage{min-width:0;display:flex;flex-direction:column;align-items:center}.roulette-card-stage{width:min(100%,760px);height:clamp(360px,43vw,510px);position:relative;perspective:1400px;overflow:visible;touch-action:pan-y;user-select:none;margin:5px auto 18px;isolation:isolate}
       .roulette-stage-glow{position:absolute;inset:12% 8%;background:radial-gradient(ellipse,rgba(202,226,54,.16),rgba(77,105,150,.09) 38%,transparent 72%);filter:blur(28px);pointer-events:none}
       .roulette-stage-scanline{position:absolute;inset:0;pointer-events:none;opacity:.22;background:linear-gradient(180deg,transparent 0%,rgba(218,240,110,.08) 49.8%,rgba(218,240,110,.22) 50%,transparent 50.4%);z-index:30}
       .roulette-card-track{position:absolute;inset:0;transform-style:preserve-3d}
       .roulette-movie-card{position:absolute;left:50%;top:47%;width:clamp(168px,21vw,238px);height:clamp(270px,34vw,350px);padding:0;border:1px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden;text-align:left;color:#f7f8fa;background:linear-gradient(160deg,#202633,#0b0e14);box-shadow:0 22px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.16);transform-style:preserve-3d;transform-origin:center center;transition:transform .12s linear,opacity .12s linear,filter .12s linear,border-color .25s ease,box-shadow .25s ease;cursor:pointer;will-change:transform,opacity,filter}
       .roulette-movie-card.is-centered{border-color:rgba(223,255,0,.65);box-shadow:0 30px 85px rgba(0,0,0,.72),0 0 35px rgba(223,255,0,.14),inset 0 1px 0 rgba(255,255,255,.2)}
+.roulette-movie-card.is-zooming-winner{border-color:rgba(234,255,114,.95);box-shadow:0 38px 110px rgba(0,0,0,.82),0 0 55px rgba(223,255,0,.28),inset 0 1px 0 rgba(255,255,255,.28);transition:transform .68s cubic-bezier(.16,1,.3,1),opacity .45s ease,filter .45s ease,box-shadow .5s ease,border-color .5s ease;pointer-events:none}
       .roulette-movie-poster{position:absolute;inset:0;display:block;background:linear-gradient(145deg,#252c39,#0b0e14)}
       .roulette-movie-poster img{width:100%;height:100%;display:block;object-fit:cover}
       .roulette-poster-fallback{position:absolute;inset:0;display:grid;place-items:center;color:#dfff00}
@@ -227,8 +235,9 @@ export default function MovieRoulettePage() {
               const distance = Math.abs(offset);
               const scale = Math.max(0.58, 1 - distance * 0.13);
               const opacity = Math.max(0.16, 1 - distance * 0.28);
-              return <button key={`${item.mediaType}-${item.id}`} type="button" className={`roulette-movie-card ${distance < 0.18 ? 'is-centered' : ''}`}
-                style={{transform:`translate(-50%,-50%) translateX(${offset * 174}px) rotateY(${-offset * 27}deg) scale(${scale})`,opacity,zIndex:Math.round(20-distance*4),filter:`brightness(${Math.max(0.38,1-distance*.2)})`}}
+              const isZoomingWinner = zoomingWinnerKey === `${item.mediaType}-${item.id}`;
+              return <button key={`${item.mediaType}-${item.id}`} type="button" className={`roulette-movie-card ${distance < 0.18 ? 'is-centered' : ''} ${isZoomingWinner ? 'is-zooming-winner' : ''}`}
+                style={{transform:isZoomingWinner ? 'translate(-50%,-50%) translateX(0) rotateY(0deg) scale(1.38)' : `translate(-50%,-50%) translateX(${offset * 174}px) rotateY(${-offset * 27}deg) scale(${scale})`,opacity:isZoomingWinner ? 1 : opacity,zIndex:isZoomingWinner ? 100 : Math.round(20-distance*4),filter:isZoomingWinner ? 'brightness(1.12)' : `brightness(${Math.max(0.38,1-distance*.2)})`}}
                 onClick={() => { if (!spinning && distance < .55) void reveal(item); else if (!spinning) setRotation(rotation + angleDiff); }}
                 tabIndex={distance < .55 ? 0 : -1} aria-label={item.title}>
                 <span className="roulette-movie-poster">
