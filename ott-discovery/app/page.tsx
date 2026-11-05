@@ -379,6 +379,7 @@ export default function Home() {
   const menuItems = [
     ...tabs.map(([value, label]) => ({ key: value, label, action: () => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); } })),
     { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
+    { key: 'collide', label: 'Movie Collide', action: () => { setShowWishlist(false); setCollideMode(true); setPage(1); window.setTimeout(() => document.querySelector('.movie-collide-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0); } },
   ];
   const toggleCollisionSelection = (item: Title) => {
     if (item.mediaType !== 'movie') return;
@@ -496,7 +497,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'collide' ? collideMode : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -507,7 +508,7 @@ export default function Home() {
     <button className={`mobile-drawer-overlay ${mobileMenu ? 'is-open' : ''}`} type="button" aria-label="Close navigation menu" tabIndex={mobileMenu ? 0 : -1} onClick={() => setMobileMenu(false)} />
     <aside ref={menuDrawerRef} id="mobile-navigation-drawer" className={`mobile-navigation-drawer ${mobileMenu ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!mobileMenu}>
       <div className="mobile-drawer-header"><span>MENU</span><button type="button" className="mobile-drawer-close" onClick={() => setMobileMenu(false)} aria-label="Close menu"><X size={20} /></button></div>
-      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' && <Heart size={17} />}{item.label}</button>)}</nav>
+      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'collide' ? collideMode : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' ? <Heart size={17} /> : item.key === 'collide' ? <GitMerge size={17} /> : null}{item.label}</button>)}</nav>
     </aside>
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
