@@ -75,10 +75,7 @@ function normalizeTitle(value: unknown): Title | null {
   };
 }
 
-function Poster({ item, onOpen, isWishlisted, onToggleWishlist }: {
-  item: Title; onOpen: (x: Title) => void; isWishlisted: boolean;
-  onToggleWishlist: (item: Title) => void;
-}) {
+function Poster({ item, onOpen }: { item: Title; onOpen: (x: Title) => void }) {
   const trailerUrl = item.trailerKey
     ? `https://www.youtube.com/watch?v=${item.trailerKey}`
     : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
@@ -89,29 +86,6 @@ function Poster({ item, onOpen, isWishlisted, onToggleWishlist }: {
       <div className="poster-shade" />
       <div className="poster-topline"><span className="type-pill">{item.mediaType === 'tv' ? 'SERIES' : 'FILM'}</span>
         {item.rating !== null && <span className="rating"><Star size={11} fill="currentColor" /> {item.rating.toFixed(1)}</span>}</div>
-      <div style={{ position: 'absolute', top: 42, right: 10, zIndex: 4, display: 'flex', gap: 7 }}>
-        <button type="button" aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`}
-          title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          onClick={e => { e.stopPropagation(); onToggleWishlist(item); }}
-          style={{ width: 34, height: 34, borderRadius: '50%', border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.78)', color: isWishlisted ? '#DFFF00' : '#fff', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
-          <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
-        </button>
-        <button type="button" aria-label={`Share ${item.title}`} title="Share"
-          onClick={async e => {
-            e.stopPropagation();
-            const url = `https://www.themoviedb.org/${item.mediaType}/${item.id}`;
-            try {
-              if (navigator.share) await navigator.share({ title: item.title, text: `Discover ${item.title} on REELRADAR`, url });
-              else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(url); window.alert('Title link copied to clipboard.'); }
-              else window.prompt('Copy this title link:', url);
-            } catch (error) {
-              if (error instanceof Error && error.name !== 'AbortError') window.alert('Unable to share this title right now.');
-            }
-          }}
-          style={{ width: 34, height: 34, borderRadius: '50%', border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.78)', color: '#fff', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
-          <Share2 size={15} />
-        </button>
-      </div>
       <button className="quick-play" type="button" aria-label={`View ${item.title}`} onClick={e => { e.stopPropagation(); onOpen(item); }}><Play size={16} fill="currentColor" /></button>
       <div className="poster-info"><h3>{item.title}</h3><p>{item.year || 'Release date TBA'} <span>·</span> {getLanguageLabel(item.language)}</p></div>
     </div>
@@ -125,7 +99,7 @@ function Poster({ item, onOpen, isWishlisted, onToggleWishlist }: {
   </article>;
 }
 
-function DetailModal({ item, close, region }: { item: Title; close: () => void; region: string }) {
+function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { item: Title; close: () => void; region: string; isWishlisted: boolean; onToggleWishlist: (item: Title) => void }) {
   const [details, setDetails] = useState<FullDetails | null>(null);
   const [detailError, setDetailError] = useState('');
   const [detailLoading, setDetailLoading] = useState(true);
@@ -150,6 +124,27 @@ function DetailModal({ item, close, region }: { item: Title; close: () => void; 
     <section className="detail-modal" onMouseDown={e => e.stopPropagation()}>
       <button className="modal-close" onClick={close} aria-label="Close" type="button"><X size={18} /></button>
       <div className="modal-hero" style={item.backdrop ? { backgroundImage: `linear-gradient(90deg,rgba(8,9,13,.98),rgba(8,9,13,.58)),url(${item.backdrop})` } : {}}>
+        <div style={{ display: 'flex', gap: 9, marginBottom: 16 }}>
+          <button type="button" aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`}
+            onClick={() => onToggleWishlist(item)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: isWishlisted ? '#DFFF00' : '#fff', cursor: 'pointer', fontWeight: 700 }}>
+            <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} /> {isWishlisted ? 'In Wishlist' : 'Add to Wishlist'}
+          </button>
+          <button type="button" aria-label={`Share ${item.title}`}
+            onClick={async () => {
+              const url = `https://www.themoviedb.org/${item.mediaType}/${item.id}`;
+              try {
+                if (navigator.share) await navigator.share({ title: item.title, text: `Discover ${item.title} on REELRADAR`, url });
+                else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(url); window.alert('Title link copied to clipboard.'); }
+                else window.prompt('Copy this title link:', url);
+              } catch (error) {
+                if (error instanceof Error && error.name !== 'AbortError') window.alert('Unable to share this title right now.');
+              }
+            }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: '#fff', cursor: 'pointer', fontWeight: 700 }}>
+            <Share2 size={15} /> Share
+          </button>
+        </div>
         <div className="modal-copy">
           <span className="eyebrow">{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'} · {item.year || 'Release date TBA'}</span>
           <h2>{item.title}</h2>
@@ -399,13 +394,13 @@ export default function Home() {
       </div>
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
-        : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} isWishlisted={wishlist.some(saved => saved.id === item.id && saved.mediaType === item.mediaType)} onToggleWishlist={toggleWishlist} />)}</div>)
+        : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>)
         : loading ? <div className="loading-grid">{Array.from({ length: 10 }).map((_, i) => <div className="skeleton" key={i} />)}</div>
         : error ? <div className="empty-state"><div className="empty-icon"><Radio size={25} /></div><h3>Could not load titles</h3><p>{error}</p>
           <span>Check the TMDB environment variables and deployment logs.</span><button className="retry-button" onClick={() => void load()} type="button">Try again</button></div>
         : displayedItems.length === 0 ? <div className="empty-state"><div className="empty-icon"><Search size={25} /></div><h3>No titles found</h3><p>Try another language, filter or search term.</p>
           <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); setAvailability('all'); setGenre(''); setShowWishlist(false); setPage(1); }} type="button">Clear filters</button></div>
-        : <><div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} isWishlisted={wishlist.some(saved => saved.id === item.id && saved.mediaType === item.mediaType)} onToggleWishlist={toggleWishlist} />)}</div>
+        : <><div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>
           <div className="pagination-wrap" aria-label="Pagination">
             <button type="button" disabled={page <= 1 || loading} onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: document.querySelector('.catalog-section')?.getBoundingClientRect().top ?? 0, behavior: 'smooth' }); }}>Previous</button>
             <div className="pagination-pages">
@@ -421,6 +416,6 @@ export default function Home() {
     </section>
     <footer className="footer"><a className="brand" href="#top"><span className="brand-mark"><Radio size={17} /></span><span>REEL<span>RADAR</span></span></a>
       <p>One place for everything worth watching.</p><span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span></footer>
-    {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} />}
+    {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlist.some(saved => saved.id === selected.id && saved.mediaType === selected.mediaType)} onToggleWishlist={toggleWishlist} />}
   </main>;
 }
