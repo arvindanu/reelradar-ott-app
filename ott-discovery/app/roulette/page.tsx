@@ -123,8 +123,15 @@ export default function MovieRoulettePage() {
     const choice = candidates[Math.floor(Math.random() * candidates.length)] ?? pool[0];
     const index = pool.findIndex(x => x.id === choice.id && x.mediaType === choice.mediaType);
     const slice = 360 / pool.length;
-    const target = 360 * (5 + Math.floor(Math.random() * 3)) + (360 - index * slice - slice / 2);
     const start = rotation;
+    // The carousel renderer centers a card when rotation modulo 360 equals
+    // (360 - index * slice - slice / 2). Calculate the delta from the CURRENT
+    // rotation to that exact angle; adding the target angle directly caused
+    // the visual winner and the revealed winner to drift apart.
+    const desiredAngle = ((360 - index * slice - slice / 2) % 360 + 360) % 360;
+    const currentAngle = ((start % 360) + 360) % 360;
+    const alignmentDelta = ((desiredAngle - currentAngle) % 360 + 360) % 360;
+    const target = 360 * (5 + Math.floor(Math.random() * 3)) + alignmentDelta;
     const duration = reducedMotion ? 420 : 5600 + Math.min(900, Math.abs(initialVelocity) * 2);
     const end = start + target;
     const started = performance.now();
