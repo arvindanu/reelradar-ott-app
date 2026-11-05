@@ -227,7 +227,7 @@ export default function Home() {
   useEffect(() => { void load(); }, [load]);
   useEffect(() => {
     if (!loading && showSplash) {
-      const timer = window.setTimeout(() => setShowSplash(false), 700);
+      const timer = window.setTimeout(() => setShowSplash(false), 7000);
       return () => window.clearTimeout(timer);
     }
   }, [loading, showSplash]);
