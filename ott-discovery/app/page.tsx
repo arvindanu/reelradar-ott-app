@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Tv, BookOpen } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -450,7 +450,27 @@ export default function Home() {
     <button className={`mobile-drawer-overlay ${mobileMenu ? 'is-open' : ''}`} type="button" aria-label="Close navigation menu" tabIndex={mobileMenu ? 0 : -1} onClick={() => setMobileMenu(false)} />
     <aside ref={menuDrawerRef} id="mobile-navigation-drawer" className={`mobile-navigation-drawer ${mobileMenu ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!mobileMenu}>
       <div className="mobile-drawer-header"><span>MENU</span><button type="button" className="mobile-drawer-close" onClick={() => setMobileMenu(false)} aria-label="Close menu"><X size={20} /></button></div>
-      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' ? <Heart size={17} /> : item.key === 'collide' ? <GitMerge size={17} /> : null}{item.label}</button>)}</nav>
+     <nav className="mobile-drawer-links" aria-label="Main navigation">
+  {menuItems.map(item => (
+    <button
+      key={item.key}
+      className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
+      onClick={() => {
+        item.action();
+        setMobileMenu(false);
+      }}
+      type="button"
+    >
+      {item.key === 'all' && <Compass size={17} />}
+      {item.key === 'movie' && <Film size={17} />}
+      {item.key === 'tv' && <Tv size={17} />}
+      {item.key === 'documentary' && <BookOpen size={17} />}
+      {item.key === 'wishlist' && <Heart size={17} />}
+      {item.key === 'collide' && <GitMerge size={17} />}
+      {item.label}
+    </button>
+  ))}
+</nav>
     </aside>
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
