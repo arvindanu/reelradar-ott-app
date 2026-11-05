@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
@@ -261,6 +261,8 @@ export default function Home() {
   const [error, setError] = useState('');
   const [selected, setSelected] = useState<Title | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const menuDrawerRef = useRef<HTMLElement>(null);
   const [availability, setAvailability] = useState<Availability>('all');
   const [genre, setGenre] = useState('');
   const [provider, setProvider] = useState('');
@@ -364,6 +366,40 @@ export default function Home() {
   }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
   const tabs: [Mode, string][] = [['all', 'Discover'], ['movie', 'Movies'], ['tv', 'Series'], ['documentary', 'Documentaries']];
+  const menuItems = [
+    ...tabs.map(([value, label]) => ({ key: value, label, action: () => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); } })),
+    { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
+  ];
+  useEffect(() => {
+    if (!mobileMenu) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const focusFirst = window.requestAnimationFrame(() => {
+      menuDrawerRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
+    });
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileMenu(false);
+        menuTriggerRef.current?.focus();
+        return;
+      }
+      if (event.key !== 'Tab' || !menuDrawerRef.current) return;
+      const focusable = Array.from(menuDrawerRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFirst);
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      menuTriggerRef.current?.focus();
+    };
+  }, [mobileMenu]);
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
@@ -399,15 +435,19 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setSearch(''); setQuery(''); setGenre(''); setPage(1); }} type="button">{l}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
         </select><ChevronDown size={13} /></label>
-        <button className="mobile-menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu" type="button"><Menu /></button>
+        <button ref={menuTriggerRef} className="mobile-menu-button" onClick={() => setMobileMenu(open => !open)} aria-label={mobileMenu ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={mobileMenu} aria-controls="mobile-navigation-drawer" type="button"><Menu /></button>
       </div>
     </header>
-    {mobileMenu && <nav className="mobile-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setMobileMenu(false); }} type="button">{l}</button>)}<button type="button" className={showWishlist ? 'nav-active' : ''} onClick={() => { setShowWishlist(true); setMobileMenu(false); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); }}><Heart size={14} /></button></nav>}
+    <button className={`mobile-drawer-overlay ${mobileMenu ? 'is-open' : ''}`} type="button" aria-label="Close navigation menu" tabIndex={mobileMenu ? 0 : -1} onClick={() => setMobileMenu(false)} />
+    <aside ref={menuDrawerRef} id="mobile-navigation-drawer" className={`mobile-navigation-drawer ${mobileMenu ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!mobileMenu}>
+      <div className="mobile-drawer-header"><span>MENU</span><button type="button" className="mobile-drawer-close" onClick={() => setMobileMenu(false)} aria-label="Close menu"><X size={20} /></button></div>
+      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' && <Heart size={17} />}{item.label}</button>)}</nav>
+    </aside>
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
       <div className="intro-content rr-showcase-content">
@@ -462,6 +502,26 @@ export default function Home() {
         </form>
         <div className="intro-foot"><span><span className="live-dot" /> FRESH RELEASES</span><span>11 LANGUAGES</span><span>ONE DISCOVERY SPACE</span></div>
       </div>
+      <style jsx global>{`
+        .mobile-menu-button { display:none; }
+        .mobile-drawer-overlay { display:none; }
+        .mobile-navigation-drawer { display:none; }
+        @media (max-width:768px) {
+          .desktop-nav { display:none !important; }
+          .mobile-menu-button { display:grid !important; place-items:center; background:transparent; border:0; color:#e5e8e1; padding:6px; }
+          .mobile-drawer-overlay { display:block; position:fixed; inset:0; z-index:100; border:0; padding:0; background:rgba(0,0,0,.68); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .28s ease,visibility .28s ease; }
+          .mobile-drawer-overlay.is-open { opacity:1; visibility:visible; pointer-events:auto; }
+          .mobile-navigation-drawer { display:flex; position:fixed; z-index:101; top:0; right:0; bottom:0; width:min( min(86vw, 360px), 100% ); flex-direction:column; padding:24px 22px; background:linear-gradient(155deg,#171a20,#0b0d12 72%); border-left:1px solid rgba(223,255,0,.2); box-shadow:-24px 0 70px rgba(0,0,0,.5); transform:translateX(105%); visibility:hidden; transition:transform .3s cubic-bezier(.2,.75,.25,1),visibility .3s ease; }
+          .mobile-navigation-drawer.is-open { transform:translateX(0); visibility:visible; }
+          .mobile-drawer-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:22px; border-bottom:1px solid rgba(255,255,255,.1); color:#DFFF00; font-size:11px; font-weight:800; letter-spacing:.22em; }
+          .mobile-drawer-close { display:grid; place-items:center; width:40px; height:40px; border:1px solid rgba(255,255,255,.14); border-radius:12px; color:#fff; background:rgba(255,255,255,.06); }
+          .mobile-drawer-links { display:flex; flex-direction:column; gap:8px; padding-top:24px; }
+          .mobile-drawer-links button { display:flex; align-items:center; gap:12px; width:100%; min-height:52px; padding:0 14px; border:1px solid transparent; border-radius:10px; background:transparent; color:#aeb3bf; text-align:left; font-size:15px; font-weight:650; }
+          .mobile-drawer-links button:hover,.mobile-drawer-links button:focus-visible,.mobile-drawer-links button.nav-active { color:#fff; border-color:rgba(223,255,0,.22); background:rgba(223,255,0,.07); outline:none; }
+          .mobile-drawer-links button.nav-active { box-shadow:inset 3px 0 #DFFF00; }
+        }
+        @media (prefers-reduced-motion:reduce) { .mobile-drawer-overlay,.mobile-navigation-drawer { transition:none !important; } }
+      `}</style>
       <style jsx>{`
         .rr-showcase-intro { display:block; position:relative; overflow:hidden; padding:52px max(5vw, 24px) 38px; }
         .rr-showcase-content { position:relative; z-index:1; width:100%; max-width:1500px; margin:0 auto; }
