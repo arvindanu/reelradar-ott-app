@@ -256,6 +256,17 @@ export default function Home() {
   const [featuredTitles, setFeaturedTitles] = useState<Title[]>([]);
   const [mobileFeaturedIndex, setMobileFeaturedIndex] = useState(0);
   const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
+
+  // Automatically advance the coverflow after 2 seconds without touch input.
+  useEffect(() => {
+    if (featuredTitles.length < 2 || mobileTouchStartX !== null) return;
+
+    const timer = window.setTimeout(() => {
+      setMobileFeaturedIndex(current => (current + 1) % featuredTitles.length);
+    }, 2000);
+
+    return () => window.clearTimeout(timer);
+  }, [featuredTitles.length, mobileFeaturedIndex, mobileTouchStartX]);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
@@ -501,7 +512,7 @@ export default function Home() {
         </div>
         <div
           className="rr-featured-rail"
-          aria-label="Popular movies and series. Swipe or use the arrows to explore."
+          aria-label="Popular movies and series. Swipe to explore."
           onTouchStart={event => setMobileTouchStartX(event.touches[0].clientX)}
           onTouchEnd={event => {
             if (mobileTouchStartX === null) return;
@@ -559,10 +570,6 @@ export default function Home() {
               </span>
             </div>;
           }) : <div className="rr-featured-card rr-featured-skeleton" />}
-          {featuredTitles.length > 1 && <>
-            <button className="rr-cover-arrow rr-cover-prev" type="button" aria-label="Previous featured title" onClick={() => moveFeatured(-1)}>‹</button>
-            <button className="rr-cover-arrow rr-cover-next" type="button" aria-label="Next featured title" onClick={() => moveFeatured(1)}>›</button>
-          </>}
         </div>
         <form className="searchbar" onSubmit={submitSearch}>
           <Search size={19} />
@@ -622,16 +629,6 @@ export default function Home() {
         .rr-cover-position-4 { z-index:2; transform:translate(-50%,-50%) translateX(118%) rotateY(-42deg) scale(.62); opacity:.32; filter:brightness(.38) saturate(.55); }
         .rr-featured-card:hover,.rr-featured-card:focus-visible { border-color:rgba(223,255,0,.65); outline:none; }
         .rr-cover-position-2:hover,.rr-cover-position-2:focus-visible { box-shadow:0 36px 88px rgba(0,0,0,.72),0 0 34px rgba(223,255,0,.13); }
-        .rr-cover-arrow {
-          position:absolute; z-index:8; top:50%; display:grid; place-items:center;
-          width:42px; height:42px; transform:translateY(-50%); border:1px solid rgba(255,255,255,.2);
-          border-radius:50%; background:rgba(8,9,13,.72); color:#fff; font-size:30px;
-          line-height:1; cursor:pointer; backdrop-filter:blur(12px);
-          transition:background .2s ease,border-color .2s ease,transform .2s ease;
-        }
-        .rr-cover-arrow:hover { background:rgba(223,255,0,.16); border-color:rgba(223,255,0,.55); }
-        .rr-cover-prev { left:3%; }
-        .rr-cover-next { right:3%; }
         .rr-featured-image,.rr-featured-image img,.rr-featured-fallback { position:absolute; inset:0; width:100%; height:100%; }
         .rr-featured-image img { object-fit:cover; transition:transform .55s ease; }
         .rr-featured-card:hover .rr-featured-image img { transform:scale(1.07); }
@@ -662,9 +659,6 @@ export default function Home() {
           .rr-cover-position-3 { transform:translate(-50%,-50%) translateX(67%) rotateY(-35deg) scale(.76); opacity:.68; }
           .rr-cover-position-0 { transform:translate(-50%,-50%) translateX(-105%) rotateY(45deg) scale(.58); opacity:.2; }
           .rr-cover-position-4 { transform:translate(-50%,-50%) translateX(105%) rotateY(-45deg) scale(.58); opacity:.2; }
-          .rr-cover-arrow { width:36px; height:36px; font-size:25px; top:auto; bottom:8px; transform:none; }
-          .rr-cover-prev { left:calc(50% - 48px); }
-          .rr-cover-next { right:calc(50% - 48px); }
           .rr-featured-copy { left:16px; right:16px; bottom:16px; gap:8px; }
           .rr-featured-copy strong { font-size:clamp(20px,6vw,27px); line-height:1.05; }
           .rr-featured-copy small { font-size:11px; letter-spacing:.02em; }
@@ -677,7 +671,7 @@ export default function Home() {
           .rr-featured-glass { background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 30%,rgba(255,255,255,.025) 70%); }
           .rr-showcase-content :global(.searchbar) { margin-top:0; }
         }
-        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none !important; animation:none !important; } .rr-cover-arrow { transition:none !important; } }
+        @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none !important; animation:none !important; } }
 
 
 
