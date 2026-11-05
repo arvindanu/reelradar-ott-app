@@ -639,18 +639,27 @@ export default function Home() {
             gap: 9px;
             min-width: 0;
           }
+          .catalog-section .desktop-discovery-controls {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(280px, 1.05fr);
+            align-items: end;
+            gap: 24px;
+            width: 100%;
+            margin: 28px 0 26px;
+          }
           .catalog-section .catalog-controls,
           .catalog-section .discovery-filter-wrap {
-            display: inline-flex;
-            vertical-align: top;
+            display: flex;
             box-sizing: border-box;
-            width: calc(25% - 18px);
+            width: 100%;
             min-width: 0;
-            margin: 28px 18px 26px 0;
+            margin: 0;
           }
           .catalog-section .catalog-controls {
+            grid-column: 4;
+            grid-row: 1;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
           }
           .catalog-section .availability-toggle {
             width: 100%;
@@ -664,6 +673,9 @@ export default function Home() {
             align-items: stretch;
             gap: 10px;
           }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(2) { grid-column: 1; grid-row: 1; }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(3) { grid-column: 2; grid-row: 1; }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(4) { grid-column: 3; grid-row: 1; }
           .catalog-section .discovery-filter-wrap label {
             white-space: nowrap;
           }
@@ -770,14 +782,15 @@ export default function Home() {
         </div>
         <div className="region-note"><Globe2 size={13} /> {regionLabel}</div>
       </div>
-      <div className="catalog-controls">
-        <div className="availability-toggle" role="group" aria-label="Availability filter">
-          {([['ott', 'OTT'], ['all', 'ALL'], ['theatre', 'THEATRE']] as const).map(([value, label]) =>
-            <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
-          )}
+      <div className="desktop-discovery-controls">
+        <div className="catalog-controls">
+          <div className="availability-toggle" role="group" aria-label="Availability filter">
+            {([['ott', 'OTT'], ['all', 'ALL'], ['theatre', 'THEATRE']] as const).map(([value, label]) =>
+              <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="discovery-filter-wrap">
+        <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
         <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => { setFilter(e.target.value as DiscoveryFilter); setPage(1); }}>
           {DISCOVERY_FILTERS.map(name => <option key={name} value={name}>{name}</option>)}
@@ -791,13 +804,14 @@ export default function Home() {
           {availableGenres.slice(0, 8).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}
         </select>
       </div>
-      <div className="discovery-filter-wrap">
-        <label htmlFor="platform-filter">Streaming platform</label>
-        <select id="platform-filter" className="discovery-filter-select" value={provider}
-          onChange={e => { setProvider(e.target.value); setPage(1); setShowWishlist(false); }}>
-          <option value="">All available platforms</option>
-          {platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}</option>)}
-        </select>
+        <div className="discovery-filter-wrap">
+          <label htmlFor="platform-filter">Streaming platform</label>
+          <select id="platform-filter" className="discovery-filter-select" value={provider}
+            onChange={e => { setProvider(e.target.value); setPage(1); setShowWishlist(false); }}>
+            <option value="">All available platforms</option>
+            {platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}</option>)}
+          </select>
+        </div>
       </div>
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
