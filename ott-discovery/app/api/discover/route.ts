@@ -367,7 +367,8 @@ function buildDiscoverParams(
   language: string,
   region: string,
   page: number,
-  documentary: boolean
+  documentary: boolean,
+  availability: 'ott' | 'all' | 'theatre'
 ): {
   params: Record<string, string>;
   note?: string;
@@ -428,6 +429,24 @@ function buildDiscoverParams(
 
   if (config.releaseType && kind === 'movie') {
     params.with_release_type = config.releaseType;
+  }
+
+  if (availability === 'ott') {
+    params.watch_region = region;
+    params.with_watch_monetization_types = 'flatrate|free|ads';
+  }
+
+  if (availability === 'theatre') {
+    if (kind === 'movie') {
+      params.with_release_type = '2|3';
+      params['primary_release_date.gte'] = dateOffset(-60);
+      params['primary_release_date.lte'] = dateOffset(45);
+    } else {
+      // TMDB does not classify TV episodes as theatrical releases.
+      params.with_original_language = language || params.with_original_language || '';
+      params['first_air_date.gte'] = dateOffset(-30);
+      params['first_air_date.lte'] = dateOffset(45);
+    }
   }
 
   return {
@@ -852,16 +871,23 @@ export async function GET(request: NextRequest) {
       ? Math.min(Math.max(pageValue, 1), 500)
       : 1;
 
+    const availabilityValue = (search.get('availability') ?? 'all').trim().toLowerCase();
+    const availability = (['ott', 'all', 'theatre'].includes(availabilityValue)
+      ? availabilityValue
+      : 'all') as 'ott' | 'all' | 'theatre';
+
     const documentary = type === 'documentary';
 
     const kinds: MediaKind[] =
-      type === 'movie'
-        ? ['movie']
-        : type === 'tv'
-          ? ['tv']
-          : ['movie', 'tv'];
+      availability === 'theatre'
+        ? (type === 'tv' ? [] : ['movie'])
+        : type === 'movie'
+          ? ['movie']
+          : type === 'tv'
+            ? ['tv']
+            : ['movie', 'tv'];
 
-    let requests: AnyRecord[][] = [];
+    let requests: { items: AnyRecord[]; totalPages: number; totalResults: number }[] = [];
     const notes: string[] = [];
 
     if (query) {
@@ -874,7 +900,8 @@ export async function GET(request: NextRequest) {
             page: String(page),
           });
 
-          return (data.results ?? [])
+          return {
+            items: (data.results ?? [])
             .filter((item: AnyRecord) => {
               const languageMatches =
                 !language ||
@@ -892,7 +919,10 @@ export async function GET(request: NextRequest) {
             .map((item: AnyRecord) => ({
               ...item,
               _kind: kind,
-            }));
+            })),
+            totalPages: data.total_pages ?? 1,
+            totalResults: data.total_results ?? 0,
+          };
         })
       );
     } else {
@@ -907,7 +937,8 @@ export async function GET(request: NextRequest) {
               }
             );
 
-            return (data.results ?? [])
+            return {
+              items: (data.results ?? [])
               .filter((item: AnyRecord) => {
                 const languageMatches =
                   !language ||
@@ -925,7 +956,10 @@ export async function GET(request: NextRequest) {
               .map((item: AnyRecord) => ({
                 ...item,
                 _kind: kind,
-              }));
+              })),
+              totalPages: data.total_pages ?? 1,
+              totalResults: data.total_results ?? 0,
+            };
           }
 
           const config = buildDiscoverParams(
@@ -934,7 +968,8 @@ export async function GET(request: NextRequest) {
             language,
             region,
             page,
-            documentary
+            documentary,
+            availability
           );
 
           if (config.note && !notes.includes(config.note)) {
@@ -946,18 +981,25 @@ export async function GET(request: NextRequest) {
             config.params
           );
 
-          return (data.results ?? []).map(
-            (item: AnyRecord) => ({
-              ...item,
-              _kind: kind,
-            })
-          );
+          return {
+            items: (data.results ?? []).map(
+              (item: AnyRecord) => ({
+                ...item,
+                _kind: kind,
+              })
+            ),
+            totalPages: data.total_pages ?? 1,
+            totalResults: data.total_results ?? 0,
+          };
         })
       );
     }
 
+    const totalPages = Math.max(1, ...requests.map(request => request.totalPages));
+    const totalResults = requests.reduce((sum, request) => sum + request.totalResults, 0);
+
     const raw: AnyRecord[] = uniqueById(
-      requests.flat()
+      requests.flatMap(request => request.items)
     )
       .sort((a, b) => {
         if (filter === 'new-releases') {
@@ -991,7 +1033,7 @@ export async function GET(request: NextRequest) {
       })
       .slice(0, 18);
 
-    const results = await Promise.all(
+    const enriched = await Promise.all(
       raw.map(item =>
         enrich(
           item,
@@ -1000,15 +1042,20 @@ export async function GET(request: NextRequest) {
         )
       )
     );
+    const results = availability === 'ott'
+      ? enriched.filter((item: AnyRecord) => (item.providers ?? []).length > 0).slice(0, 18)
+      : enriched;
 
     return NextResponse.json(
       {
         results,
         page,
+        totalPages,
+        totalResults,
+        availability,
         region,
         language,
         filter,
-        totalResults: results.length,
         notes,
         fetchedAt: new Date().toISOString(),
       },

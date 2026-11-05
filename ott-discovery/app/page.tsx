@@ -21,9 +21,14 @@ type FullDetails = {
   nextEpisode?: string | null; contentRating?: string | null; director?: string[];
   creators?: string[]; cast?: Person[]; crew?: Person[]; productionCompanies?: string[];
   voteCount?: number; popularity?: number; budget?: number; revenue?: number;
-  homepage?: string | null; imdbId?: string | null;
+  homepage?: string | null; imdbId?: string | null; reviews?: Review[];
 };
 type Mode = 'all' | 'movie' | 'tv' | 'documentary';
+type Availability = 'ott' | 'all' | 'theatre';
+type Review = {
+  id: string; author: string; authorDetails?: { username?: string; rating?: number | null };
+  content: string; createdAt?: string; url?: string | null;
+};
 
 const DISCOVERY_FILTERS = [
   'Popular', 'Trending Now', 'Most Watched', 'Top Rated', 'Highest Rated',
@@ -83,6 +88,7 @@ function DetailModal({ item, close, region }: { item: Title; close: () => void; 
   const [details, setDetails] = useState<FullDetails | null>(null);
   const [detailError, setDetailError] = useState('');
   const [detailLoading, setDetailLoading] = useState(true);
+  const [expandedReviews, setExpandedReviews] = useState<string[]>([]);
   const trailer = item.trailerKey ? `https://www.youtube.com/watch?v=${item.trailerKey}` : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
 
   useEffect(() => {
@@ -158,6 +164,21 @@ function DetailModal({ item, close, region }: { item: Title; close: () => void; 
             <div className="person-row" key={`${person.id}-${person.role}`} >{person.profile && <img src={person.profile} alt="" loading="lazy" />}<span><strong>{person.name}</strong><small>{person.role}</small></span></div>
           ) : <p className="muted-note">Crew information unavailable.</p>}</div>
         </div>
+        <section className="reviews-section">
+          <div className="details-heading"><h3>Audience reviews</h3><span>{details?.reviews?.length ? `${details.reviews.length} REVIEWS` : 'TMDB REVIEWS'}</span></div>
+          {detailLoading ? <p className="muted-note">Loading reviews…</p> : details?.reviews?.length ? details.reviews.map(review => {
+            const expanded = expandedReviews.includes(review.id);
+            const content = review.content ?? '';
+            const needsExpansion = content.length > 420;
+            return <article className="review-card" key={review.id}>
+              <div className="review-top"><div><strong>{review.author}</strong><small>{review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'Review'}</small></div>
+                {typeof review.authorDetails?.rating === 'number' && <span className="review-rating"><Star size={12} fill="currentColor" /> {review.authorDetails.rating}/10</span>}</div>
+              <p>{needsExpansion && !expanded ? `${content.slice(0, 420)}…` : content}</p>
+              <div className="review-actions">{needsExpansion && <button type="button" onClick={() => setExpandedReviews(current => expanded ? current.filter(id => id !== review.id) : [...current, review.id])}>{expanded ? 'Read less' : 'Read more'}</button>}
+                {review.url && <a href={review.url} target="_blank" rel="noreferrer">View on TMDB <ExternalLink size={12} /></a>}</div>
+            </article>;
+          }) : <p className="muted-note">No audience reviews are available for this title yet.</p>}
+        </section>
       </div>
     </section>
   </div>;
@@ -175,11 +196,15 @@ export default function Home() {
   const [error, setError] = useState('');
   const [selected, setSelected] = useState<Title | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [availability, setAvailability] = useState<Availability>('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
     try {
-      const params = new URLSearchParams({ type: mode, language, region, query: search, filter });
+      const params = new URLSearchParams({ type: mode, language, region, query: search, filter, page: String(page), availability });
       const res = await fetch(`/api/discover?${params.toString()}`, { cache: 'no-store' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not load titles.');
@@ -189,23 +214,25 @@ export default function Home() {
       .filter((x: Title | null): x is Title => x !== null)
   : [];
       setItems(safeItems);
+      setTotalPages(Math.max(1, Number(data.totalPages) || 1));
+      setTotalResults(Math.max(0, Number(data.totalResults) || safeItems.length));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
       setItems([]);
     } finally { setLoading(false); }
-  }, [mode, language, region, search, filter]);
+  }, [mode, language, region, search, filter, page, availability]);
 
   useEffect(() => { void load(); }, [load]);
-  const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); };
+  const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
   const tabs: [Mode, string][] = [['all', 'Discover'], ['movie', 'Movies'], ['tv', 'Series'], ['documentary', 'Documentaries']];
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
 
   return <main className="site-shell">
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setSearch(''); setQuery(''); }} type="button">{l}</button>)}</nav>
+      <nav className="desktop-nav">{tabs.map(([v, l]) => <button key={v} className={mode === v ? 'nav-active' : ''} onClick={() => { setMode(v); setSearch(''); setQuery(''); setPage(1); }} type="button">{l}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
-        <select value={region} onChange={e => setRegion(e.target.value)} aria-label="Streaming country">
+        <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
         </select><ChevronDown size={13} /></label>
         <button className="mobile-menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu" type="button"><Menu /></button>
@@ -232,18 +259,25 @@ export default function Home() {
       <div className="section-heading"><div><div className="eyebrow">THE DISCOVERY FEED</div>
         <h2>{search ? `Results for “${search}”` : filter}</h2>
         <p>Explore titles by mood and popularity. Streaming availability depends on your region.</p></div>
-        <div className="result-count"><SlidersHorizontal size={15} /><span>{items.length} TITLES</span></div>
+        <div className="result-count"><SlidersHorizontal size={15} /><span>{totalResults.toLocaleString()} TITLES</span></div>
       </div>
       <div className="filter-row">
         <div className="language-filters">
-          <button className={!language ? 'filter-chip selected' : 'filter-chip'} onClick={() => setLanguage('')} type="button">All languages</button>
+          <button className={!language ? 'filter-chip selected' : 'filter-chip'} onClick={() => { setLanguage(''); setPage(1); }} type="button">All languages</button>
           {LANGUAGES.map(l => <button key={l.code} className={language === l.code ? 'filter-chip selected' : 'filter-chip'} onClick={() => setLanguage(current => current === l.code ? '' : l.code)} type="button">{l.label}</button>)}
         </div>
         <div className="region-note"><Globe2 size={13} /> {regionLabel}</div>
       </div>
+      <div className="catalog-controls">
+        <div className="availability-toggle" role="group" aria-label="Availability filter">
+          {([['ott', 'OTT'], ['all', 'ALL'], ['theatre', 'THEATRE']] as const).map(([value, label]) =>
+            <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
+          )}
+        </div>
+      </div>
       <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
-        <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => setFilter(e.target.value as DiscoveryFilter)}>
+        <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => { setFilter(e.target.value as DiscoveryFilter); setPage(1); }}>
           {DISCOVERY_FILTERS.map(name => <option key={name} value={name}>{name}</option>)}
         </select>
       </div>
@@ -251,9 +285,20 @@ export default function Home() {
         : error ? <div className="empty-state"><div className="empty-icon"><Radio size={25} /></div><h3>Could not load titles</h3><p>{error}</p>
           <span>Check the TMDB environment variables and deployment logs.</span><button className="retry-button" onClick={() => void load()} type="button">Try again</button></div>
         : items.length === 0 ? <div className="empty-state"><div className="empty-icon"><Search size={25} /></div><h3>No titles found</h3><p>Try another language, filter or search term.</p>
-          <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); }} type="button">Clear filters</button></div>
+          <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); setAvailability('all'); setPage(1); }} type="button">Clear filters</button></div>
         : <><div className="poster-grid">{items.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>
-          <div className="feed-footer"><span>YOU'RE ALL CAUGHT UP</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
+          <div className="pagination-wrap" aria-label="Pagination">
+            <button type="button" disabled={page <= 1 || loading} onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: document.querySelector('.catalog-section')?.getBoundingClientRect().top ?? 0, behavior: 'smooth' }); }}>Previous</button>
+            <div className="pagination-pages">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+                const start = Math.max(1, Math.min(totalPages - 4, page - 2));
+                const pageNumber = start + index;
+                return <button key={pageNumber} type="button" className={pageNumber === page ? 'page-number page-current' : 'page-number'} disabled={loading} aria-current={pageNumber === page ? 'page' : undefined} onClick={() => setPage(pageNumber)}>{pageNumber}</button>;
+              })}
+            </div>
+            <button type="button" disabled={page >= totalPages || loading} onClick={() => { setPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: document.querySelector('.catalog-section')?.getBoundingClientRect().top ?? 0, behavior: 'smooth' }); }}>Next <ArrowUpRight size={13} /></button>
+          </div>
+          <div className="feed-footer"><span>SHOWING {items.length} OF {totalResults.toLocaleString()} TITLES</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
     </section>
     <footer className="footer"><a className="brand" href="#top"><span className="brand-mark"><Radio size={17} /></span><span>REEL<span>RADAR</span></span></a>
       <p>One place for everything worth watching.</p><span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span></footer>

@@ -28,11 +28,12 @@ export async function GET(request: NextRequest) {
     const id = Number(s.get('id'));
     const region = /^[A-Z]{2}$/.test((s.get('region') ?? 'IN').toUpperCase()) ? (s.get('region') ?? 'IN').toUpperCase() : 'IN';
     if (!Number.isInteger(id) || id <= 0) return NextResponse.json({ error: 'A valid title ID is required.' }, { status: 400 });
-    const [d, credits, keywords, ratings] = await Promise.all([
+    const [d, credits, keywords, ratings, reviewData] = await Promise.all([
       tmdb(`/${type}/${id}`, { language: 'en-US' }),
       tmdb(`/${type}/${id}/credits`),
       tmdb(`/${type}/${id}/keywords`),
       type === 'tv' ? tmdb(`/tv/${id}/content_ratings`) : tmdb(`/movie/${id}/release_dates`),
+      tmdb(`/${type}/${id}/reviews`, { language: 'en-US', page: '1' }).catch(() => ({ results: [] })),
     ]);
     const keywordRows = type === 'tv' ? (keywords.results ?? []) : (keywords.keywords ?? []);
     const ratingRow = type === 'tv'
@@ -78,6 +79,17 @@ export async function GET(request: NextRequest) {
       revenue: d.revenue ?? 0,
       homepage: d.homepage ?? null,
       imdbId: d.imdb_id ?? null,
+      reviews: (reviewData.results ?? []).slice(0, 8).map((review: AnyRecord) => ({
+        id: review.id,
+        author: review.author ?? 'Anonymous',
+        authorDetails: {
+          username: review.author_details?.username ?? '',
+          rating: typeof review.author_details?.rating === 'number' ? review.author_details.rating : null,
+        },
+        content: review.content ?? '',
+        createdAt: review.created_at ?? '',
+        url: review.url ?? null,
+      })),
     }, { headers: { 'Cache-Control': 's-maxage=3600, stale-while-revalidate=86400' } });
   } catch (error) {
     console.error('REELRADAR details error:', error);
