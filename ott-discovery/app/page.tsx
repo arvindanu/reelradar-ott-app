@@ -271,14 +271,6 @@ export default function Home() {
   const [platforms, setPlatforms] = useState<PlatformOption[]>([]);
   const [wishlist, setWishlist] = useState<Title[]>([]);
   const [wishlistReady, setWishlistReady] = useState(false);
-  const [collideMode, setCollideMode] = useState(false);
-  const [collideSelection, setCollideSelection] = useState<Title[]>([]);
-  const [collisionAnimating, setCollisionAnimating] = useState(false);
-  const [collisionLoading, setCollisionLoading] = useState(false);
-  const [collisionError, setCollisionError] = useState('');
-  const [collisionResult, setCollisionResult] = useState<CollisionResult | null>(null);
-  const [collisionShareMessage, setCollisionShareMessage] = useState('');
-  const finishCollisionAnimationRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -379,58 +371,8 @@ export default function Home() {
   const menuItems = [
     ...tabs.map(([value, label]) => ({ key: value, label, action: () => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); } })),
     { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
-    { key: 'collide', label: 'Movie Collide', action: () => { setShowWishlist(false); setCollideMode(true); setPage(1); window.setTimeout(() => document.querySelector('.movie-collide-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0); } },
+    { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
   ];
-  const toggleCollisionSelection = (item: Title) => {
-    if (item.mediaType !== 'movie') return;
-    setCollisionResult(null); setCollisionError('');
-    setCollideSelection(current => current.some(x => x.id === item.id)
-      ? current.filter(x => x.id !== item.id)
-      : current.length < 2 ? [...current, item] : [current[1], item]);
-  };
-
-  const runCollision = async () => {
-    if (collideSelection.length !== 2 || collisionLoading) return;
-    setCollisionLoading(true); setCollisionError(''); setCollisionResult(null);
-    setCollisionAnimating(true);
-    const animationPromise = new Promise<void>(resolve => {
-      const finish = () => { setCollisionAnimating(false); finishCollisionAnimationRef.current = null; resolve(); };
-      finishCollisionAnimationRef.current = finish;
-      window.setTimeout(finish, 3500);
-    });
-    try {
-      const requestPromise = fetch('/api/collide', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstId: collideSelection[0].id, secondId: collideSelection[1].id }),
-      }).then(async response => {
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not find a collision match.');
-        return data as CollisionResult;
-      });
-      const [result] = await Promise.all([requestPromise, animationPromise]);
-      setCollisionResult(result);
-      if (!result.match) setCollisionError('No strong match was found. Try two different movies.');
-    } catch (e) {
-      setCollisionError(e instanceof Error ? e.message : 'Movie Collide failed. Please try again.');
-    } finally {
-      finishCollisionAnimationRef.current?.();
-      setCollisionLoading(false);
-    }
-  };
-
-  const skipCollision = () => {
-    finishCollisionAnimationRef.current?.();
-  };
-
-  const shareCollision = async () => {
-    if (!collisionResult?.match) return;
-    const url = `https://www.themoviedb.org/movie/${collisionResult.match.id}`;
-    const text = `REELRADAR Movie Collide: ${collideSelection.map(x => x.title).join(' + ')} → ${collisionResult.match.title}`;
-    try {
-      if (navigator.share) await navigator.share({ title: 'Movie Collide', text, url });
-      else { await navigator.clipboard.writeText(`${text} ${url}`); setCollisionShareMessage('Match link copied.'); }
-    } catch { setCollisionShareMessage('Sharing was cancelled or unavailable.'); }
-  };
 
   useEffect(() => {
     if (!mobileMenu) return;
@@ -497,7 +439,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'collide' ? collideMode : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -508,7 +450,7 @@ export default function Home() {
     <button className={`mobile-drawer-overlay ${mobileMenu ? 'is-open' : ''}`} type="button" aria-label="Close navigation menu" tabIndex={mobileMenu ? 0 : -1} onClick={() => setMobileMenu(false)} />
     <aside ref={menuDrawerRef} id="mobile-navigation-drawer" className={`mobile-navigation-drawer ${mobileMenu ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!mobileMenu}>
       <div className="mobile-drawer-header"><span>MENU</span><button type="button" className="mobile-drawer-close" onClick={() => setMobileMenu(false)} aria-label="Close menu"><X size={20} /></button></div>
-      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'collide' ? collideMode : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' ? <Heart size={17} /> : item.key === 'collide' ? <GitMerge size={17} /> : null}{item.label}</button>)}</nav>
+      <nav className="mobile-drawer-links" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={() => { item.action(); setMobileMenu(false); }} type="button">{item.key === 'wishlist' ? <Heart size={17} /> : item.key === 'collide' ? <GitMerge size={17} /> : null}{item.label}</button>)}</nav>
     </aside>
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
@@ -645,65 +587,7 @@ export default function Home() {
         @media (prefers-reduced-motion:reduce) { .rr-featured-card,.rr-featured-image img { transition:none; animation:none !important; } }
 
 
-      .movie-collide-panel { margin:22px 0 26px; padding:20px; border:1px solid rgba(223,255,0,.2); border-radius:18px; background:linear-gradient(135deg,rgba(223,255,0,.055),rgba(255,255,255,.025)); }
-      .movie-collide-intro { display:flex; justify-content:space-between; align-items:center; gap:16px; }
-      .movie-collide-intro h3 { display:flex; align-items:center; gap:9px; margin:7px 0 4px; font-size:22px; color:#f5f5f5; }
-      .movie-collide-intro h3 svg { color:#DFFF00; }
-      .movie-collide-intro p { margin:0; color:#9ca3af; font-size:13px; }
-      .collide-mode-button,.collide-run-button,.collide-result-actions button,.collide-result-open { border:1px solid rgba(223,255,0,.45); border-radius:11px; background:rgba(223,255,0,.1); color:#eaff75; padding:11px 15px; font-weight:750; cursor:pointer; }
-      .collide-mode-button.is-active,.collide-run-button { background:#DFFF00; color:#08090d; }
-      .collide-selection-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.1); color:#d1d5db; font-size:13px; }
-      .collide-selection-bar>div { display:flex; gap:8px; }
-      .collide-clear-button { border:1px solid rgba(255,255,255,.16); background:transparent; color:#d1d5db; border-radius:9px; padding:9px 12px; }
-      .collide-run-button { display:flex; align-items:center; gap:7px; padding:9px 16px; }
-      .collide-run-button:disabled,.collide-clear-button:disabled { opacity:.4; cursor:not-allowed; }
-      :global(.poster-card.collide-selected) { outline:2px solid #DFFF00; outline-offset:3px; }
-      :global(.collide-select-mark) { position:absolute; z-index:5; top:12px; left:12px; display:flex; align-items:center; gap:5px; padding:7px 9px; border:1px solid rgba(255,255,255,.3); border-radius:9px; color:#fff; background:rgba(5,7,10,.82); font-size:11px; font-weight:800; }
-      :global(.collide-select-mark.is-selected) { color:#08090d; border-color:#DFFF00; background:#DFFF00; }
-      .collide-error { color:#ff9b9b; margin:14px 0 0; font-size:13px; }
-      .collision-stage { position:relative; display:flex; align-items:center; justify-content:center; height:210px; margin-top:18px; overflow:hidden; border-radius:14px; background:radial-gradient(ellipse,rgba(223,255,0,.12),rgba(0,0,0,.2) 65%); isolation:isolate; }
-      .collision-poster { position:absolute; width:92px; height:138px; overflow:hidden; border:1px solid rgba(255,255,255,.35); border-radius:10px; box-shadow:0 12px 35px #0009; animation:collide-in 1.15s cubic-bezier(.2,.8,.2,1) both; }
-      .collision-poster img { width:100%; height:100%; object-fit:cover; }
-      .collision-poster-left { left:calc(50% - 165px); animation-name:collide-left; }
-      .collision-poster-right { right:calc(50% - 165px); animation-name:collide-right; }
-      .collision-impact { position:absolute; width:12px; height:12px; border-radius:50%; background:#DFFF00; box-shadow:0 0 20px 12px rgba(223,255,0,.7),0 0 65px 28px rgba(223,255,0,.3); opacity:0; animation:collide-flash .9s 1s ease-out both; }
-      .collision-impact span,.collision-impact i,.collision-impact b { position:absolute; inset:-14px; border:2px solid rgba(223,255,0,.75); border-radius:50%; animation:collide-wave 1.1s 1s ease-out both; }
-      .collision-impact i { animation-delay:1.12s; } .collision-impact b { animation-delay:1.24s; }
-      .collision-stage-label { position:absolute; bottom:42px; color:#DFFF00; font-size:11px; font-weight:900; letter-spacing:.18em; }
-      .collision-skip { position:absolute; right:12px; bottom:10px; border:1px solid #ffffff33; border-radius:8px; padding:6px 10px; color:#fff; background:#111a; font-size:11px; }
-      .collision-results { margin-top:20px; animation:collide-reveal .55s ease both; }
-      .collision-waiting { display:flex; align-items:center; justify-content:center; gap:10px; padding:24px 10px; color:#DFFF00; font-size:12px; letter-spacing:.04em; }
-      .collision-spinner { width:16px; height:16px; border:2px solid rgba(223,255,0,.25); border-top-color:#DFFF00; border-radius:50%; animation:collide-spin .8s linear infinite; }
-      @keyframes collide-spin { to { transform:rotate(360deg); } }
-      .collision-main-result { display:grid; grid-template-columns:150px 1fr; gap:20px; align-items:center; padding:17px; border-radius:14px; background:rgba(255,255,255,.045); border:1px solid rgba(223,255,0,.2); }
-      .collision-result-poster { aspect-ratio:2/3; overflow:hidden; border-radius:10px; background:#111; }
-      .collision-result-poster img { width:100%; height:100%; object-fit:cover; }
-      .collision-result-copy h4 { margin:7px 0; font-size:24px; color:#fff; }
-      .collision-result-copy p { color:#b4bac5; font-size:13px; line-height:1.6; }
-      .collision-result-meta { color:#DFFF00 !important; }
-      .collide-result-open { display:inline-flex; align-items:center; gap:7px; margin-top:5px; }
-      .collision-why { margin-top:18px; }
-      .collision-why h4,.collision-runners h4 { margin:0 0 10px; color:#fff; font-size:16px; }
-      .collision-why>div { padding:11px 13px; margin-top:8px; border-left:2px solid #DFFF00; background:rgba(255,255,255,.035); }
-      .collision-why strong { color:#DFFF00; font-size:13px; }
-      .collision-why p { margin:5px 0 0; color:#b4bac5; font-size:12px; line-height:1.5; }
-      .collision-runners { margin-top:20px; }
-      .collision-runners>div { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
-      .collision-runners button { min-width:0; border:0; padding:0; text-align:left; color:#fff; background:transparent; cursor:pointer; }
-      .collision-runners button>span { display:block; aspect-ratio:2/3; overflow:hidden; border-radius:9px; background:#111; }
-      .collision-runners img { width:100%; height:100%; object-fit:cover; }
-      .collision-runners strong,.collision-runners small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:6px; font-size:11px; }
-      .collision-runners small { color:#9ca3af; margin-top:3px; }
-      .collision-result-actions { display:flex; gap:9px; margin-top:18px; }
-      .collision-result-actions button { display:flex; align-items:center; gap:7px; }
-      .collide-share-message { color:#DFFF00; font-size:12px; }
-      @keyframes collide-left { from { transform:translateX(-130px) rotate(-8deg); opacity:.3; filter:blur(5px); } to { transform:translateX(70px) rotate(0); opacity:1; filter:blur(0); } }
-      @keyframes collide-right { from { transform:translateX(130px) rotate(8deg); opacity:.3; filter:blur(5px); } to { transform:translateX(-70px) rotate(0); opacity:1; filter:blur(0); } }
-      @keyframes collide-flash { 0% { opacity:0; transform:scale(.2); } 35% { opacity:1; transform:scale(2.5); } 100% { opacity:0; transform:scale(5); } }
-      @keyframes collide-wave { from { transform:scale(.2); opacity:.9; } to { transform:scale(5); opacity:0; } }
-      @keyframes collide-reveal { from { opacity:0; transform:translateY(10px) scale(.98); filter:blur(5px); } to { opacity:1; transform:none; filter:blur(0); } }
-      @media(max-width:700px) { .movie-collide-panel { padding:15px; } .movie-collide-intro { align-items:flex-start; flex-direction:column; } .collision-main-result { grid-template-columns:105px 1fr; gap:13px; padding:12px; } .collision-result-copy h4 { font-size:19px; } .collision-result-copy p { font-size:12px; } .collision-runners>div { grid-template-columns:repeat(3,minmax(0,1fr)); } .collision-runners button:nth-child(n+4) { display:none; } .collide-selection-bar { align-items:flex-start; flex-direction:column; } }
-      @media(prefers-reduced-motion:reduce) { .collision-poster { animation:collide-fade .45s ease both !important; } .collision-impact,.collision-impact span,.collision-impact i,.collision-impact b,.collision-spinner { animation:none !important; } .collision-results { animation:collide-fade .45s ease both !important; } @keyframes collide-fade { from { opacity:0; } to { opacity:1; } } }
+
 
       `}</style>
     </section>
@@ -713,21 +597,7 @@ export default function Home() {
         <p>Explore titles by mood and popularity. Streaming availability depends on your region.</p></div>
         <div className="result-count"><SlidersHorizontal size={15} /><span>{totalResults.toLocaleString()} TITLES</span></div>
       </div>
-      <section className="movie-collide-panel" aria-label="Movie Collide">
-        <div className="movie-collide-intro"><div><span className="eyebrow">A NEW WAY TO DISCOVER</span><h3><GitMerge size={19} /> Movie Collide</h3><p>Pick two movies. Discover the film that connects them.</p></div>
-          <button type="button" className={`collide-mode-button ${collideMode ? 'is-active' : ''}`} onClick={() => { setCollideMode(value => !value); setCollideSelection([]); setCollisionResult(null); setCollisionError(''); }}>{collideMode ? 'Exit selection' : 'Select two movies'}</button>
-        </div>
-        {collideMode && <div className="collide-selection-bar"><span>{collideSelection.length}/2 selected {collideSelection.length > 0 ? `· ${collideSelection.map(x => x.title).join(' + ')}` : '· Choose movie cards below'}</span>
-          <div><button type="button" className="collide-clear-button" disabled={!collideSelection.length} onClick={() => setCollideSelection([])}>Clear</button><button type="button" className="collide-run-button" disabled={collideSelection.length !== 2 || collisionLoading} onClick={() => void runCollision()}><GitMerge size={15} /> Collide</button></div>
-        </div>}
-        {collisionError && !collisionLoading && <p className="collide-error" role="alert">{collisionError}</p>}
-        {collisionLoading && !collisionAnimating && <div className="collision-waiting" role="status"><span className="collision-spinner" /> Matching is taking a little longer. Waiting for TMDB…</div>}
-        {collisionAnimating && <div className="collision-stage" role="status" aria-live="polite"><div className="collision-poster collision-poster-left">{collideSelection[0]?.poster && <img src={collideSelection[0].poster} alt="" />}</div><div className="collision-impact"><span /><i /><b /></div><div className="collision-poster collision-poster-right">{collideSelection[1]?.poster && <img src={collideSelection[1].poster} alt="" />}</div><div className="collision-stage-label">FINDING YOUR PERFECT MATCH</div><button type="button" className="collision-skip" onClick={skipCollision}>Skip animation</button></div>}
-        {collisionResult?.match && !collisionLoading && <div className="collision-results"><div className="collision-main-result"><div className="collision-result-poster">{collisionResult.match.poster && <img src={collisionResult.match.poster} alt={`${collisionResult.match.title} poster`} />}</div><div className="collision-result-copy"><span className="eyebrow">YOUR COLLISION MATCH</span><h4>{collisionResult.match.title}</h4><p className="collision-result-meta">{collisionResult.match.year || 'Year unavailable'} · {collisionResult.match.rating !== null ? `★ ${collisionResult.match.rating.toFixed(1)}` : 'Not rated'} · {collisionResult.match.genreNames?.length ? collisionResult.match.genreNames.join(' · ') : 'Movie'}</p><p>{collisionResult.match.overview || 'Overview unavailable.'}</p><button type="button" className="collide-result-open" onClick={() => setSelected(collisionResult.match!)}>Read more <ArrowUpRight size={14} /></button></div></div>
-          <div className="collision-why"><h4>Why this match</h4><div><strong>{collideSelection[0]?.title}</strong><p>{collisionResult.reasonA?.length ? collisionResult.reasonA.join(' · ') : 'Shared cinematic themes and discovery signals'}</p></div><div><strong>{collideSelection[1]?.title}</strong><p>{collisionResult.reasonB?.length ? collisionResult.reasonB.join(' · ') : 'Shared cinematic themes and discovery signals'}</p></div></div>
-          {collisionResult.runnersUp?.length > 0 && <div className="collision-runners"><h4>More possible matches</h4><div>{collisionResult.runnersUp.map(item => <button type="button" key={item.id} onClick={() => setSelected(item)}><span>{item.poster && <img src={item.poster} alt="" loading="lazy" />}</span><strong>{item.title}</strong><small>{item.year} {item.rating !== null ? `· ★ ${item.rating.toFixed(1)}` : ''}</small></button>)}</div></div>}
-          <div className="collision-result-actions"><button type="button" onClick={() => void runCollision()}>Collide again</button><button type="button" onClick={() => void shareCollision()}><Share2 size={14} /> Share</button></div>{collisionShareMessage && <p className="collide-share-message" role="status">{collisionShareMessage}</p>}</div>}
-      </section>
+
       <div className="filter-row">
         <div className="language-filters">
           <button className={!language ? 'filter-chip selected' : 'filter-chip'} onClick={() => { setLanguage(''); setPage(1); }} type="button">All languages</button>
@@ -766,13 +636,13 @@ export default function Home() {
       </div>
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
-        : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} selectionMode={collideMode} selectedIndex={collideSelection.findIndex(x => x.id === item.id)} onToggleSelect={toggleCollisionSelection} />)}</div>)
+        : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>)
         : loading ? <div className="loading-grid">{Array.from({ length: 10 }).map((_, i) => <div className="skeleton" key={i} />)}</div>
         : error ? <div className="empty-state"><div className="empty-icon"><Radio size={25} /></div><h3>Could not load titles</h3><p>{error}</p>
           <span>Check the TMDB environment variables and deployment logs.</span><button className="retry-button" onClick={() => void load()} type="button">Try again</button></div>
         : displayedItems.length === 0 ? <div className="empty-state"><div className="empty-icon"><Search size={25} /></div><h3>No titles found</h3><p>Try another language, filter or search term.</p>
           <button className="retry-button" onClick={() => { setLanguage(''); setSearch(''); setQuery(''); setFilter('Trending Now'); setMode('all'); setAvailability('all'); setGenre(''); setProvider(''); setShowWishlist(false); setPage(1); }} type="button">Clear filters</button></div>
-        : <><div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} selectionMode={collideMode} selectedIndex={collideSelection.findIndex(x => x.id === item.id)} onToggleSelect={toggleCollisionSelection} />)}</div>
+        : <><div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>
           <div className="pagination-wrap" aria-label="Pagination">
             <button type="button" disabled={page <= 1 || loading} onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: document.querySelector('.catalog-section')?.getBoundingClientRect().top ?? 0, behavior: 'smooth' }); }}>Previous</button>
             <div className="pagination-pages">
