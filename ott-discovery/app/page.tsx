@@ -118,7 +118,8 @@ export default function Home() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not load titles.');
       const safeItems = Array.isArray(data.results)
-        ? data.results.map(normalizeTitle).filter((x): x is Title => x !== null) : [];
+        ? data.results.map(normalizeTitle).filter((x: Title | null): x is Title => x !== null)
+: [];
       setItems(safeItems);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
