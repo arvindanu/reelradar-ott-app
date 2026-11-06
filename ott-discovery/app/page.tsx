@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { usePathname } from 'next/navigation';
 import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Tv, BookOpen, Dices } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
@@ -246,6 +247,7 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
 }
 
 export default function Home() {
+  const pathname = usePathname();
   const [mode, setMode] = useState<Mode>('all');
   const [language, setLanguage] = useState('');
   const [region, setRegion] = useState('IN');
@@ -394,6 +396,7 @@ export default function Home() {
     { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
     { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
     { key: 'timeliner', label: 'Timeliner', action: () => { window.location.assign('/timeliner'); } },
+    { key: 'vibeflix', label: 'VibeFlix', action: () => { window.location.assign('/vibeflix'); } },
   ];
 
   useEffect(() => {
@@ -467,7 +470,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -482,7 +485,7 @@ export default function Home() {
   {menuItems.map(item => (
     <button
       key={item.key}
-      className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
+      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
       onClick={() => {
         setMobileMenu(false);
         item.action();
@@ -497,6 +500,7 @@ export default function Home() {
       {item.key === 'collide' && <GitMerge size={17} />}
       {item.key === 'roulette' && <Dices size={17} />}
       {item.key === 'timeliner' && <Clock3 size={17} />}
+      {item.key === 'vibeflix' && <Sparkles size={17} />}
       {item.label}
     </button>
   ))}
