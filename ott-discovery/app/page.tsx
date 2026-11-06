@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -396,6 +396,7 @@ export default function Home() {
     { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
     { key: 'timeliner', label: 'Timeliner', action: () => { window.location.assign('/timeliner'); } },
     { key: 'vibeflix', label: 'VibeFlix', action: () => { window.location.assign('/vibeflix'); } },
+    { key: 'bingeclock', label: 'BingeClock', action: () => { window.location.assign('/bingeclock'); } },
   ];
 
   useEffect(() => {
@@ -469,7 +470,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -484,10 +485,11 @@ export default function Home() {
   {menuItems.map(item => (
     <button
       key={item.key}
-      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
+      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
       onClick={() => {
         setMobileMenu(false);
-        item.action();
+        if (item.key === 'bingeclock') window.setTimeout(item.action, 180);
+        else item.action();
       }}
       type="button"
     >
@@ -497,6 +499,7 @@ export default function Home() {
       {item.key === 'roulette' && <Dices size={17} />}
       {item.key === 'timeliner' && <Clock3 size={17} />}
       {item.key === 'vibeflix' && <Sparkles size={17} />}
+      {item.key === 'bingeclock' && <Hourglass size={17} />}
       {item.label}
     </button>
   ))}
