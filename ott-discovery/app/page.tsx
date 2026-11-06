@@ -501,13 +501,22 @@ export default function Home() {
     </div>}
     <header className="topbar">
 
-     <a className="brand" href="/" aria-label="REELRADAR Home">
+     <a
+  className="brand"
+  href="/"
+  aria-label="REELRADAR Home"
+  style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+  }}
+>
   <img
     src="/reelradar-logo.png"
     alt=""
     style={{
-      width: 165,
-      height: 42,
+      width: 150,
+      height: 38,
       objectFit: 'contain',
     }}
   />
@@ -906,20 +915,29 @@ export default function Home() {
     </section>
 
     <footer className="footer">
-  <a className="brand" href="/" aria-label="REELRADAR Home">
-    <img
-      src="/reelradar-logo.png"
-      alt=""
-      style={{
-        width: 150,
-        height: 38,
-        objectFit: 'contain',
-      }}
-    />
-    <span>
-      REEL<span style={{ color: '#DFFF00' }}>RADAR</span>
-    </span>
-  </a>
+  <a
+  className="brand"
+  href="/"
+  aria-label="REELRADAR Home"
+  style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+  }}
+>
+  <img
+    src="/reelradar-logo.png"
+    alt=""
+    style={{
+      width: 150,
+      height: 38,
+      objectFit: 'contain',
+    }}
+  />
+  <span>
+    REEL<span style={{ color: '#DFFF00' }}>RADAR</span>
+  </span>
+</a>
     
       <p>One place for everything worth watching.</p><span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span></footer>
     {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlist.some(saved => saved.id === selected.id && saved.mediaType === selected.mediaType)} onToggleWishlist={toggleWishlist} />}
