@@ -466,7 +466,7 @@ export default function Home() {
       <p>PREPARING YOUR NEXT WATCH</p>
     </div>}
     <header className="topbar">
-      <a className="brand" href="#top"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
+      <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
       <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
@@ -597,6 +597,96 @@ export default function Home() {
           .mobile-drawer-links button.nav-active { box-shadow:inset 3px 0 #DFFF00; }
         }
         @media (prefers-reduced-motion:reduce) { .mobile-drawer-overlay,.mobile-navigation-drawer { transition:none !important; } }
+
+        /* Desktop-only layout polish: distribute discovery controls across the feed. */
+        @media (min-width: 1100px) {
+          .rr-showcase-heading {
+            justify-content: center !important;
+            text-align: center !important;
+            margin-bottom: 22px !important;
+          }
+          .rr-showcase-heading > div {
+            width: 100%;
+            text-align: center !important;
+          }
+          .rr-showcase-title {
+            text-align: center;
+          }
+          .rr-showcase-content :global(.searchbar) {
+            width: min(100%, 900px) !important;
+            margin: 5px auto 0 !important;
+          }
+          .rr-showcase-content :global(.intro-foot) {
+            width: min(100%, 900px);
+            margin: 24px auto 0 !important;
+            justify-content: center !important;
+          }
+          .catalog-section {
+            width: min(100% - 10vw, 1700px);
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .catalog-section .filter-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 24px;
+          }
+          .catalog-section .language-filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+          }
+          .catalog-section .desktop-discovery-controls {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(280px, 1.05fr);
+            align-items: end;
+            gap: 24px;
+            width: 100%;
+            margin: 28px 0 26px;
+          }
+          .catalog-section .catalog-controls,
+          .catalog-section .discovery-filter-wrap {
+            display: flex;
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+          }
+          .catalog-section .catalog-controls {
+            grid-column: 4;
+            grid-row: 1;
+            align-items: center;
+            justify-content: flex-end;
+          }
+          .catalog-section .availability-toggle {
+            width: 100%;
+            max-width: 360px;
+          }
+          .catalog-section .availability-toggle button {
+            flex: 1;
+          }
+          .catalog-section .discovery-filter-wrap {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(2) { grid-column: 1; grid-row: 1; }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(3) { grid-column: 2; grid-row: 1; }
+          .catalog-section .desktop-discovery-controls > .discovery-filter-wrap:nth-child(4) { grid-column: 3; grid-row: 1; }
+          .catalog-section .discovery-filter-wrap label {
+            white-space: nowrap;
+          }
+          .catalog-section .discovery-filter-select {
+            width: 100%;
+            min-width: 0;
+          }
+          .catalog-section .discovery-filter-wrap:last-of-type {
+            margin-right: 0;
+          }
+        }
       `}</style>
       <style jsx>{`
         .rr-showcase-intro { display:block; position:relative; overflow:hidden; padding:52px max(5vw, 24px) 38px; }
@@ -680,7 +770,7 @@ export default function Home() {
     </section>
     <section className="catalog-section">
       <div className="section-heading"><div><div className="eyebrow">THE DISCOVERY FEED</div>
-        <h2>{search ? `Results for “${search}”` : filter}</h2>
+        <h2>{search ? `Results for “${search}”` : filter || 'All picks'}</h2>
         <p>Explore titles by mood and popularity. Streaming availability depends on your region.</p></div>
         <div className="result-count"><SlidersHorizontal size={15} /><span>{totalResults.toLocaleString()} TITLES</span></div>
       </div>
@@ -692,14 +782,15 @@ export default function Home() {
         </div>
         <div className="region-note"><Globe2 size={13} /> {regionLabel}</div>
       </div>
-      <div className="catalog-controls">
-        <div className="availability-toggle" role="group" aria-label="Availability filter">
-          {([['ott', 'OTT'], ['all', 'ALL'], ['theatre', 'THEATRE']] as const).map(([value, label]) =>
-            <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
-          )}
+      <div className="desktop-discovery-controls">
+        <div className="catalog-controls">
+          <div className="availability-toggle" role="group" aria-label="Availability filter">
+            {([['ott', 'OTT'], ['all', 'ALL'], ['theatre', 'THEATRE']] as const).map(([value, label]) =>
+              <button key={value} type="button" className={availability === value ? 'availability-active' : ''} onClick={() => { setAvailability(value); setPage(1); }}>{label}</button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="discovery-filter-wrap">
+        <div className="discovery-filter-wrap">
         <label htmlFor="discovery-filter">Browse by</label>
         <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => { setFilter(e.target.value as DiscoveryFilter); setPage(1); }}>
           <option value="">All picks</option>
@@ -714,13 +805,14 @@ export default function Home() {
           {availableGenres.slice(0, 8).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}
         </select>
       </div>
-      <div className="discovery-filter-wrap">
-        <label htmlFor="platform-filter">Streaming platform</label>
-        <select id="platform-filter" className="discovery-filter-select" value={provider}
-          onChange={e => { setProvider(e.target.value); setPage(1); setShowWishlist(false); }}>
-          <option value="">All available platforms</option>
-          {platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}</option>)}
-        </select>
+        <div className="discovery-filter-wrap">
+          <label htmlFor="platform-filter">Streaming platform</label>
+          <select id="platform-filter" className="discovery-filter-select" value={provider}
+            onChange={e => { setProvider(e.target.value); setPage(1); setShowWishlist(false); }}>
+            <option value="">All available platforms</option>
+            {platforms.map(platform => <option key={platform.id} value={platform.id}>{platform.name}</option>)}
+          </select>
+        </div>
       </div>
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
@@ -745,7 +837,7 @@ export default function Home() {
           <div className="feed-footer"><span>SHOWING {items.length} OF {totalResults.toLocaleString()} TITLES</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
     </section>
 
-    <footer className="footer"><a className="brand" href="#top"><span className="brand-mark"><Radio size={17} /></span><span>REEL<span>RADAR</span></span></a>
+    <footer className="footer"><a className="brand" href="/"><span className="brand-mark"><Radio size={17} /></span><span>REEL<span>RADAR</span></span></a>
       <p>One place for everything worth watching.</p><span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span></footer>
     {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlist.some(saved => saved.id === selected.id && saved.mediaType === selected.mediaType)} onToggleWishlist={toggleWishlist} />}
   </main>;
