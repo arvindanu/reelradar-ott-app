@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass, ScanEye } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -295,6 +295,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    try {
+      const pending = window.sessionStorage.getItem('reelradar-actorlens-open-title');
+      if (!pending) return;
+      window.sessionStorage.removeItem('reelradar-actorlens-open-title');
+      const title = normalizeTitle(JSON.parse(pending));
+      if (title) setSelected(title);
+    } catch { /* Ignore an invalid one-time ActorLens handoff. */ }
+  }, []);
+
+  useEffect(() => {
     let active = true;
     setProvider('');
     fetch(`/api/discover?providers=1&region=${encodeURIComponent(region)}`, { cache: 'no-store' })
@@ -397,6 +407,7 @@ export default function Home() {
     { key: 'timeliner', label: 'Timeliner', action: () => { window.location.assign('/timeliner'); } },
     { key: 'vibeflix', label: 'VibeFlix', action: () => { window.location.assign('/vibeflix'); } },
     { key: 'bingeclock', label: 'BingeClock', action: () => { window.location.assign('/bingeclock'); } },
+    { key: 'actorlens', label: 'ActorLens', action: () => { window.location.assign('/actorlens'); } },
   ];
 
   useEffect(() => {
@@ -470,7 +481,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -485,10 +496,10 @@ export default function Home() {
   {menuItems.map(item => (
     <button
       key={item.key}
-      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
+      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
       onClick={() => {
         setMobileMenu(false);
-        if (item.key === 'bingeclock') window.setTimeout(item.action, 180);
+        if (item.key === 'bingeclock' || item.key === 'actorlens') window.setTimeout(item.action, 180);
         else item.action();
       }}
       type="button"
@@ -500,6 +511,7 @@ export default function Home() {
       {item.key === 'timeliner' && <Clock3 size={17} />}
       {item.key === 'vibeflix' && <Sparkles size={17} />}
       {item.key === 'bingeclock' && <Hourglass size={17} />}
+      {item.key === 'actorlens' && <ScanEye size={17} />}
       {item.label}
     </button>
   ))}
