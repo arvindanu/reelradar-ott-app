@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Tv, BookOpen, Dices } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -389,9 +389,8 @@ export default function Home() {
     }
   }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
-  const tabs: [Mode, string][] = [['all', 'Discover'], ['movie', 'Movies'], ['tv', 'Series'], ['documentary', 'Documentaries']];
   const menuItems = [
-    ...tabs.map(([value, label]) => ({ key: value, label, action: () => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); } })),
+    { key: 'all', label: 'Discover', action: () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setPage(1); } },
     { key: 'wishlist', label: 'My Wishlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
     { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
     { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
@@ -493,9 +492,6 @@ export default function Home() {
       type="button"
     >
       {item.key === 'all' && <Compass size={17} />}
-      {item.key === 'movie' && <Film size={17} />}
-      {item.key === 'tv' && <Tv size={17} />}
-      {item.key === 'documentary' && <BookOpen size={17} />}
       {item.key === 'wishlist' && <Heart size={17} />}
       {item.key === 'collide' && <GitMerge size={17} />}
       {item.key === 'roulette' && <Dices size={17} />}
@@ -580,6 +576,21 @@ export default function Home() {
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search movies, series, documentaries…" />
           <button type="submit">Explore <ArrowUpRight size={15} /></button>
         </form>
+        <div className="media-type-toggle-wrap">
+          <div className="availability-toggle media-type-toggle" role="group" aria-label="Content type filter">
+            {([['movie', 'MOVIES'], ['tv', 'SERIES'], ['documentary', 'DOCUMENTARIES']] as const).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                className={mode === value ? 'availability-active' : ''}
+                aria-pressed={mode === value}
+                onClick={() => { setMode(value); setSearch(''); setQuery(''); setGenre(''); setPage(1); }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="intro-foot"><span><span className="live-dot" /> FRESH RELEASES</span><span>11 LANGUAGES</span><span>ONE DISCOVERY SPACE</span></div>
       </div>
       <style jsx global>{`
@@ -741,6 +752,9 @@ export default function Home() {
         .rr-featured-skeleton { pointer-events:none; background:linear-gradient(110deg,rgba(255,255,255,.04) 8%,rgba(255,255,255,.1) 18%,rgba(255,255,255,.04) 33%); background-size:200% 100%; animation:rr-shimmer 1.5s linear infinite; }
         @keyframes rr-shimmer { to { background-position-x:-200%; } }
         .rr-showcase-content :global(.searchbar) { width:min(100%,720px); margin-top:5px; }
+        .media-type-toggle-wrap { display:flex; justify-content:center; width:100%; margin:14px auto 0; }
+        .media-type-toggle { width:min(100%,440px); }
+        .media-type-toggle button { flex:1; white-space:nowrap; }
         @media (max-width:760px) {
           .rr-showcase-intro { padding:34px 16px 28px; }
           .rr-showcase-heading { align-items:center; justify-content:center; text-align:center; margin-bottom:12px; }
