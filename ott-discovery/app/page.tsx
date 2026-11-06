@@ -485,45 +485,13 @@ export default function Home() {
         background: '#08090d',
       }}
     >
-      <img
-  src="/reelradar-logo.png"
-  alt="REELRADAR"
-  style={{
-    width: 190,
-    maxWidth: '65vw',
-    height: 'auto',
-    objectFit: 'contain',
-  }}
-/>
-      
+      <div className="splash-brand-mark"><Clapperboard size={38} strokeWidth={1.7} /></div>
+      <div className="splash-wordmark">REEL<span>RADAR</span></div>
       <div className="splash-loader"><span /></div>
       <p>PREPARING YOUR NEXT WATCH</p>
     </div>}
     <header className="topbar">
-
-     <a
-  className="brand"
-  href="/"
-  aria-label="REELRADAR Home"
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-  }}
->
-  <img
-    src="/reelradar-logo.png"
-    alt=""
-    style={{
-      width: 150,
-      height: 38,
-      objectFit: 'contain',
-    }}
-  />
-  <span>
-    REEL<span style={{ color: '#DFFF00' }}>RADAR</span>
-  </span>
-</a>
+      <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
       <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
@@ -914,31 +882,7 @@ export default function Home() {
           <div className="feed-footer"><span>SHOWING {items.length} OF {totalResults.toLocaleString()} TITLES</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
     </section>
 
-    <footer className="footer">
-  <a
-  className="brand"
-  href="/"
-  aria-label="REELRADAR Home"
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-  }}
->
-  <img
-    src="/reelradar-logo.png"
-    alt=""
-    style={{
-      width: 150,
-      height: 38,
-      objectFit: 'contain',
-    }}
-  />
-  <span>
-    REEL<span style={{ color: '#DFFF00' }}>RADAR</span>
-  </span>
-</a>
-    
+    <footer className="footer"><a className="brand" href="/"><span className="brand-mark"><Radio size={17} /></span><span>REEL<span>RADAR</span></span></a>
       <p>One place for everything worth watching.</p><span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span></footer>
     {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlist.some(saved => saved.id === selected.id && saved.mediaType === selected.mediaType)} onToggleWishlist={toggleWishlist} />}
   </main>;
