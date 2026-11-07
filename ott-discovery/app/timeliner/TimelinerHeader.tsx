@@ -69,6 +69,7 @@ export default function TimelinerHeader() {
           color: #d5ff00 !important;
         }
 
+        
         @media (max-width: 600px) {
           .tl-topbar {
             min-height: 58px !important;

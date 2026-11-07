@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, ChevronLeft, Clapperboard, Clock3, ExternalLink, Heart, LoaderCircle, Play, RotateCcw, Share2, Shuffle, Sparkles, Star, Users, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronLeft, Clapperboard, Clock3, ExternalLink, Heart, LoaderCircle, Play, RotateCcw, Share2, Shuffle, Sparkles, Star, Users, X } from 'lucide-react';
 import './vibeflix.css';
 
 type Provider = { id: number; name: string; logo: string | null };
@@ -150,14 +150,18 @@ export default function VibeFlixPage() {
 
   return <main className="vf-page">
     <div className="vf-shell">
-     <header className="vf-nav">
-  <Link className="back" href="/" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
-  </Link>
+    <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-  <Link className="vf-brand" href="/">
-    REELRADAR
-  </Link>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
 </header>
       {screen === 'intro' && <section className="vf-hero">
         <div className="vf-orb">🎬</div><span className="vf-kicker">YOUR MOOD. YOUR MOVIE.</span><h1>FIND YOUR<br/><span>VIBE.</span></h1>
