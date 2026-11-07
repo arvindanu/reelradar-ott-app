@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import './timeliner/timeliner.css';
 export const metadata: Metadata = {
   title: 'REELRADAR — Find what to watch',
   description: 'Discover new movies, series and documentaries across languages and streaming platforms.',
