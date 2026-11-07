@@ -29,3 +29,76 @@
 @media(prefers-reduced-motion:reduce){
   .bc-ring .value,.bc-progress span{transition:none!important}
 }
+.page-header {
+  height: 72px;
+  padding: 0 clamp(20px, 6vw, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: rgba(8,9,13,.92);
+  position: relative;
+  z-index: 5;
+}
+
+.page-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: -.7px;
+}
+
+.page-header-brand > span:last-child > span {
+  color: #dfff00;
+}
+
+.page-header-brand-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #dfff00;
+  background: rgba(223,255,0,.09);
+  border: 1px solid rgba(223,255,0,.17);
+}
+
+.page-header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #b9bdc8;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 750;
+  transition: color .2s ease;
+}
+
+.page-header-back:hover {
+  color: #dfff00;
+}
+
+@media (max-width: 700px) {
+  .page-header {
+    height: 62px;
+    padding: 0 17px;
+  }
+
+  .page-header-brand {
+    font-size: 15px;
+    gap: 7px;
+  }
+
+  .page-header-brand-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .page-header-back {
+    font-size: 10px;
+  }
+}

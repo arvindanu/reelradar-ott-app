@@ -201,14 +201,18 @@ export default function BingeClockPage() {
   };
 
   return <main className="bc-page">
-<header className="bc-topbar">
-  <Link href="/" className="bc-back" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
-  </Link>
+<header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-  <Link href="/" className="bc-brand">
-    REELRADAR
-  </Link>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
 </header>
     <div className="bc-wrap">
       <section className="bc-hero"><span className="bc-kicker"><Hourglass size={14}/> YOUR WATCH-TIME PLANNER</span><h1>BINGE<span>CLOCK</span></h1><p>BingeClock tells you exactly how much to watch each day to finish a franchise or series before your deadline.</p><div className="bc-tagline">Less guessing. Better pacing. One episode at a time.</div>

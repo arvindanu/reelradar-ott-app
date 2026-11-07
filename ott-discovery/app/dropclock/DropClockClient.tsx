@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, type MouseEvent, type CSSProperties } from 'react';
-import { ArrowLeft, Bell, CalendarPlus, CalendarClock, ChevronDown, Film, Globe2, RefreshCw, Radio, RotateCcw, Clapperboard } from 'lucide-react';
+import { ArrowLeft, Bell, CalendarPlus, CalendarClock, ChevronDown, Film, Globe2, RefreshCw, Radio, RotateCcw, Clapperboard, ArrowUpRight } from 'lucide-react';
 import './dropclock.css';
 
 type Drop = {
@@ -505,13 +505,17 @@ export default function DropClockClient() {
   return <main className="dc-page">
     <div className="dc-grid-bg"/>
 
-    <header className="dc-topbar">
-  <a href="/" className="dc-back" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
+    <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
   </a>
 
-  <a href="/" className="dc-brand">
-    REELRADAR
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
   </a>
 </header>
 

@@ -5,3 +5,76 @@
 @media(max-width:360px){.dc-title-row h1{font-size:51px}.dc-drop-card{grid-template-columns:84px minmax(0,1fr)}.dc-badges span{font-size:6px}.dc-card-actions button{padding:6px 5px}.dc-clock-digits{gap:4px}.dc-clock-digits span{min-width:34px}}
 @media(prefers-reduced-motion:reduce){.dc-page *, .dc-page *:before,.dc-page *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.dc-awaited-backdrop{transform:none!important}}
 .dc-awaited-card.is-done .dc-awaited-content:after{content:"";position:absolute;inset:18% 18%;pointer-events:none;background:radial-gradient(circle at 15% 35%,var(--dc-accent) 0 2px,transparent 3px),radial-gradient(circle at 82% 28%,#fff 0 2px,transparent 3px),radial-gradient(circle at 65% 70%,var(--dc-accent) 0 2px,transparent 3px),radial-gradient(circle at 28% 78%,#fff 0 1px,transparent 2px);animation:dc-celebrate 1.1s ease-out both}@keyframes dc-celebrate{0%{opacity:0;transform:scale(.35) rotate(0)}35%{opacity:1}100%{opacity:0;transform:scale(1.3) rotate(22deg)}}
+.page-header {
+  height: 72px;
+  padding: 0 clamp(20px, 6vw, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: rgba(8,9,13,.92);
+  position: relative;
+  z-index: 5;
+}
+
+.page-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: -.7px;
+}
+
+.page-header-brand > span:last-child > span {
+  color: #dfff00;
+}
+
+.page-header-brand-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #dfff00;
+  background: rgba(223,255,0,.09);
+  border: 1px solid rgba(223,255,0,.17);
+}
+
+.page-header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #b9bdc8;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 750;
+  transition: color .2s ease;
+}
+
+.page-header-back:hover {
+  color: #dfff00;
+}
+
+@media (max-width: 700px) {
+  .page-header {
+    height: 62px;
+    padding: 0 17px;
+  }
+
+  .page-header-brand {
+    font-size: 15px;
+    gap: 7px;
+  }
+
+  .page-header-brand-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .page-header-back {
+    font-size: 10px;
+  }
+}

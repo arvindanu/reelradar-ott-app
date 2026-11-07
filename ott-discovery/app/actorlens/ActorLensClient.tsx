@@ -262,12 +262,18 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
 
   return <main className="actorlens-page">
     <div className="al-grid-bg" aria-hidden="true" />
-    <header className="al-topbar">
-  <Link href="/" className="al-back-link" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
-  </Link>
+   <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-  <span className="al-brand">REELRADAR</span>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
 </header>
 
     {!actorId ? <section className="al-landing">
