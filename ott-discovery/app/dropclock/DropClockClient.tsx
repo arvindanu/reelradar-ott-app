@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, type MouseEvent, type CSSProperties } from 'react';
-import { ArrowLeft, Bell, CalendarPlus, CalendarClock, ChevronDown, Film, Globe2, RefreshCw, Radio, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Bell, CalendarPlus, CalendarClock, ChevronDown, Film, Globe2, RefreshCw, Radio, RotateCcw, Clapperboard } from 'lucide-react';
 import './dropclock.css';
 
 type Drop = {
@@ -668,17 +668,20 @@ export default function DropClockClient() {
         )}
       </section>
 
-      <footer className="dc-tmdb-footer">
-        <img
-          src={TMDB_LOGO}
-          alt="TMDB"
-          onError={e=>{e.currentTarget.style.display='none';}}
-        />
-        <span>
-          This product uses the TMDB API but is not endorsed or certified by TMDB.
-          Release dates are sourced from TMDB and may change by region or platform.
-        </span>
-      </footer>
+      <footer className="footer">
+  <a className="brand" href="/">
+    <span className="brand-mark">
+      <Clapperboard size={17} strokeWidth={1.7} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
+
+  <p>One place for everything worth watching.</p>
+
+  <span className="footer-credit">
+    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
+  </span>
+</footer>
     </div>
   </main>;
 }

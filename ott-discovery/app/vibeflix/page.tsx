@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, ChevronLeft, Clock3, ExternalLink, Heart, LoaderCircle, Play, RotateCcw, Share2, Shuffle, Sparkles, Star, Users, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronLeft, Clapperboard, Clock3, ExternalLink, Heart, LoaderCircle, Play, RotateCcw, Share2, Shuffle, Sparkles, Star, Users, X } from 'lucide-react';
 
 type Provider = { id: number; name: string; logo: string | null };
 type Title = {
@@ -200,7 +200,20 @@ export default function VibeFlixPage() {
         {result.runnersUp.length > 0 && <><div className="vf-runner-title"><h3>More picks for your vibe</h3><span>ALSO MATCHED FOR YOU</span></div><div className="vf-runners">{result.runnersUp.map(item => <article className="vf-runner" key={`${item.mediaType}:${item.id}`}>{item.poster ? <img src={item.poster} alt={`${item.title} poster`} loading="lazy"/> : <div className="vf-empty">Poster unavailable</div>}<div className="vf-runner-copy"><strong>{item.title}</strong><small>{item.year || 'Release date unavailable'} · {item.mediaType === 'tv' ? 'Series' : 'Movie'}{item.rating ? ` · ★ ${item.rating.toFixed(1)}` : ''}</small></div></article>)}</div></>}
         <div className="vf-result-actions" style={{ marginTop: 30 }}><button className="vf-btn primary" onClick={another}><Shuffle size={15}/> Find another match</button><button className="vf-btn" onClick={start}><RotateCcw size={15}/> Start over</button></div>
       </section>}
-      <footer className="vf-footer"><span>This product uses the TMDB API but is not endorsed or certified by TMDB.</span><span>·</span><span>Recommendations are generated from your quiz answers.</span></footer>
+      <footer className="footer">
+  <a className="brand" href="/">
+    <span className="brand-mark">
+      <Clapperboard size={17} strokeWidth={1.7} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
+
+  <p>One place for everything worth watching.</p>
+
+  <span className="footer-credit">
+    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
+  </span>
+</footer>
     </div>
   </main>;
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, ChevronDown, Clock3, Film, ListFilter, Search, Sparkles, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Clapperboard, Clock3, Film, ListFilter, Search, Sparkles, X } from 'lucide-react';
 import TimelinerHeader from './TimelinerHeader';
 
 type Franchise = { id: number; name: string; poster: string | null; backdrop: string | null; hasChronology: boolean };
@@ -95,7 +95,20 @@ export default function TimelinerPage() {
       <div className="tl-controls"><label className="tl-search"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search any movie franchise or collection..." aria-label="Search TMDB collections"/></label><label className="tl-select"><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Sort collections"><option value="az">Sort: A–Z</option></select><ChevronDown size={14}/></label></div>
       <div className="tl-results-head"><span>{loading?'SEARCHING TMDB…':query.trim().length < 2?'SEARCH TMDB COLLECTIONS':`${totalResults.toLocaleString()} COLLECTION${totalResults===1?'':'S'} FOUND`}</span><span>{query.trim().length >= 2 ? `PAGE ${page}${totalPages ? ` / ${totalPages}` : ''}` : 'POWERED BY TMDB'}</span></div>
       {loading ? <div className="tl-state"><strong>Searching movie collections…</strong>Finding matching collections from TMDB.</div> : error ? <div className="tl-state"><strong>We couldn't search TMDB</strong>{error}<br/><button className="tl-intro-reopen" onClick={()=>window.location.reload()}>Try again</button></div> : query.trim().length < 2 ? <div className="tl-state"><strong>Discover any movie collection</strong>Search by franchise or collection name. Try Star Wars, Marvel, Harry Potter, Batman, or Fast &amp; Furious.</div> : filtered.length ? <><div className="tl-grid">{filtered.map(item=><Link className="tl-card" href={`/timeliner/${item.id}`} key={item.id}><div className="tl-poster">{item.poster ? <img src={item.poster} alt={`${item.name} poster`} loading="lazy"/> : <div className="tl-state">Poster unavailable</div>}</div><div className="tl-card-copy"><h3>{item.name}<ArrowUpRight className="tl-arrow" size={14}/></h3><span>{item.hasChronology?'Release + story order configured':'Release order · Story order not configured'}</span></div></Link>)}</div><div className="tl-pagination"><button type="button" disabled={page<=1 || loading} onClick={()=>setPage(value=>Math.max(1,value-1))}>Previous</button><span>Page {page} of {Math.max(totalPages,1)}</span><button type="button" disabled={page>=totalPages || loading} onClick={()=>setPage(value=>Math.min(totalPages,value+1))}>Next</button></div></> : <div className="tl-state"><strong>No collections found</strong>Try another franchise or collection name.</div>}
-      <footer className="tl-attribution"><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue.svg" alt="TMDB"/><span>This product uses the TMDB API but is not endorsed or certified by TMDB.</span></footer>
+      <footer className="footer">
+  <a className="brand" href="/">
+    <span className="brand-mark">
+      <Clapperboard size={17} strokeWidth={1.7} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
+
+  <p>One place for everything worth watching.</p>
+
+  <span className="footer-credit">
+    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
+  </span>
+</footer>
     </div>
   </main>;
 }

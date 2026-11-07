@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Check, Dices, ExternalLink, Film, LoaderCircle, RotateCcw, Star, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowLeft, Check, Clapperboard, Dices, ExternalLink, Film, LoaderCircle, RotateCcw, Star, Volume2, VolumeX, X } from 'lucide-react';
 
 type MediaType = 'movie' | 'tv';
 type Title = {
@@ -285,7 +285,24 @@ export default function MovieRoulettePage() {
         {winner.providers?.length ? <><p style={{marginBottom:5,fontWeight:800}}>WHERE TO WATCH</p><div className="roulette-provider-row">{winner.providers.map(p=><a key={p.id} href={winner.watchLink || '#'} target="_blank" rel="noreferrer">{p.logo&&<img src={p.logo} alt=""/>}{p.name}</a>)}</div></>:<p style={{fontSize:10}}>Streaming provider availability was not returned for this title.</p>}
         {winner.trailerKey && <iframe id="roulette-trailer" className="roulette-trailer" src={`https://www.youtube-nocookie.com/embed/${winner.trailerKey}`} title={`${winner.title} trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/>}
       </div>
-    </section></div>}
+    </section>
+    
+    </div>}
+
+    <footer className="footer">
+  <a className="brand" href="/">
+    <span className="brand-mark">
+      <Clapperboard size={17} strokeWidth={1.7} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
+
+  <p>One place for everything worth watching.</p>
+
+  <span className="footer-credit">
+    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
+  </span>
+</footer>
   </main>;
 }
 
