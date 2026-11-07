@@ -76,18 +76,15 @@ export default function MovieCollidePage() {
   };
 
   return <main className="collide-page">
-     <header className="-header">
-        <a href="/" className="lookalike-brand">
-          <span className="lookalike-brand-icon">
-            <Clapperboard size={20} />
-          </span>
-          <span>REEL<span>RADAR</span></span>
-        </a>
-        <a href="/" className="lookalike-back">
-          <ArrowUpRight size={15} />
-          Back to Discover
-        </a>
-      </header>
+     <header className="vf-nav">
+  <Link className="back" href="/" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </Link>
+
+  <Link className="vf-brand" href="/">
+    REELRADAR
+  </Link>
+</header>
     <section className="collide-hero"><div className="hero-glow"/><span className="eyebrow"></span><h1><span>MOVIE</span> COLLIDE</h1><p>Two movies. One unexpected connection. Discover the film that sits between your favourites.</p><div className="hero-mark"><GitMerge size={25}/><span>SELECT TWO MOVIES TO BEGIN</span></div></section>
     <section className="collide-content">
       <div className="section-top"><div><span className="eyebrow">THE COLLISION LAB</span><h2>Choose your two movies</h2><p>Select any two films. We’ll find a movie that connects their cinematic DNA.</p></div><div className="selection-count">{selected.length}<span>/2 SELECTED</span></div></div>
