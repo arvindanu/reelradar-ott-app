@@ -1,0 +1,2485 @@
+{
+  "franchises": [
+    {
+      "slug": "star-wars",
+      "name": "Star Wars",
+      "aliases": ["Star Wars Saga", "Skywalker Saga"],
+      "description": "The Star Wars movies in in-universe story order.",
+      "movies": [
+        { "title": "Star Wars: Episode I - The Phantom Menace", "year": 1999 },
+        { "title": "Star Wars: Episode II - Attack of the Clones", "year": 2002 },
+        { "title": "Star Wars: The Clone Wars", "year": 2008 },
+        { "title": "Star Wars: Episode III - Revenge of the Sith", "year": 2005 },
+        { "title": "Solo: A Star Wars Story", "year": 2018 },
+        { "title": "Rogue One: A Star Wars Story", "year": 2016 },
+        { "title": "Star Wars", "year": 1977 },
+        { "title": "The Empire Strikes Back", "year": 1980 },
+        { "title": "Return of the Jedi", "year": 1983 },
+        { "title": "Star Wars: The Force Awakens", "year": 2015 },
+        { "title": "Star Wars: The Last Jedi", "year": 2017 },
+        { "title": "Star Wars: The Rise of Skywalker", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "wizarding-world",
+      "name": "Wizarding World",
+      "aliases": ["Harry Potter", "Fantastic Beasts"],
+      "description": "Fantastic Beasts followed by the Harry Potter films.",
+      "movies": [
+        { "title": "Fantastic Beasts and Where to Find Them", "year": 2016 },
+        { "title": "Fantastic Beasts: The Crimes of Grindelwald", "year": 2018 },
+        { "title": "Fantastic Beasts: The Secrets of Dumbledore", "year": 2022 },
+        { "title": "Harry Potter and the Philosopher's Stone", "year": 2001 },
+        { "title": "Harry Potter and the Chamber of Secrets", "year": 2002 },
+        { "title": "Harry Potter and the Prisoner of Azkaban", "year": 2004 },
+        { "title": "Harry Potter and the Goblet of Fire", "year": 2005 },
+        { "title": "Harry Potter and the Order of the Phoenix", "year": 2007 },
+        { "title": "Harry Potter and the Half-Blood Prince", "year": 2009 },
+        { "title": "Harry Potter and the Deathly Hallows: Part 1", "year": 2010 },
+        { "title": "Harry Potter and the Deathly Hallows: Part 2", "year": 2011 }
+      ]
+    },
+    {
+      "slug": "middle-earth",
+      "name": "Middle-earth",
+      "aliases": ["The Lord of the Rings", "The Hobbit"],
+      "description": "The Hobbit trilogy followed by The Lord of the Rings trilogy.",
+      "movies": [
+        { "title": "The Hobbit: An Unexpected Journey", "year": 2012 },
+        { "title": "The Hobbit: The Desolation of Smaug", "year": 2013 },
+        { "title": "The Hobbit: The Battle of the Five Armies", "year": 2014 },
+        { "title": "The Lord of the Rings: The Fellowship of the Ring", "year": 2001 },
+        { "title": "The Lord of the Rings: The Two Towers", "year": 2002 },
+        { "title": "The Lord of the Rings: The Return of the King", "year": 2003 }
+      ]
+    },
+    {
+      "slug": "fast-and-furious",
+      "name": "Fast & Furious",
+      "aliases": ["Fast and Furious", "Fast Saga"],
+      "description": "The main Fast Saga and Hobbs & Shaw in story order.",
+      "movies": [
+        { "title": "The Fast and the Furious", "year": 2001 },
+        { "title": "2 Fast 2 Furious", "year": 2003 },
+        { "title": "Fast & Furious", "year": 2009 },
+        { "title": "Fast Five", "year": 2011 },
+        { "title": "Fast & Furious 6", "year": 2013 },
+        { "title": "The Fast and the Furious: Tokyo Drift", "year": 2006 },
+        { "title": "Furious 7", "year": 2015 },
+        { "title": "The Fate of the Furious", "year": 2017 },
+        { "title": "Fast & Furious Presents: Hobbs & Shaw", "year": 2019 },
+        { "title": "F9", "year": 2021 },
+        { "title": "Fast X", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "jurassic",
+      "name": "Jurassic Park & World",
+      "aliases": ["Jurassic Park", "Jurassic World"],
+      "description": "All seven main Jurassic films in story order.",
+      "movies": [
+        { "title": "Jurassic Park", "year": 1993 },
+        { "title": "The Lost World: Jurassic Park", "year": 1997 },
+        { "title": "Jurassic Park III", "year": 2001 },
+        { "title": "Jurassic World", "year": 2015 },
+        { "title": "Jurassic World: Fallen Kingdom", "year": 2018 },
+        { "title": "Jurassic World Dominion", "year": 2022 },
+        { "title": "Jurassic World Rebirth", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "alien",
+      "name": "Alien",
+      "aliases": ["Alien Saga", "Xenomorph"],
+      "description": "The main Alien films in in-universe chronological order.",
+      "movies": [
+        { "title": "Prometheus", "year": 2012 },
+        { "title": "Alien: Covenant", "year": 2017 },
+        { "title": "Alien", "year": 1979 },
+        { "title": "Alien: Romulus", "year": 2024 },
+        { "title": "Aliens", "year": 1986 },
+        { "title": "Alien 3", "year": 1992 },
+        { "title": "Alien Resurrection", "year": 1997 }
+      ]
+    },
+    {
+      "slug": "john-wick",
+      "name": "John Wick",
+      "aliases": ["John Wick Universe"],
+      "description": "The John Wick films and Ballerina in story order.",
+      "movies": [
+        { "title": "John Wick", "year": 2014 },
+        { "title": "John Wick: Chapter 2", "year": 2017 },
+        { "title": "John Wick: Chapter 3 - Parabellum", "year": 2019 },
+        { "title": "From the World of John Wick: Ballerina", "year": 2025 },
+        { "title": "John Wick: Chapter 4", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "mission-impossible",
+      "name": "Mission: Impossible",
+      "aliases": ["Mission Impossible", "Ethan Hunt"],
+      "description": "The Ethan Hunt films in story order.",
+      "movies": [
+        { "title": "Mission: Impossible", "year": 1996 },
+        { "title": "Mission: Impossible II", "year": 2000 },
+        { "title": "Mission: Impossible III", "year": 2006 },
+        { "title": "Mission: Impossible - Ghost Protocol", "year": 2011 },
+        { "title": "Mission: Impossible - Rogue Nation", "year": 2015 },
+        { "title": "Mission: Impossible - Fallout", "year": 2018 },
+        { "title": "Mission: Impossible - Dead Reckoning Part One", "year": 2023 },
+        { "title": "Mission: Impossible - The Final Reckoning", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "hunger-games",
+      "name": "The Hunger Games",
+      "aliases": ["Hunger Games", "Panem"],
+      "description": "The prequel followed by Katniss's story.",
+      "movies": [
+        { "title": "The Hunger Games: The Ballad of Songbirds & Snakes", "year": 2023 },
+        { "title": "The Hunger Games", "year": 2012 },
+        { "title": "The Hunger Games: Catching Fire", "year": 2013 },
+        { "title": "The Hunger Games: Mockingjay - Part 1", "year": 2014 },
+        { "title": "The Hunger Games: Mockingjay - Part 2", "year": 2015 }
+      ]
+    },
+    {
+      "slug": "monsterverse",
+      "name": "MonsterVerse",
+      "aliases": ["Godzilla and Kong", "Godzilla", "King Kong"],
+      "description": "The Legendary MonsterVerse films in story order.",
+      "movies": [
+        { "title": "Kong: Skull Island", "year": 2017 },
+        { "title": "Godzilla", "year": 2014 },
+        { "title": "Godzilla: King of the Monsters", "year": 2019 },
+        { "title": "Godzilla vs. Kong", "year": 2021 },
+        { "title": "Godzilla x Kong: The New Empire", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "planet-of-the-apes",
+      "name": "Planet of the Apes",
+      "aliases": ["Planet of Apes", "Caesar Saga"],
+      "description": "The modern Caesar trilogy and its Kingdom continuation.",
+      "movies": [
+        { "title": "Rise of the Planet of the Apes", "year": 2011 },
+        { "title": "Dawn of the Planet of the Apes", "year": 2014 },
+        { "title": "War for the Planet of the Apes", "year": 2017 },
+        { "title": "Kingdom of the Planet of the Apes", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "indiana-jones",
+      "name": "Indiana Jones",
+      "aliases": ["Indiana Jones Adventures"],
+      "description": "All five Indiana Jones films in story order.",
+      "movies": [
+        { "title": "Indiana Jones and the Temple of Doom", "year": 1984 },
+        { "title": "Raiders of the Lost Ark", "year": 1981 },
+        { "title": "Indiana Jones and the Last Crusade", "year": 1989 },
+        { "title": "Indiana Jones and the Kingdom of the Crystal Skull", "year": 2008 },
+        { "title": "Indiana Jones and the Dial of Destiny", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "marvel-cinematic-universe",
+      "name": "Marvel Cinematic Universe",
+      "aliases": ["MCU", "Marvel Studios", "Avengers"],
+      "description": "The Marvel Studios films in in-universe chronological order.",
+      "movies": [
+        { "title": "Captain America: The First Avenger", "year": 2011 },
+        { "title": "Captain Marvel", "year": 2019 },
+        { "title": "Iron Man", "year": 2008 },
+        { "title": "Iron Man 2", "year": 2010 },
+        { "title": "The Incredible Hulk", "year": 2008 },
+        { "title": "Thor", "year": 2011 },
+        { "title": "The Avengers", "year": 2012 },
+        { "title": "Thor: The Dark World", "year": 2013 },
+        { "title": "Iron Man 3", "year": 2013 },
+        { "title": "Captain America: The Winter Soldier", "year": 2014 },
+        { "title": "Guardians of the Galaxy", "year": 2014 },
+        { "title": "Guardians of the Galaxy Vol. 2", "year": 2017 },
+        { "title": "Avengers: Age of Ultron", "year": 2015 },
+        { "title": "Ant-Man", "year": 2015 },
+        { "title": "Captain America: Civil War", "year": 2016 },
+        { "title": "Black Widow", "year": 2021 },
+        { "title": "Black Panther", "year": 2018 },
+        { "title": "Spider-Man: Homecoming", "year": 2017 },
+        { "title": "Doctor Strange", "year": 2016 },
+        { "title": "Thor: Ragnarok", "year": 2017 },
+        { "title": "Ant-Man and the Wasp", "year": 2018 },
+        { "title": "Avengers: Infinity War", "year": 2018 },
+        { "title": "Avengers: Endgame", "year": 2019 },
+        { "title": "Eternals", "year": 2021 },
+        { "title": "Shang-Chi and the Legend of the Ten Rings", "year": 2021 },
+        { "title": "Spider-Man: Far From Home", "year": 2019 },
+        { "title": "Spider-Man: No Way Home", "year": 2021 },
+        { "title": "Doctor Strange in the Multiverse of Madness", "year": 2022 },
+        { "title": "Black Panther: Wakanda Forever", "year": 2022 },
+        { "title": "Thor: Love and Thunder", "year": 2022 },
+        { "title": "Ant-Man and the Wasp: Quantumania", "year": 2023 },
+        { "title": "Guardians of the Galaxy Vol. 3", "year": 2023 },
+        { "title": "The Marvels", "year": 2023 },
+        { "title": "Deadpool & Wolverine", "year": 2024 },
+        { "title": "Captain America: Brave New World", "year": 2025 },
+        { "title": "Thunderbolts*", "year": 2025 },
+        { "title": "The Fantastic Four: First Steps", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "x-men",
+      "name": "X-Men",
+      "aliases": ["X-Men Universe", "Fox X-Men", "Wolverine", "Deadpool"],
+      "description": "The Fox X-Men universe films in approximate in-universe story order.",
+      "movies": [
+        { "title": "X-Men Origins: Wolverine", "year": 2009 },
+        { "title": "X-Men: First Class", "year": 2011 },
+        { "title": "X-Men: Days of Future Past", "year": 2014 },
+        { "title": "X-Men: Apocalypse", "year": 2016 },
+        { "title": "Dark Phoenix", "year": 2019 },
+        { "title": "X-Men", "year": 2000 },
+        { "title": "X2", "year": 2003 },
+        { "title": "X-Men: The Last Stand", "year": 2006 },
+        { "title": "The Wolverine", "year": 2013 },
+        { "title": "The New Mutants", "year": 2020 },
+        { "title": "Deadpool", "year": 2016 },
+        { "title": "Deadpool 2", "year": 2018 },
+        { "title": "Logan", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "dc-extended-universe",
+      "name": "DC Extended Universe",
+      "aliases": ["DCEU", "Snyderverse", "Justice League"],
+      "description": "The DCEU films in approximate in-universe story order.",
+      "movies": [
+        { "title": "Wonder Woman", "year": 2017 },
+        { "title": "Wonder Woman 1984", "year": 2020 },
+        { "title": "Man of Steel", "year": 2013 },
+        { "title": "Batman v Superman: Dawn of Justice", "year": 2016 },
+        { "title": "Suicide Squad", "year": 2016 },
+        { "title": "Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn)", "year": 2020 },
+        { "title": "Justice League", "year": 2017 },
+        { "title": "Aquaman", "year": 2018 },
+        { "title": "Shazam!", "year": 2019 },
+        { "title": "The Suicide Squad", "year": 2021 },
+        { "title": "Black Adam", "year": 2022 },
+        { "title": "The Flash", "year": 2023 },
+        { "title": "Shazam! Fury of the Gods", "year": 2023 },
+        { "title": "Blue Beetle", "year": 2023 },
+        { "title": "Aquaman and the Lost Kingdom", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "dc-universe",
+      "name": "DC Universe",
+      "aliases": ["DCU", "James Gunn DC"],
+      "description": "The rebooted DC Universe films.",
+      "movies": [
+        { "title": "Superman", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "dark-knight-trilogy",
+      "name": "The Dark Knight Trilogy",
+      "aliases": ["Christopher Nolan Batman", "Nolan Batman"],
+      "description": "Christopher Nolan's Batman trilogy.",
+      "movies": [
+        { "title": "Batman Begins", "year": 2005 },
+        { "title": "The Dark Knight", "year": 2008 },
+        { "title": "The Dark Knight Rises", "year": 2012 }
+      ]
+    },
+    {
+      "slug": "burton-schumacher-batman",
+      "name": "Batman (Burton & Schumacher Era)",
+      "aliases": ["Tim Burton Batman", "Batman 1989 Series"],
+      "description": "The four Batman films from 1989 to 1997.",
+      "movies": [
+        { "title": "Batman", "year": 1989 },
+        { "title": "Batman Returns", "year": 1992 },
+        { "title": "Batman Forever", "year": 1995 },
+        { "title": "Batman & Robin", "year": 1997 }
+      ]
+    },
+    {
+      "slug": "the-batman",
+      "name": "The Batman",
+      "aliases": ["Matt Reeves Batman", "Reeves Batman Epic Crime Saga"],
+      "description": "Matt Reeves' grounded Batman universe.",
+      "movies": [
+        { "title": "The Batman", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "joker",
+      "name": "Joker",
+      "aliases": ["Joker Films", "Arthur Fleck"],
+      "description": "Todd Phillips' standalone Joker films.",
+      "movies": [
+        { "title": "Joker", "year": 2019 },
+        { "title": "Joker: Folie à Deux", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "superman-christopher-reeve",
+      "name": "Superman (Christopher Reeve)",
+      "aliases": ["Superman Quadrilogy", "Reeve Superman"],
+      "description": "The original four Superman films starring Christopher Reeve.",
+      "movies": [
+        { "title": "Superman: The Movie", "year": 1978 },
+        { "title": "Superman II", "year": 1980 },
+        { "title": "Superman III", "year": 1983 },
+        { "title": "Superman IV: The Quest for Peace", "year": 1987 }
+      ]
+    },
+    {
+      "slug": "raimi-spider-man",
+      "name": "Spider-Man (Sam Raimi Trilogy)",
+      "aliases": ["Tobey Maguire Spider-Man", "Raimi Spider-Man"],
+      "description": "Sam Raimi's Spider-Man trilogy with Tobey Maguire.",
+      "movies": [
+        { "title": "Spider-Man", "year": 2002 },
+        { "title": "Spider-Man 2", "year": 2004 },
+        { "title": "Spider-Man 3", "year": 2007 }
+      ]
+    },
+    {
+      "slug": "amazing-spider-man",
+      "name": "The Amazing Spider-Man",
+      "aliases": ["Andrew Garfield Spider-Man", "Marc Webb Spider-Man"],
+      "description": "Marc Webb's Spider-Man films with Andrew Garfield.",
+      "movies": [
+        { "title": "The Amazing Spider-Man", "year": 2012 },
+        { "title": "The Amazing Spider-Man 2", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "spider-verse",
+      "name": "Spider-Verse",
+      "aliases": ["Into the Spider-Verse", "Miles Morales", "Across the Spider-Verse"],
+      "description": "The animated Spider-Verse films featuring Miles Morales.",
+      "movies": [
+        { "title": "Spider-Man: Into the Spider-Verse", "year": 2018 },
+        { "title": "Spider-Man: Across the Spider-Verse", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "sony-spider-man-universe",
+      "name": "Sony's Spider-Man Universe",
+      "aliases": ["SSU", "Venom Universe", "Sony Pictures Universe of Marvel Characters"],
+      "description": "Sony's Spider-Man-adjacent films in approximate story order.",
+      "movies": [
+        { "title": "Madame Web", "year": 2024 },
+        { "title": "Venom", "year": 2018 },
+        { "title": "Venom: Let There Be Carnage", "year": 2021 },
+        { "title": "Morbius", "year": 2022 },
+        { "title": "Kraven the Hunter", "year": 2024 },
+        { "title": "Venom: The Last Dance", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "blade",
+      "name": "Blade",
+      "aliases": ["Blade Trilogy", "Wesley Snipes Blade"],
+      "description": "The Blade trilogy starring Wesley Snipes.",
+      "movies": [
+        { "title": "Blade", "year": 1998 },
+        { "title": "Blade II", "year": 2002 },
+        { "title": "Blade: Trinity", "year": 2004 }
+      ]
+    },
+    {
+      "slug": "james-bond",
+      "name": "James Bond",
+      "aliases": ["007", "Bond Films", "Eon Bond"],
+      "description": "The Eon Productions James Bond films in release and story order.",
+      "movies": [
+        { "title": "Dr. No", "year": 1962 },
+        { "title": "From Russia with Love", "year": 1963 },
+        { "title": "Goldfinger", "year": 1964 },
+        { "title": "Thunderball", "year": 1965 },
+        { "title": "You Only Live Twice", "year": 1967 },
+        { "title": "On Her Majesty's Secret Service", "year": 1969 },
+        { "title": "Diamonds Are Forever", "year": 1971 },
+        { "title": "Live and Let Die", "year": 1973 },
+        { "title": "The Man with the Golden Gun", "year": 1974 },
+        { "title": "The Spy Who Loved Me", "year": 1977 },
+        { "title": "Moonraker", "year": 1979 },
+        { "title": "For Your Eyes Only", "year": 1981 },
+        { "title": "Octopussy", "year": 1983 },
+        { "title": "A View to a Kill", "year": 1985 },
+        { "title": "The Living Daylights", "year": 1987 },
+        { "title": "Licence to Kill", "year": 1989 },
+        { "title": "GoldenEye", "year": 1995 },
+        { "title": "Tomorrow Never Dies", "year": 1997 },
+        { "title": "The World Is Not Enough", "year": 1999 },
+        { "title": "Die Another Day", "year": 2002 },
+        { "title": "Casino Royale", "year": 2006 },
+        { "title": "Quantum of Solace", "year": 2008 },
+        { "title": "Skyfall", "year": 2012 },
+        { "title": "Spectre", "year": 2015 },
+        { "title": "No Time to Die", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "bourne",
+      "name": "Bourne",
+      "aliases": ["Jason Bourne", "The Bourne Series"],
+      "description": "The Jason Bourne spy films.",
+      "movies": [
+        { "title": "The Bourne Identity", "year": 2002 },
+        { "title": "The Bourne Supremacy", "year": 2004 },
+        { "title": "The Bourne Ultimatum", "year": 2007 },
+        { "title": "The Bourne Legacy", "year": 2012 },
+        { "title": "Jason Bourne", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "die-hard",
+      "name": "Die Hard",
+      "aliases": ["John McClane", "Die Hard Series"],
+      "description": "The John McClane action films.",
+      "movies": [
+        { "title": "Die Hard", "year": 1988 },
+        { "title": "Die Hard 2", "year": 1990 },
+        { "title": "Die Hard with a Vengeance", "year": 1995 },
+        { "title": "Live Free or Die Hard", "year": 2007 },
+        { "title": "A Good Day to Die Hard", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "lethal-weapon",
+      "name": "Lethal Weapon",
+      "aliases": ["Riggs and Murtaugh", "Lethal Weapon Series"],
+      "description": "The four Lethal Weapon buddy-cop films.",
+      "movies": [
+        { "title": "Lethal Weapon", "year": 1987 },
+        { "title": "Lethal Weapon 2", "year": 1989 },
+        { "title": "Lethal Weapon 3", "year": 1992 },
+        { "title": "Lethal Weapon 4", "year": 1998 }
+      ]
+    },
+    {
+      "slug": "rambo",
+      "name": "Rambo",
+      "aliases": ["First Blood", "John Rambo"],
+      "description": "The John Rambo films starring Sylvester Stallone.",
+      "movies": [
+        { "title": "First Blood", "year": 1982 },
+        { "title": "Rambo: First Blood Part II", "year": 1985 },
+        { "title": "Rambo III", "year": 1988 },
+        { "title": "Rambo", "year": 2008 },
+        { "title": "Rambo: Last Blood", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "rocky-creed",
+      "name": "Rocky & Creed",
+      "aliases": ["Rocky Balboa", "Creed", "Rocky Saga"],
+      "description": "The Rocky films followed by the Creed spin-offs in story order.",
+      "movies": [
+        { "title": "Rocky", "year": 1976 },
+        { "title": "Rocky II", "year": 1979 },
+        { "title": "Rocky III", "year": 1982 },
+        { "title": "Rocky IV", "year": 1985 },
+        { "title": "Rocky V", "year": 1990 },
+        { "title": "Rocky Balboa", "year": 2006 },
+        { "title": "Creed", "year": 2015 },
+        { "title": "Creed II", "year": 2018 },
+        { "title": "Creed III", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "terminator",
+      "name": "Terminator",
+      "aliases": ["The Terminator", "Skynet", "Judgment Day"],
+      "description": "The Terminator films in release order; later films branch into alternate timelines.",
+      "movies": [
+        { "title": "The Terminator", "year": 1984 },
+        { "title": "Terminator 2: Judgment Day", "year": 1991 },
+        { "title": "Terminator 3: Rise of the Machines", "year": 2003 },
+        { "title": "Terminator Salvation", "year": 2009 },
+        { "title": "Terminator Genisys", "year": 2015 },
+        { "title": "Terminator: Dark Fate", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "the-matrix",
+      "name": "The Matrix",
+      "aliases": ["Matrix Trilogy", "Matrix Saga"],
+      "description": "The Matrix films in story order.",
+      "movies": [
+        { "title": "The Matrix", "year": 1999 },
+        { "title": "The Matrix Reloaded", "year": 2003 },
+        { "title": "The Matrix Revolutions", "year": 2003 },
+        { "title": "The Matrix Resurrections", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "kingsman",
+      "name": "Kingsman",
+      "aliases": ["Kingsman Universe", "The Secret Service"],
+      "description": "The Kingsman spy films with the prequel placed first.",
+      "movies": [
+        { "title": "The King's Man", "year": 2021 },
+        { "title": "Kingsman: The Secret Service", "year": 2014 },
+        { "title": "Kingsman: The Golden Circle", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "taken",
+      "name": "Taken",
+      "aliases": ["Bryan Mills", "Taken Trilogy"],
+      "description": "The Bryan Mills action trilogy starring Liam Neeson.",
+      "movies": [
+        { "title": "Taken", "year": 2008 },
+        { "title": "Taken 2", "year": 2012 },
+        { "title": "Taken 3", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "the-expendables",
+      "name": "The Expendables",
+      "aliases": ["Expendables", "Expend4bles"],
+      "description": "The ensemble action series led by Sylvester Stallone.",
+      "movies": [
+        { "title": "The Expendables", "year": 2010 },
+        { "title": "The Expendables 2", "year": 2012 },
+        { "title": "The Expendables 3", "year": 2014 },
+        { "title": "Expend4bles", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "the-equalizer",
+      "name": "The Equalizer",
+      "aliases": ["Robert McCall", "Equalizer Trilogy"],
+      "description": "The Robert McCall films starring Denzel Washington.",
+      "movies": [
+        { "title": "The Equalizer", "year": 2014 },
+        { "title": "The Equalizer 2", "year": 2018 },
+        { "title": "The Equalizer 3", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "the-transporter",
+      "name": "The Transporter",
+      "aliases": ["Frank Martin", "Transporter Series"],
+      "description": "The Frank Martin driver-for-hire action films.",
+      "movies": [
+        { "title": "The Transporter", "year": 2002 },
+        { "title": "Transporter 2", "year": 2005 },
+        { "title": "Transporter 3", "year": 2008 },
+        { "title": "The Transporter Refueled", "year": 2015 }
+      ]
+    },
+    {
+      "slug": "bad-boys",
+      "name": "Bad Boys",
+      "aliases": ["Bad Boys Series", "Mike and Marcus"],
+      "description": "The Miami buddy-cop action films with Will Smith and Martin Lawrence.",
+      "movies": [
+        { "title": "Bad Boys", "year": 1995 },
+        { "title": "Bad Boys II", "year": 2003 },
+        { "title": "Bad Boys for Life", "year": 2020 },
+        { "title": "Bad Boys: Ride or Die", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "rush-hour",
+      "name": "Rush Hour",
+      "aliases": ["Carter and Lee", "Rush Hour Trilogy"],
+      "description": "The Jackie Chan and Chris Tucker action comedy trilogy.",
+      "movies": [
+        { "title": "Rush Hour", "year": 1998 },
+        { "title": "Rush Hour 2", "year": 2001 },
+        { "title": "Rush Hour 3", "year": 2007 }
+      ]
+    },
+    {
+      "slug": "jack-reacher",
+      "name": "Jack Reacher",
+      "aliases": ["Reacher", "Reacher Films"],
+      "description": "The Tom Cruise Jack Reacher films.",
+      "movies": [
+        { "title": "Jack Reacher", "year": 2012 },
+        { "title": "Jack Reacher: Never Go Back", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "dirty-harry",
+      "name": "Dirty Harry",
+      "aliases": ["Harry Callahan", "Dirty Harry Series"],
+      "description": "The Harry Callahan police thrillers starring Clint Eastwood.",
+      "movies": [
+        { "title": "Dirty Harry", "year": 1971 },
+        { "title": "Magnum Force", "year": 1973 },
+        { "title": "The Enforcer", "year": 1976 },
+        { "title": "Sudden Impact", "year": 1983 },
+        { "title": "The Dead Pool", "year": 1988 }
+      ]
+    },
+    {
+      "slug": "mad-max",
+      "name": "Mad Max",
+      "aliases": ["Road Warrior", "Fury Road", "Furiosa"],
+      "description": "The Mad Max films with Furiosa placed before Fury Road.",
+      "movies": [
+        { "title": "Mad Max", "year": 1979 },
+        { "title": "Mad Max 2: The Road Warrior", "year": 1981 },
+        { "title": "Mad Max Beyond Thunderdome", "year": 1985 },
+        { "title": "Furiosa: A Mad Max Saga", "year": 2024 },
+        { "title": "Mad Max: Fury Road", "year": 2015 }
+      ]
+    },
+    {
+      "slug": "beverly-hills-cop",
+      "name": "Beverly Hills Cop",
+      "aliases": ["Axel Foley", "Beverly Hills Cop Series"],
+      "description": "The Axel Foley action comedies starring Eddie Murphy.",
+      "movies": [
+        { "title": "Beverly Hills Cop", "year": 1984 },
+        { "title": "Beverly Hills Cop II", "year": 1987 },
+        { "title": "Beverly Hills Cop III", "year": 1994 },
+        { "title": "Beverly Hills Cop: Axel F", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "the-naked-gun",
+      "name": "The Naked Gun",
+      "aliases": ["Naked Gun", "Police Squad", "Frank Drebin"],
+      "description": "The Naked Gun parody comedies.",
+      "movies": [
+        { "title": "The Naked Gun: From the Files of Police Squad!", "year": 1988 },
+        { "title": "The Naked Gun 2½: The Smell of Fear", "year": 1991 },
+        { "title": "Naked Gun 33⅓: The Final Insult", "year": 1994 },
+        { "title": "The Naked Gun", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "hannibal-lecter",
+      "name": "Hannibal Lecter",
+      "aliases": ["Hannibal", "Silence of the Lambs", "Red Dragon"],
+      "description": "The Hannibal Lecter films in story order.",
+      "movies": [
+        { "title": "Hannibal Rising", "year": 2007 },
+        { "title": "Red Dragon", "year": 2002 },
+        { "title": "The Silence of the Lambs", "year": 1991 },
+        { "title": "Hannibal", "year": 2001 }
+      ]
+    },
+    {
+      "slug": "now-you-see-me",
+      "name": "Now You See Me",
+      "aliases": ["The Four Horsemen", "Now You See Me Series"],
+      "description": "The Four Horsemen heist-magic films.",
+      "movies": [
+        { "title": "Now You See Me", "year": 2013 },
+        { "title": "Now You See Me 2", "year": 2016 },
+        { "title": "Now You See Me: Now You Don't", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "oceans",
+      "name": "Ocean's",
+      "aliases": ["Ocean's Eleven", "Ocean's Trilogy", "Danny Ocean"],
+      "description": "The modern Ocean's heist films.",
+      "movies": [
+        { "title": "Ocean's Eleven", "year": 2001 },
+        { "title": "Ocean's Twelve", "year": 2004 },
+        { "title": "Ocean's Thirteen", "year": 2007 },
+        { "title": "Ocean's 8", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "national-treasure",
+      "name": "National Treasure",
+      "aliases": ["Ben Gates", "National Treasure Series"],
+      "description": "The Ben Gates treasure-hunt adventures.",
+      "movies": [
+        { "title": "National Treasure", "year": 2004 },
+        { "title": "National Treasure: Book of Secrets", "year": 2007 }
+      ]
+    },
+    {
+      "slug": "sherlock-holmes",
+      "name": "Sherlock Holmes (Guy Ritchie)",
+      "aliases": ["Robert Downey Jr. Sherlock", "Sherlock Holmes Films"],
+      "description": "Guy Ritchie's Sherlock Holmes films.",
+      "movies": [
+        { "title": "Sherlock Holmes", "year": 2009 },
+        { "title": "Sherlock Holmes: A Game of Shadows", "year": 2011 }
+      ]
+    },
+    {
+      "slug": "knives-out",
+      "name": "Knives Out",
+      "aliases": ["Benoit Blanc", "Knives Out Mysteries"],
+      "description": "The Benoit Blanc murder mysteries.",
+      "movies": [
+        { "title": "Knives Out", "year": 2019 },
+        { "title": "Glass Onion: A Knives Out Mystery", "year": 2022 },
+        { "title": "Wake Up Dead Man: A Knives Out Mystery", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "dollars-trilogy",
+      "name": "Dollars Trilogy",
+      "aliases": ["Man with No Name Trilogy", "Spaghetti Westerns"],
+      "description": "Sergio Leone's loosely connected Western trilogy, in release order.",
+      "movies": [
+        { "title": "A Fistful of Dollars", "year": 1964 },
+        { "title": "For a Few Dollars More", "year": 1965 },
+        { "title": "The Good, the Bad and the Ugly", "year": 1966 }
+      ]
+    },
+    {
+      "slug": "the-godfather",
+      "name": "The Godfather",
+      "aliases": ["Godfather Trilogy", "Corleone Saga"],
+      "description": "The Corleone family saga.",
+      "movies": [
+        { "title": "The Godfather", "year": 1972 },
+        { "title": "The Godfather Part II", "year": 1974 },
+        { "title": "The Godfather Part III", "year": 1990 }
+      ]
+    },
+    {
+      "slug": "gladiator",
+      "name": "Gladiator",
+      "aliases": ["Gladiator Films", "Maximus"],
+      "description": "Ridley Scott's Roman epics.",
+      "movies": [
+        { "title": "Gladiator", "year": 2000 },
+        { "title": "Gladiator II", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "300",
+      "name": "300",
+      "aliases": ["Spartans", "300 Films"],
+      "description": "The Spartan war epics based on Frank Miller's graphic novel.",
+      "movies": [
+        { "title": "300", "year": 2006 },
+        { "title": "300: Rise of an Empire", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "top-gun",
+      "name": "Top Gun",
+      "aliases": ["Maverick", "Top Gun Series"],
+      "description": "The Pete 'Maverick' Mitchell films.",
+      "movies": [
+        { "title": "Top Gun", "year": 1986 },
+        { "title": "Top Gun: Maverick", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "ip-man",
+      "name": "Ip Man",
+      "aliases": ["Donnie Yen Ip Man", "Wing Chun Films"],
+      "description": "The Ip Man martial arts biopic series starring Donnie Yen.",
+      "movies": [
+        { "title": "Ip Man", "year": 2008 },
+        { "title": "Ip Man 2", "year": 2010 },
+        { "title": "Ip Man 3", "year": 2015 },
+        { "title": "Ip Man 4: The Finale", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "the-raid",
+      "name": "The Raid",
+      "aliases": ["Raid Redemption", "Indonesian Action"],
+      "description": "The Indonesian martial arts action series.",
+      "movies": [
+        { "title": "The Raid", "year": 2011 },
+        { "title": "The Raid 2", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "infernal-affairs",
+      "name": "Infernal Affairs",
+      "aliases": ["Hong Kong Crime Trilogy", "Wu Jian Dao"],
+      "description": "The Hong Kong crime thriller trilogy with the prequel placed first.",
+      "movies": [
+        { "title": "Infernal Affairs II", "year": 2003 },
+        { "title": "Infernal Affairs", "year": 2002 },
+        { "title": "Infernal Affairs III", "year": 2003 }
+      ]
+    },
+    {
+      "slug": "rurouni-kenshin-live-action",
+      "name": "Rurouni Kenshin (Live Action)",
+      "aliases": ["Kenshin Live Action", "Samurai X Films"],
+      "description": "The live-action Rurouni Kenshin films with the prequel placed first.",
+      "movies": [
+        { "title": "Rurouni Kenshin: The Beginning", "year": 2021 },
+        { "title": "Rurouni Kenshin", "year": 2012 },
+        { "title": "Rurouni Kenshin: Kyoto Inferno", "year": 2014 },
+        { "title": "Rurouni Kenshin: The Legend Ends", "year": 2014 },
+        { "title": "Rurouni Kenshin: The Final", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "star-trek-original-series-films",
+      "name": "Star Trek: Original Series Films",
+      "aliases": ["Star Trek TOS Movies", "Kirk and Spock", "Star Trek I-VI"],
+      "description": "The six Star Trek films featuring the original crew.",
+      "movies": [
+        { "title": "Star Trek: The Motion Picture", "year": 1979 },
+        { "title": "Star Trek II: The Wrath of Khan", "year": 1982 },
+        { "title": "Star Trek III: The Search for Spock", "year": 1984 },
+        { "title": "Star Trek IV: The Voyage Home", "year": 1986 },
+        { "title": "Star Trek V: The Final Frontier", "year": 1989 },
+        { "title": "Star Trek VI: The Undiscovered Country", "year": 1991 }
+      ]
+    },
+    {
+      "slug": "star-trek-next-generation-films",
+      "name": "Star Trek: The Next Generation Films",
+      "aliases": ["Star Trek TNG Movies", "Picard Films"],
+      "description": "The four Star Trek films featuring the Next Generation crew.",
+      "movies": [
+        { "title": "Star Trek Generations", "year": 1994 },
+        { "title": "Star Trek: First Contact", "year": 1996 },
+        { "title": "Star Trek: Insurrection", "year": 1998 },
+        { "title": "Star Trek: Nemesis", "year": 2002 }
+      ]
+    },
+    {
+      "slug": "star-trek-kelvin-timeline",
+      "name": "Star Trek: Kelvin Timeline",
+      "aliases": ["Star Trek Reboot", "JJ Abrams Star Trek"],
+      "description": "The rebooted alternate-timeline Star Trek films.",
+      "movies": [
+        { "title": "Star Trek", "year": 2009 },
+        { "title": "Star Trek Into Darkness", "year": 2013 },
+        { "title": "Star Trek Beyond", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "back-to-the-future",
+      "name": "Back to the Future",
+      "aliases": ["BTTF", "Marty McFly"],
+      "description": "The time-travel trilogy starring Michael J. Fox.",
+      "movies": [
+        { "title": "Back to the Future", "year": 1985 },
+        { "title": "Back to the Future Part II", "year": 1989 },
+        { "title": "Back to the Future Part III", "year": 1990 }
+      ]
+    },
+    {
+      "slug": "men-in-black",
+      "name": "Men in Black",
+      "aliases": ["MIB", "Agent J and Agent K"],
+      "description": "The Men in Black alien-agency films.",
+      "movies": [
+        { "title": "Men in Black", "year": 1997 },
+        { "title": "Men in Black II", "year": 2002 },
+        { "title": "Men in Black 3", "year": 2012 },
+        { "title": "Men in Black: International", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "independence-day",
+      "name": "Independence Day",
+      "aliases": ["ID4", "Independence Day Series"],
+      "description": "The alien invasion blockbusters.",
+      "movies": [
+        { "title": "Independence Day", "year": 1996 },
+        { "title": "Independence Day: Resurgence", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "robocop",
+      "name": "RoboCop",
+      "aliases": ["Robo Cop", "Alex Murphy"],
+      "description": "The original RoboCop trilogy.",
+      "movies": [
+        { "title": "RoboCop", "year": 1987 },
+        { "title": "RoboCop 2", "year": 1990 },
+        { "title": "RoboCop 3", "year": 1993 }
+      ]
+    },
+    {
+      "slug": "tron",
+      "name": "Tron",
+      "aliases": ["Tron Legacy", "The Grid"],
+      "description": "The Tron films set in the digital world of the Grid.",
+      "movies": [
+        { "title": "Tron", "year": 1982 },
+        { "title": "Tron: Legacy", "year": 2010 },
+        { "title": "Tron: Ares", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "cloverfield",
+      "name": "Cloverfield",
+      "aliases": ["Cloverfield Universe", "Cloverfield Paradox"],
+      "description": "The loosely connected Cloverfield anthology films.",
+      "movies": [
+        { "title": "Cloverfield", "year": 2008 },
+        { "title": "10 Cloverfield Lane", "year": 2016 },
+        { "title": "The Cloverfield Paradox", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "a-quiet-place",
+      "name": "A Quiet Place",
+      "aliases": ["Quiet Place", "Abbott Family"],
+      "description": "The sound-hunting alien films with the prequel placed first.",
+      "movies": [
+        { "title": "A Quiet Place: Day One", "year": 2024 },
+        { "title": "A Quiet Place", "year": 2018 },
+        { "title": "A Quiet Place Part II", "year": 2020 }
+      ]
+    },
+    {
+      "slug": "the-purge",
+      "name": "The Purge",
+      "aliases": ["Purge Series", "Annual Purge"],
+      "description": "The dystopian Purge films in story order.",
+      "movies": [
+        { "title": "The First Purge", "year": 2018 },
+        { "title": "The Purge", "year": 2013 },
+        { "title": "The Purge: Anarchy", "year": 2014 },
+        { "title": "The Purge: Election Year", "year": 2016 },
+        { "title": "The Forever Purge", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "transformers",
+      "name": "Transformers",
+      "aliases": ["Autobots", "Bumblebee", "Optimus Prime"],
+      "description": "The live-action and animated Transformers films in in-universe story order.",
+      "movies": [
+        { "title": "Transformers One", "year": 2024 },
+        { "title": "Bumblebee", "year": 2018 },
+        { "title": "Transformers: Rise of the Beasts", "year": 2023 },
+        { "title": "Transformers", "year": 2007 },
+        { "title": "Transformers: Revenge of the Fallen", "year": 2009 },
+        { "title": "Transformers: Dark of the Moon", "year": 2011 },
+        { "title": "Transformers: Age of Extinction", "year": 2014 },
+        { "title": "Transformers: The Last Knight", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "pacific-rim",
+      "name": "Pacific Rim",
+      "aliases": ["Jaegers and Kaiju", "Pacific Rim Series"],
+      "description": "The giant-robot versus kaiju films.",
+      "movies": [
+        { "title": "Pacific Rim", "year": 2013 },
+        { "title": "Pacific Rim: Uprising", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "avatar",
+      "name": "Avatar",
+      "aliases": ["Pandora", "James Cameron Avatar"],
+      "description": "James Cameron's Pandora saga.",
+      "movies": [
+        { "title": "Avatar", "year": 2009 },
+        { "title": "Avatar: The Way of Water", "year": 2022 },
+        { "title": "Avatar: Fire and Ash", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "dune",
+      "name": "Dune",
+      "aliases": ["Dune Saga", "Arrakis", "Denis Villeneuve Dune"],
+      "description": "Denis Villeneuve's adaptation of Frank Herbert's novel.",
+      "movies": [
+        { "title": "Dune", "year": 2021 },
+        { "title": "Dune: Part Two", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "classic-planet-of-the-apes",
+      "name": "Planet of the Apes (Original Series)",
+      "aliases": ["Classic Apes", "Original Planet of the Apes"],
+      "description": "The original five Planet of the Apes films.",
+      "movies": [
+        { "title": "Planet of the Apes", "year": 1968 },
+        { "title": "Beneath the Planet of the Apes", "year": 1970 },
+        { "title": "Escape from the Planet of the Apes", "year": 1971 },
+        { "title": "Conquest of the Planet of the Apes", "year": 1972 },
+        { "title": "Battle for the Planet of the Apes", "year": 1973 }
+      ]
+    },
+    {
+      "slug": "predator",
+      "name": "Predator",
+      "aliases": ["Yautja", "Predator Series"],
+      "description": "The Predator films in approximate in-universe story order.",
+      "movies": [
+        { "title": "Predator: Killer of Killers", "year": 2025 },
+        { "title": "Prey", "year": 2022 },
+        { "title": "Predator", "year": 1987 },
+        { "title": "Predator 2", "year": 1990 },
+        { "title": "Predators", "year": 2010 },
+        { "title": "The Predator", "year": 2018 },
+        { "title": "Predator: Badlands", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "alien-vs-predator",
+      "name": "Alien vs. Predator",
+      "aliases": ["AVP", "AVP Series"],
+      "description": "The Alien and Predator crossover films.",
+      "movies": [
+        { "title": "AVP: Alien vs. Predator", "year": 2004 },
+        { "title": "Aliens vs. Predator: Requiem", "year": 2007 }
+      ]
+    },
+    {
+      "slug": "divergent",
+      "name": "Divergent",
+      "aliases": ["Divergent Series", "Tris Prior"],
+      "description": "The dystopian young-adult Divergent films.",
+      "movies": [
+        { "title": "Divergent", "year": 2014 },
+        { "title": "The Divergent Series: Insurgent", "year": 2015 },
+        { "title": "The Divergent Series: Allegiant", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "maze-runner",
+      "name": "The Maze Runner",
+      "aliases": ["Maze Runner Series", "Thomas and the Gladers"],
+      "description": "The dystopian Maze Runner trilogy.",
+      "movies": [
+        { "title": "The Maze Runner", "year": 2014 },
+        { "title": "Maze Runner: The Scorch Trials", "year": 2015 },
+        { "title": "Maze Runner: The Death Cure", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "underworld",
+      "name": "Underworld",
+      "aliases": ["Vampires and Lycans", "Selene"],
+      "description": "The vampire versus werewolf films with the prequel placed first.",
+      "movies": [
+        { "title": "Underworld: Rise of the Lycans", "year": 2009 },
+        { "title": "Underworld", "year": 2003 },
+        { "title": "Underworld: Evolution", "year": 2006 },
+        { "title": "Underworld: Awakening", "year": 2012 },
+        { "title": "Underworld: Blood Wars", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "resident-evil-live-action",
+      "name": "Resident Evil (Live Action)",
+      "aliases": ["Resident Evil Films", "Umbrella Corporation"],
+      "description": "The live-action Resident Evil films, including the 2021 reboot.",
+      "movies": [
+        { "title": "Resident Evil", "year": 2002 },
+        { "title": "Resident Evil: Apocalypse", "year": 2004 },
+        { "title": "Resident Evil: Extinction", "year": 2007 },
+        { "title": "Resident Evil: Afterlife", "year": 2010 },
+        { "title": "Resident Evil: Retribution", "year": 2012 },
+        { "title": "Resident Evil: The Final Chapter", "year": 2016 },
+        { "title": "Resident Evil: Welcome to Raccoon City", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "godzilla-showa-era",
+      "name": "Godzilla (Showa Era)",
+      "aliases": ["Toho Godzilla", "Classic Godzilla", "Gojira Showa"],
+      "description": "Toho's original Godzilla series from 1954 to 1975.",
+      "movies": [
+        { "title": "Gojira", "year": 1954 },
+        { "title": "Godzilla Raids Again", "year": 1955 },
+        { "title": "King Kong vs. Godzilla", "year": 1962 },
+        { "title": "Mothra vs. Godzilla", "year": 1964 },
+        { "title": "Ghidorah, the Three-Headed Monster", "year": 1964 },
+        { "title": "Invasion of Astro-Monster", "year": 1965 },
+        { "title": "Ebirah, Horror of the Deep", "year": 1966 },
+        { "title": "Son of Godzilla", "year": 1967 },
+        { "title": "Destroy All Monsters", "year": 1968 },
+        { "title": "All Monsters Attack", "year": 1969 },
+        { "title": "Godzilla vs. Hedorah", "year": 1971 },
+        { "title": "Godzilla vs. Gigan", "year": 1972 },
+        { "title": "Godzilla vs. Megalon", "year": 1973 },
+        { "title": "Godzilla vs. Mechagodzilla", "year": 1974 },
+        { "title": "Terror of Mechagodzilla", "year": 1975 }
+      ]
+    },
+    {
+      "slug": "godzilla-heisei-era",
+      "name": "Godzilla (Heisei Era)",
+      "aliases": ["Heisei Godzilla", "Toho Godzilla 1984 Series"],
+      "description": "Toho's Heisei-era Godzilla series.",
+      "movies": [
+        { "title": "The Return of Godzilla", "year": 1984 },
+        { "title": "Godzilla vs. Biollante", "year": 1989 },
+        { "title": "Godzilla vs. King Ghidorah", "year": 1991 },
+        { "title": "Godzilla vs. Mothra", "year": 1992 },
+        { "title": "Godzilla vs. Mechagodzilla II", "year": 1993 },
+        { "title": "Godzilla vs. SpaceGodzilla", "year": 1994 },
+        { "title": "Godzilla vs. Destoroyah", "year": 1995 }
+      ]
+    },
+    {
+      "slug": "godzilla-millennium-era",
+      "name": "Godzilla (Millennium Era)",
+      "aliases": ["Millennium Godzilla", "Toho Godzilla 2000 Series"],
+      "description": "Toho's Millennium-era Godzilla films, mostly standalone continuities.",
+      "movies": [
+        { "title": "Godzilla 2000: Millennium", "year": 1999 },
+        { "title": "Godzilla vs. Megaguirus", "year": 2000 },
+        { "title": "Godzilla, Mothra and King Ghidorah: Giant Monsters All-Out Attack", "year": 2001 },
+        { "title": "Godzilla Against Mechagodzilla", "year": 2002 },
+        { "title": "Godzilla: Tokyo S.O.S.", "year": 2003 },
+        { "title": "Godzilla: Final Wars", "year": 2004 }
+      ]
+    },
+    {
+      "slug": "godzilla-reiwa-era",
+      "name": "Godzilla (Reiwa Era)",
+      "aliases": ["Reiwa Godzilla", "Shin Godzilla", "Godzilla Minus One"],
+      "description": "Toho's modern standalone Godzilla reboots.",
+      "movies": [
+        { "title": "Shin Godzilla", "year": 2016 },
+        { "title": "Godzilla Minus One", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "pirates-of-the-caribbean",
+      "name": "Pirates of the Caribbean",
+      "aliases": ["Jack Sparrow", "Black Pearl"],
+      "description": "The Jack Sparrow swashbuckling adventures.",
+      "movies": [
+        { "title": "Pirates of the Caribbean: The Curse of the Black Pearl", "year": 2003 },
+        { "title": "Pirates of the Caribbean: Dead Man's Chest", "year": 2006 },
+        { "title": "Pirates of the Caribbean: At World's End", "year": 2007 },
+        { "title": "Pirates of the Caribbean: On Stranger Tides", "year": 2011 },
+        { "title": "Pirates of the Caribbean: Dead Men Tell No Tales", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "chronicles-of-narnia",
+      "name": "The Chronicles of Narnia",
+      "aliases": ["Narnia", "Aslan"],
+      "description": "The live-action Narnia films based on C.S. Lewis' novels.",
+      "movies": [
+        { "title": "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe", "year": 2005 },
+        { "title": "The Chronicles of Narnia: Prince Caspian", "year": 2008 },
+        { "title": "The Chronicles of Narnia: The Voyage of the Dawn Treader", "year": 2010 }
+      ]
+    },
+    {
+      "slug": "percy-jackson",
+      "name": "Percy Jackson",
+      "aliases": ["Percy Jackson and the Olympians", "Greek Mythology Films"],
+      "description": "The Percy Jackson film adaptations.",
+      "movies": [
+        { "title": "Percy Jackson & the Olympians: The Lightning Thief", "year": 2010 },
+        { "title": "Percy Jackson: Sea of Monsters", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "twilight",
+      "name": "Twilight",
+      "aliases": ["Twilight Saga", "Bella and Edward"],
+      "description": "The Twilight Saga vampire romance films.",
+      "movies": [
+        { "title": "Twilight", "year": 2008 },
+        { "title": "The Twilight Saga: New Moon", "year": 2009 },
+        { "title": "The Twilight Saga: Eclipse", "year": 2010 },
+        { "title": "The Twilight Saga: Breaking Dawn - Part 1", "year": 2011 },
+        { "title": "The Twilight Saga: Breaking Dawn - Part 2", "year": 2012 }
+      ]
+    },
+    {
+      "slug": "maleficent",
+      "name": "Maleficent",
+      "aliases": ["Disney Maleficent", "Sleeping Beauty Retelling"],
+      "description": "Disney's live-action Maleficent films.",
+      "movies": [
+        { "title": "Maleficent", "year": 2014 },
+        { "title": "Maleficent: Mistress of Evil", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "alice-in-wonderland-live-action",
+      "name": "Alice in Wonderland (Tim Burton)",
+      "aliases": ["Alice Live Action", "Through the Looking Glass"],
+      "description": "Disney's live-action Alice in Wonderland films.",
+      "movies": [
+        { "title": "Alice in Wonderland", "year": 2010 },
+        { "title": "Alice Through the Looking Glass", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "night-at-the-museum",
+      "name": "Night at the Museum",
+      "aliases": ["Museum Adventure", "Larry Daley"],
+      "description": "The comedy adventure trilogy where museum exhibits come alive.",
+      "movies": [
+        { "title": "Night at the Museum", "year": 2006 },
+        { "title": "Night at the Museum: Battle of the Smithsonian", "year": 2009 },
+        { "title": "Night at the Museum: Secret of the Tomb", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "jumanji",
+      "name": "Jumanji",
+      "aliases": ["Jumanji Series", "Welcome to the Jungle"],
+      "description": "The magical board game turned video game adventure series.",
+      "movies": [
+        { "title": "Jumanji", "year": 1995 },
+        { "title": "Jumanji: Welcome to the Jungle", "year": 2017 },
+        { "title": "Jumanji: The Next Level", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "the-mummy",
+      "name": "The Mummy",
+      "aliases": ["Mummy Trilogy", "Scorpion King", "Rick O'Connell"],
+      "description": "The Brendan Fraser Mummy films with the Scorpion King prequel placed first.",
+      "movies": [
+        { "title": "The Scorpion King", "year": 2002 },
+        { "title": "The Mummy", "year": 1999 },
+        { "title": "The Mummy Returns", "year": 2001 },
+        { "title": "The Mummy: Tomb of the Dragon Emperor", "year": 2008 }
+      ]
+    },
+    {
+      "slug": "wicked",
+      "name": "Wicked",
+      "aliases": ["Wicked Films", "Oz Musical"],
+      "description": "The two-part Wicked musical adaptation.",
+      "movies": [
+        { "title": "Wicked", "year": 2024 },
+        { "title": "Wicked: For Good", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "beetlejuice",
+      "name": "Beetlejuice",
+      "aliases": ["Beetlejuice Series", "Tim Burton Beetlejuice"],
+      "description": "Tim Burton's Beetlejuice films.",
+      "movies": [
+        { "title": "Beetlejuice", "year": 1988 },
+        { "title": "Beetlejuice Beetlejuice", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "hocus-pocus",
+      "name": "Hocus Pocus",
+      "aliases": ["Sanderson Sisters", "Hocus Pocus Series"],
+      "description": "The Sanderson Sisters Halloween comedies.",
+      "movies": [
+        { "title": "Hocus Pocus", "year": 1993 },
+        { "title": "Hocus Pocus 2", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "the-addams-family",
+      "name": "The Addams Family",
+      "aliases": ["Addams Family Films", "Gomez and Morticia"],
+      "description": "The 1990s live-action Addams Family films.",
+      "movies": [
+        { "title": "The Addams Family", "year": 1991 },
+        { "title": "Addams Family Values", "year": 1993 }
+      ]
+    },
+    {
+      "slug": "zombieland",
+      "name": "Zombieland",
+      "aliases": ["Zombieland Series", "Double Tap"],
+      "description": "The zombie-apocalypse comedies.",
+      "movies": [
+        { "title": "Zombieland", "year": 2009 },
+        { "title": "Zombieland: Double Tap", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "ghostbusters",
+      "name": "Ghostbusters",
+      "aliases": ["Ghostbusters Series", "Afterlife"],
+      "description": "The Ghostbusters films in story order.",
+      "movies": [
+        { "title": "Ghostbusters", "year": 1984 },
+        { "title": "Ghostbusters II", "year": 1989 },
+        { "title": "Ghostbusters: Afterlife", "year": 2021 },
+        { "title": "Ghostbusters: Frozen Empire", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "bill-and-ted",
+      "name": "Bill & Ted",
+      "aliases": ["Bill and Ted", "Excellent Adventure"],
+      "description": "The time-travelling slacker comedy trilogy.",
+      "movies": [
+        { "title": "Bill & Ted's Excellent Adventure", "year": 1989 },
+        { "title": "Bill & Ted's Bogus Journey", "year": 1991 },
+        { "title": "Bill & Ted Face the Music", "year": 2020 }
+      ]
+    },
+    {
+      "slug": "paddington",
+      "name": "Paddington",
+      "aliases": ["Paddington Bear", "Paddington Films"],
+      "description": "The live-action Paddington Bear films.",
+      "movies": [
+        { "title": "Paddington", "year": 2014 },
+        { "title": "Paddington 2", "year": 2017 },
+        { "title": "Paddington in Peru", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "the-karate-kid",
+      "name": "The Karate Kid",
+      "aliases": ["Karate Kid Series", "Daniel LaRusso", "Cobra Kai Universe"],
+      "description": "The Karate Kid films in release order.",
+      "movies": [
+        { "title": "The Karate Kid", "year": 1984 },
+        { "title": "The Karate Kid Part II", "year": 1986 },
+        { "title": "The Karate Kid Part III", "year": 1989 },
+        { "title": "The Next Karate Kid", "year": 1994 },
+        { "title": "Karate Kid: Legends", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "sonic-the-hedgehog",
+      "name": "Sonic the Hedgehog",
+      "aliases": ["Sonic Films", "Sonic Movie Series"],
+      "description": "The live-action Sonic the Hedgehog films.",
+      "movies": [
+        { "title": "Sonic the Hedgehog", "year": 2020 },
+        { "title": "Sonic the Hedgehog 2", "year": 2022 },
+        { "title": "Sonic the Hedgehog 3", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "five-nights-at-freddys",
+      "name": "Five Nights at Freddy's",
+      "aliases": ["FNAF", "Freddy Fazbear"],
+      "description": "The film adaptations of the horror video game series.",
+      "movies": [
+        { "title": "Five Nights at Freddy's", "year": 2023 },
+        { "title": "Five Nights at Freddy's 2", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "spy-kids",
+      "name": "Spy Kids",
+      "aliases": ["Spy Kids Series", "Cortez Family"],
+      "description": "The family spy adventure films.",
+      "movies": [
+        { "title": "Spy Kids", "year": 2001 },
+        { "title": "Spy Kids 2: Island of Lost Dreams", "year": 2002 },
+        { "title": "Spy Kids 3-D: Game Over", "year": 2003 },
+        { "title": "Spy Kids: All the Time in the World", "year": 2011 },
+        { "title": "Spy Kids: Armageddon", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "the-hangover",
+      "name": "The Hangover",
+      "aliases": ["Hangover Trilogy", "Wolfpack"],
+      "description": "The Las Vegas Wolfpack comedy trilogy.",
+      "movies": [
+        { "title": "The Hangover", "year": 2009 },
+        { "title": "The Hangover Part II", "year": 2011 },
+        { "title": "The Hangover Part III", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "austin-powers",
+      "name": "Austin Powers",
+      "aliases": ["Austin Powers Trilogy", "Mike Myers Spy Spoof"],
+      "description": "The spy-spoof comedy trilogy.",
+      "movies": [
+        { "title": "Austin Powers: International Man of Mystery", "year": 1997 },
+        { "title": "Austin Powers: The Spy Who Shagged Me", "year": 1999 },
+        { "title": "Austin Powers in Goldmember", "year": 2002 }
+      ]
+    },
+    {
+      "slug": "johnny-english",
+      "name": "Johnny English",
+      "aliases": ["Johnny English Series", "Rowan Atkinson Spy"],
+      "description": "The spy-comedy films starring Rowan Atkinson.",
+      "movies": [
+        { "title": "Johnny English", "year": 2003 },
+        { "title": "Johnny English Reborn", "year": 2011 },
+        { "title": "Johnny English Strikes Again", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "ted",
+      "name": "Ted",
+      "aliases": ["Ted Films", "Talking Teddy Bear"],
+      "description": "Seth MacFarlane's Ted comedies.",
+      "movies": [
+        { "title": "Ted", "year": 2012 },
+        { "title": "Ted 2", "year": 2015 }
+      ]
+    },
+    {
+      "slug": "cornetto-trilogy",
+      "name": "Three Flavours Cornetto Trilogy",
+      "aliases": ["Cornetto Trilogy", "Edgar Wright Trilogy"],
+      "description": "Edgar Wright's thematically linked comedy trilogy.",
+      "movies": [
+        { "title": "Shaun of the Dead", "year": 2004 },
+        { "title": "Hot Fuzz", "year": 2007 },
+        { "title": "The World's End", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "waynes-world",
+      "name": "Wayne's World",
+      "aliases": ["Waynes World", "Wayne and Garth"],
+      "description": "The Saturday Night Live spin-off comedies.",
+      "movies": [
+        { "title": "Wayne's World", "year": 1992 },
+        { "title": "Wayne's World 2", "year": 1993 }
+      ]
+    },
+    {
+      "slug": "meet-the-parents",
+      "name": "Meet the Parents",
+      "aliases": ["Focker Trilogy", "Meet the Fockers"],
+      "description": "The Focker family comedy trilogy.",
+      "movies": [
+        { "title": "Meet the Parents", "year": 2000 },
+        { "title": "Meet the Fockers", "year": 2004 },
+        { "title": "Little Fockers", "year": 2010 }
+      ]
+    },
+    {
+      "slug": "home-alone",
+      "name": "Home Alone",
+      "aliases": ["Kevin McCallister", "Home Alone Series"],
+      "description": "The Home Alone holiday comedies.",
+      "movies": [
+        { "title": "Home Alone", "year": 1990 },
+        { "title": "Home Alone 2: Lost in New York", "year": 1992 },
+        { "title": "Home Alone 3", "year": 1997 },
+        { "title": "Home Sweet Home Alone", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "scary-movie",
+      "name": "Scary Movie",
+      "aliases": ["Scary Movie Series", "Horror Spoofs"],
+      "description": "The horror parody comedy series.",
+      "movies": [
+        { "title": "Scary Movie", "year": 2000 },
+        { "title": "Scary Movie 2", "year": 2001 },
+        { "title": "Scary Movie 3", "year": 2003 },
+        { "title": "Scary Movie 4", "year": 2006 },
+        { "title": "Scary Movie 5", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "pitch-perfect",
+      "name": "Pitch Perfect",
+      "aliases": ["Barden Bellas", "Pitch Perfect Trilogy"],
+      "description": "The a cappella musical comedies.",
+      "movies": [
+        { "title": "Pitch Perfect", "year": 2012 },
+        { "title": "Pitch Perfect 2", "year": 2015 },
+        { "title": "Pitch Perfect 3", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "step-up",
+      "name": "Step Up",
+      "aliases": ["Step Up Series", "Dance Films"],
+      "description": "The street-dance romance films.",
+      "movies": [
+        { "title": "Step Up", "year": 2006 },
+        { "title": "Step Up 2: The Streets", "year": 2008 },
+        { "title": "Step Up 3D", "year": 2010 },
+        { "title": "Step Up Revolution", "year": 2012 },
+        { "title": "Step Up: All In", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "mamma-mia",
+      "name": "Mamma Mia!",
+      "aliases": ["Mamma Mia Musicals", "ABBA Musical Films"],
+      "description": "The ABBA-powered musical films.",
+      "movies": [
+        { "title": "Mamma Mia!", "year": 2008 },
+        { "title": "Mamma Mia! Here We Go Again", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "bridget-jones",
+      "name": "Bridget Jones",
+      "aliases": ["Bridget Jones Diary", "Bridget Jones Series"],
+      "description": "The Bridget Jones romantic comedies.",
+      "movies": [
+        { "title": "Bridget Jones's Diary", "year": 2001 },
+        { "title": "Bridget Jones: The Edge of Reason", "year": 2004 },
+        { "title": "Bridget Jones's Baby", "year": 2016 },
+        { "title": "Bridget Jones: Mad About the Boy", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "fifty-shades",
+      "name": "Fifty Shades",
+      "aliases": ["Fifty Shades of Grey", "Fifty Shades Trilogy"],
+      "description": "The romantic drama film trilogy.",
+      "movies": [
+        { "title": "Fifty Shades of Grey", "year": 2015 },
+        { "title": "Fifty Shades Darker", "year": 2017 },
+        { "title": "Fifty Shades Freed", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "toy-story",
+      "name": "Toy Story",
+      "aliases": ["Woody and Buzz", "Pixar Toy Story", "Lightyear"],
+      "description": "The Toy Story films with the Lightyear spin-off placed first.",
+      "movies": [
+        { "title": "Lightyear", "year": 2022 },
+        { "title": "Toy Story", "year": 1995 },
+        { "title": "Toy Story 2", "year": 1999 },
+        { "title": "Toy Story 3", "year": 2010 },
+        { "title": "Toy Story 4", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "shrek",
+      "name": "Shrek",
+      "aliases": ["Shrek Series", "Far Far Away"],
+      "description": "DreamWorks' Shrek films.",
+      "movies": [
+        { "title": "Shrek", "year": 2001 },
+        { "title": "Shrek 2", "year": 2004 },
+        { "title": "Shrek the Third", "year": 2007 },
+        { "title": "Shrek Forever After", "year": 2010 }
+      ]
+    },
+    {
+      "slug": "puss-in-boots",
+      "name": "Puss in Boots",
+      "aliases": ["Shrek Spin-off", "The Last Wish"],
+      "description": "The Puss in Boots spin-off films from the Shrek universe.",
+      "movies": [
+        { "title": "Puss in Boots", "year": 2011 },
+        { "title": "Puss in Boots: The Last Wish", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "ice-age",
+      "name": "Ice Age",
+      "aliases": ["Manny Sid and Diego", "Ice Age Series"],
+      "description": "The Ice Age animated films.",
+      "movies": [
+        { "title": "Ice Age", "year": 2002 },
+        { "title": "Ice Age: The Meltdown", "year": 2006 },
+        { "title": "Ice Age: Dawn of the Dinosaurs", "year": 2009 },
+        { "title": "Ice Age: Continental Drift", "year": 2012 },
+        { "title": "Ice Age: Collision Course", "year": 2016 },
+        { "title": "Ice Age: The Adventures of Buck Wild", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "madagascar",
+      "name": "Madagascar",
+      "aliases": ["Madagascar Series", "Penguins of Madagascar"],
+      "description": "DreamWorks' Madagascar films.",
+      "movies": [
+        { "title": "Madagascar", "year": 2005 },
+        { "title": "Madagascar: Escape 2 Africa", "year": 2008 },
+        { "title": "Madagascar 3: Europe's Most Wanted", "year": 2012 },
+        { "title": "Penguins of Madagascar", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "kung-fu-panda",
+      "name": "Kung Fu Panda",
+      "aliases": ["Po the Dragon Warrior", "Kung Fu Panda Series"],
+      "description": "DreamWorks' Kung Fu Panda films.",
+      "movies": [
+        { "title": "Kung Fu Panda", "year": 2008 },
+        { "title": "Kung Fu Panda 2", "year": 2011 },
+        { "title": "Kung Fu Panda 3", "year": 2016 },
+        { "title": "Kung Fu Panda 4", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "how-to-train-your-dragon",
+      "name": "How to Train Your Dragon",
+      "aliases": ["HTTYD", "Hiccup and Toothless"],
+      "description": "DreamWorks' animated Dragon trilogy.",
+      "movies": [
+        { "title": "How to Train Your Dragon", "year": 2010 },
+        { "title": "How to Train Your Dragon 2", "year": 2014 },
+        { "title": "How to Train Your Dragon: The Hidden World", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "despicable-me",
+      "name": "Despicable Me & Minions",
+      "aliases": ["Minions", "Gru", "Illumination Despicable Me"],
+      "description": "The Despicable Me and Minions films in story order.",
+      "movies": [
+        { "title": "Minions", "year": 2015 },
+        { "title": "Minions: The Rise of Gru", "year": 2022 },
+        { "title": "Despicable Me", "year": 2010 },
+        { "title": "Despicable Me 2", "year": 2013 },
+        { "title": "Despicable Me 3", "year": 2017 },
+        { "title": "Despicable Me 4", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "cars",
+      "name": "Cars",
+      "aliases": ["Lightning McQueen", "Pixar Cars"],
+      "description": "Pixar's Cars trilogy.",
+      "movies": [
+        { "title": "Cars", "year": 2006 },
+        { "title": "Cars 2", "year": 2011 },
+        { "title": "Cars 3", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "the-incredibles",
+      "name": "The Incredibles",
+      "aliases": ["Incredibles", "Parr Family"],
+      "description": "Pixar's superhero family films.",
+      "movies": [
+        { "title": "The Incredibles", "year": 2004 },
+        { "title": "Incredibles 2", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "finding-nemo",
+      "name": "Finding Nemo",
+      "aliases": ["Finding Dory", "Pixar Ocean Films"],
+      "description": "Pixar's undersea adventures.",
+      "movies": [
+        { "title": "Finding Nemo", "year": 2003 },
+        { "title": "Finding Dory", "year": 2016 }
+      ]
+    },
+    {
+      "slug": "monsters-inc",
+      "name": "Monsters, Inc.",
+      "aliases": ["Monsters University", "Sulley and Mike"],
+      "description": "Pixar's Monsters films with the prequel placed first.",
+      "movies": [
+        { "title": "Monsters University", "year": 2013 },
+        { "title": "Monsters, Inc.", "year": 2001 }
+      ]
+    },
+    {
+      "slug": "frozen",
+      "name": "Frozen",
+      "aliases": ["Elsa and Anna", "Disney Frozen"],
+      "description": "Disney's Frozen films.",
+      "movies": [
+        { "title": "Frozen", "year": 2013 },
+        { "title": "Frozen II", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "moana",
+      "name": "Moana",
+      "aliases": ["Disney Moana", "Maui and Moana"],
+      "description": "Disney's Polynesian adventure films.",
+      "movies": [
+        { "title": "Moana", "year": 2016 },
+        { "title": "Moana 2", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "inside-out",
+      "name": "Inside Out",
+      "aliases": ["Pixar Emotions", "Joy and Sadness"],
+      "description": "Pixar's emotion-driven films.",
+      "movies": [
+        { "title": "Inside Out", "year": 2015 },
+        { "title": "Inside Out 2", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "hotel-transylvania",
+      "name": "Hotel Transylvania",
+      "aliases": ["Dracula's Hotel", "Hotel T"],
+      "description": "Sony Animation's monster-hotel comedies.",
+      "movies": [
+        { "title": "Hotel Transylvania", "year": 2012 },
+        { "title": "Hotel Transylvania 2", "year": 2015 },
+        { "title": "Hotel Transylvania 3: Summer Vacation", "year": 2018 },
+        { "title": "Hotel Transylvania: Transformania", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "the-lion-king",
+      "name": "The Lion King",
+      "aliases": ["Simba", "Pride Lands", "Mufasa"],
+      "description": "Disney's Lion King animated films with the Mufasa prequel placed first.",
+      "movies": [
+        { "title": "Mufasa: The Lion King", "year": 2024 },
+        { "title": "The Lion King", "year": 1994 },
+        { "title": "The Lion King II: Simba's Pride", "year": 1998 },
+        { "title": "The Lion King 1½", "year": 2004 }
+      ]
+    },
+    {
+      "slug": "trolls",
+      "name": "Trolls",
+      "aliases": ["Poppy and Branch", "DreamWorks Trolls"],
+      "description": "DreamWorks' musical Trolls films.",
+      "movies": [
+        { "title": "Trolls", "year": 2016 },
+        { "title": "Trolls World Tour", "year": 2020 },
+        { "title": "Trolls Band Together", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "the-boss-baby",
+      "name": "The Boss Baby",
+      "aliases": ["Boss Baby Series", "Baby Corp"],
+      "description": "DreamWorks' Boss Baby films.",
+      "movies": [
+        { "title": "The Boss Baby", "year": 2017 },
+        { "title": "The Boss Baby: Family Business", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "sing",
+      "name": "Sing",
+      "aliases": ["Illumination Sing", "Buster Moon"],
+      "description": "Illumination's singing-animal musicals.",
+      "movies": [
+        { "title": "Sing", "year": 2016 },
+        { "title": "Sing 2", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "the-secret-life-of-pets",
+      "name": "The Secret Life of Pets",
+      "aliases": ["Secret Life of Pets", "Max and Duke"],
+      "description": "Illumination's pets-at-home animated comedies.",
+      "movies": [
+        { "title": "The Secret Life of Pets", "year": 2016 },
+        { "title": "The Secret Life of Pets 2", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "rio",
+      "name": "Rio",
+      "aliases": ["Blu and Jewel", "Blue Sky Rio"],
+      "description": "Blue Sky Studios' Rio films.",
+      "movies": [
+        { "title": "Rio", "year": 2011 },
+        { "title": "Rio 2", "year": 2014 }
+      ]
+    },
+    {
+      "slug": "happy-feet",
+      "name": "Happy Feet",
+      "aliases": ["Mumble the Penguin", "Happy Feet Series"],
+      "description": "The animated dancing penguin films.",
+      "movies": [
+        { "title": "Happy Feet", "year": 2006 },
+        { "title": "Happy Feet Two", "year": 2011 }
+      ]
+    },
+    {
+      "slug": "cloudy-with-a-chance-of-meatballs",
+      "name": "Cloudy with a Chance of Meatballs",
+      "aliases": ["Flint Lockwood", "Cloudy Series"],
+      "description": "Sony Pictures Animation's food-weather comedies.",
+      "movies": [
+        { "title": "Cloudy with a Chance of Meatballs", "year": 2009 },
+        { "title": "Cloudy with a Chance of Meatballs 2", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "the-croods",
+      "name": "The Croods",
+      "aliases": ["Croods Series", "DreamWorks Croods"],
+      "description": "DreamWorks' prehistoric family comedies.",
+      "movies": [
+        { "title": "The Croods", "year": 2013 },
+        { "title": "The Croods: A New Age", "year": 2020 }
+      ]
+    },
+    {
+      "slug": "zootopia",
+      "name": "Zootopia",
+      "aliases": ["Zootropolis", "Judy Hopps and Nick Wilde"],
+      "description": "Disney's animal-metropolis detective films.",
+      "movies": [
+        { "title": "Zootopia", "year": 2016 },
+        { "title": "Zootopia 2", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "wreck-it-ralph",
+      "name": "Wreck-It Ralph",
+      "aliases": ["Ralph Breaks the Internet", "Disney Arcade Films"],
+      "description": "Disney's video-game-world animated films.",
+      "movies": [
+        { "title": "Wreck-It Ralph", "year": 2012 },
+        { "title": "Ralph Breaks the Internet", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "the-angry-birds-movie",
+      "name": "The Angry Birds Movie",
+      "aliases": ["Angry Birds", "Red and Chuck"],
+      "description": "Animated films based on the Angry Birds mobile game.",
+      "movies": [
+        { "title": "The Angry Birds Movie", "year": 2016 },
+        { "title": "The Angry Birds Movie 2", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "the-conjuring-universe",
+      "name": "The Conjuring Universe",
+      "aliases": ["Conjuring", "Annabelle", "The Nun", "Warrens"],
+      "description": "The Conjuring Universe films in in-universe story order.",
+      "movies": [
+        { "title": "The Nun", "year": 2018 },
+        { "title": "Annabelle: Creation", "year": 2017 },
+        { "title": "The Nun II", "year": 2023 },
+        { "title": "Annabelle", "year": 2014 },
+        { "title": "The Conjuring", "year": 2013 },
+        { "title": "Annabelle Comes Home", "year": 2019 },
+        { "title": "The Curse of La Llorona", "year": 2019 },
+        { "title": "The Conjuring 2", "year": 2016 },
+        { "title": "The Conjuring: The Devil Made Me Do It", "year": 2021 },
+        { "title": "The Conjuring: Last Rites", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "saw",
+      "name": "Saw",
+      "aliases": ["Jigsaw", "Saw Series"],
+      "description": "The Saw films in approximate story order, with Saw X placed between the first two.",
+      "movies": [
+        { "title": "Saw", "year": 2004 },
+        { "title": "Saw X", "year": 2023 },
+        { "title": "Saw II", "year": 2005 },
+        { "title": "Saw III", "year": 2006 },
+        { "title": "Saw IV", "year": 2007 },
+        { "title": "Saw V", "year": 2008 },
+        { "title": "Saw VI", "year": 2009 },
+        { "title": "Saw 3D", "year": 2010 },
+        { "title": "Jigsaw", "year": 2017 },
+        { "title": "Spiral: From the Book of Saw", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "scream",
+      "name": "Scream",
+      "aliases": ["Ghostface", "Scream Series"],
+      "description": "The Ghostface slasher series.",
+      "movies": [
+        { "title": "Scream", "year": 1996 },
+        { "title": "Scream 2", "year": 1997 },
+        { "title": "Scream 3", "year": 2000 },
+        { "title": "Scream 4", "year": 2011 },
+        { "title": "Scream (2022)", "year": 2022 },
+        { "title": "Scream VI", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "halloween-original-timeline",
+      "name": "Halloween (Original Timeline)",
+      "aliases": ["Michael Myers", "Halloween Series"],
+      "description": "The original Halloween films, which branch into several continuities.",
+      "movies": [
+        { "title": "Halloween", "year": 1978 },
+        { "title": "Halloween II", "year": 1981 },
+        { "title": "Halloween III: Season of the Witch", "year": 1982 },
+        { "title": "Halloween 4: The Return of Michael Myers", "year": 1988 },
+        { "title": "Halloween 5: The Revenge of Michael Myers", "year": 1989 },
+        { "title": "Halloween: The Curse of Michael Myers", "year": 1995 },
+        { "title": "Halloween H20: 20 Years Later", "year": 1998 },
+        { "title": "Halloween: Resurrection", "year": 2002 }
+      ]
+    },
+    {
+      "slug": "halloween-rob-zombie",
+      "name": "Halloween (Rob Zombie)",
+      "aliases": ["Rob Zombie Halloween", "Halloween Remake"],
+      "description": "Rob Zombie's reimagined Halloween films.",
+      "movies": [
+        { "title": "Halloween (2007)", "year": 2007 },
+        { "title": "Halloween II (2009)", "year": 2009 }
+      ]
+    },
+    {
+      "slug": "halloween-blumhouse-trilogy",
+      "name": "Halloween (Blumhouse Trilogy)",
+      "aliases": ["Halloween 2018 Trilogy", "Laurie Strode Trilogy"],
+      "description": "The direct sequels to the 1978 original.",
+      "movies": [
+        { "title": "Halloween (2018)", "year": 2018 },
+        { "title": "Halloween Kills", "year": 2021 },
+        { "title": "Halloween Ends", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "friday-the-13th",
+      "name": "Friday the 13th",
+      "aliases": ["Jason Voorhees", "Camp Crystal Lake"],
+      "description": "The Friday the 13th films, including Freddy vs. Jason.",
+      "movies": [
+        { "title": "Friday the 13th", "year": 1980 },
+        { "title": "Friday the 13th Part 2", "year": 1981 },
+        { "title": "Friday the 13th Part III", "year": 1982 },
+        { "title": "Friday the 13th: The Final Chapter", "year": 1984 },
+        { "title": "Friday the 13th: A New Beginning", "year": 1985 },
+        { "title": "Friday the 13th Part VI: Jason Lives", "year": 1986 },
+        { "title": "Friday the 13th Part VII: The New Blood", "year": 1988 },
+        { "title": "Friday the 13th Part VIII: Jason Takes Manhattan", "year": 1989 },
+        { "title": "Jason Goes to Hell: The Final Friday", "year": 1993 },
+        { "title": "Jason X", "year": 2001 },
+        { "title": "Freddy vs. Jason", "year": 2003 },
+        { "title": "Friday the 13th (2009)", "year": 2009 }
+      ]
+    },
+    {
+      "slug": "a-nightmare-on-elm-street",
+      "name": "A Nightmare on Elm Street",
+      "aliases": ["Freddy Krueger", "Elm Street"],
+      "description": "The Freddy Krueger slasher films.",
+      "movies": [
+        { "title": "A Nightmare on Elm Street", "year": 1984 },
+        { "title": "A Nightmare on Elm Street 2: Freddy's Revenge", "year": 1985 },
+        { "title": "A Nightmare on Elm Street 3: Dream Warriors", "year": 1987 },
+        { "title": "A Nightmare on Elm Street 4: The Dream Master", "year": 1988 },
+        { "title": "A Nightmare on Elm Street 5: The Dream Child", "year": 1989 },
+        { "title": "Freddy's Dead: The Final Nightmare", "year": 1991 },
+        { "title": "Wes Craven's New Nightmare", "year": 1994 },
+        { "title": "A Nightmare on Elm Street (2010)", "year": 2010 }
+      ]
+    },
+    {
+      "slug": "childs-play",
+      "name": "Child's Play",
+      "aliases": ["Chucky", "Child's Play Series"],
+      "description": "The Chucky horror films.",
+      "movies": [
+        { "title": "Child's Play", "year": 1988 },
+        { "title": "Child's Play 2", "year": 1990 },
+        { "title": "Child's Play 3", "year": 1991 },
+        { "title": "Bride of Chucky", "year": 1998 },
+        { "title": "Seed of Chucky", "year": 2004 },
+        { "title": "Curse of Chucky", "year": 2013 },
+        { "title": "Cult of Chucky", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "insidious",
+      "name": "Insidious",
+      "aliases": ["The Further", "Lambert Family"],
+      "description": "The Insidious films in story order.",
+      "movies": [
+        { "title": "Insidious: Chapter 3", "year": 2015 },
+        { "title": "Insidious: The Last Key", "year": 2018 },
+        { "title": "Insidious", "year": 2010 },
+        { "title": "Insidious: Chapter 2", "year": 2013 },
+        { "title": "Insidious: The Red Door", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "the-exorcist",
+      "name": "The Exorcist",
+      "aliases": ["Exorcist Series", "Regan MacNeil"],
+      "description": "The Exorcist films in story order.",
+      "movies": [
+        { "title": "Exorcist: The Beginning", "year": 2004 },
+        { "title": "Dominion: Prequel to the Exorcist", "year": 2005 },
+        { "title": "The Exorcist", "year": 1973 },
+        { "title": "Exorcist II: The Heretic", "year": 1977 },
+        { "title": "The Exorcist III", "year": 1990 },
+        { "title": "The Exorcist: Believer", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "final-destination",
+      "name": "Final Destination",
+      "aliases": ["Death's Design", "Final Destination Series"],
+      "description": "The Final Destination films in story order.",
+      "movies": [
+        { "title": "Final Destination: Bloodlines", "year": 2025 },
+        { "title": "Final Destination 5", "year": 2011 },
+        { "title": "Final Destination", "year": 2000 },
+        { "title": "Final Destination 2", "year": 2003 },
+        { "title": "Final Destination 3", "year": 2006 },
+        { "title": "The Final Destination", "year": 2009 }
+      ]
+    },
+    {
+      "slug": "evil-dead",
+      "name": "Evil Dead",
+      "aliases": ["Ash Williams", "Necronomicon", "Army of Darkness"],
+      "description": "The Evil Dead horror-comedy franchise.",
+      "movies": [
+        { "title": "The Evil Dead", "year": 1981 },
+        { "title": "Evil Dead II", "year": 1987 },
+        { "title": "Army of Darkness", "year": 1992 },
+        { "title": "Evil Dead", "year": 2013 },
+        { "title": "Evil Dead Rise", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "jaws",
+      "name": "Jaws",
+      "aliases": ["Jaws Series", "Amity Island"],
+      "description": "The Jaws shark thrillers.",
+      "movies": [
+        { "title": "Jaws", "year": 1975 },
+        { "title": "Jaws 2", "year": 1978 },
+        { "title": "Jaws 3-D", "year": 1983 },
+        { "title": "Jaws: The Revenge", "year": 1987 }
+      ]
+    },
+    {
+      "slug": "poltergeist",
+      "name": "Poltergeist",
+      "aliases": ["Freeling Family", "Poltergeist Series"],
+      "description": "The Poltergeist haunted-house films.",
+      "movies": [
+        { "title": "Poltergeist", "year": 1982 },
+        { "title": "Poltergeist II: The Other Side", "year": 1986 },
+        { "title": "Poltergeist III", "year": 1988 }
+      ]
+    },
+    {
+      "slug": "gremlins",
+      "name": "Gremlins",
+      "aliases": ["Gizmo", "Gremlins Series"],
+      "description": "The Gremlins horror-comedies.",
+      "movies": [
+        { "title": "Gremlins", "year": 1984 },
+        { "title": "Gremlins 2: The New Batch", "year": 1990 }
+      ]
+    },
+    {
+      "slug": "terrifier",
+      "name": "Terrifier",
+      "aliases": ["Art the Clown", "Terrifier Series"],
+      "description": "The Art the Clown slasher films.",
+      "movies": [
+        { "title": "Terrifier", "year": 2016 },
+        { "title": "Terrifier 2", "year": 2022 },
+        { "title": "Terrifier 3", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "it",
+      "name": "It",
+      "aliases": ["Pennywise", "Stephen King's It"],
+      "description": "The modern adaptation of Stephen King's It.",
+      "movies": [
+        { "title": "It", "year": 2017 },
+        { "title": "It Chapter Two", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "baahubali",
+      "name": "Baahubali",
+      "aliases": ["Bahubali", "Mahishmati Saga"],
+      "description": "S.S. Rajamouli's Telugu epic duology.",
+      "movies": [
+        { "title": "Baahubali: The Beginning", "year": 2015 },
+        { "title": "Baahubali 2: The Conclusion", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "kgf",
+      "name": "K.G.F",
+      "aliases": ["KGF", "Rocky Bhai", "Kolar Gold Fields"],
+      "description": "The Kannada action epic starring Yash.",
+      "movies": [
+        { "title": "K.G.F: Chapter 1", "year": 2018 },
+        { "title": "K.G.F: Chapter 2", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "pushpa",
+      "name": "Pushpa",
+      "aliases": ["Pushpa Raj", "Pushpa Series"],
+      "description": "The Telugu red sandalwood smuggling saga starring Allu Arjun.",
+      "movies": [
+        { "title": "Pushpa: The Rise", "year": 2021 },
+        { "title": "Pushpa 2: The Rule", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "kantara",
+      "name": "Kantara",
+      "aliases": ["Kantara Chapter 1", "Rishab Shetty Kantara"],
+      "description": "The Kannada folk-mythology films with the prequel placed first.",
+      "movies": [
+        { "title": "Kantara: A Legend - Chapter 1", "year": 2025 },
+        { "title": "Kantara", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "lokesh-cinematic-universe",
+      "name": "Lokesh Cinematic Universe",
+      "aliases": ["LCU", "Kaithi Vikram Leo"],
+      "description": "The interconnected Tamil action films directed by Lokesh Kanagaraj.",
+      "movies": [
+        { "title": "Kaithi", "year": 2019 },
+        { "title": "Vikram", "year": 2022 },
+        { "title": "Leo", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "enthiran",
+      "name": "Enthiran",
+      "aliases": ["Robot", "Chitti the Robot", "2.0"],
+      "description": "Shankar's Tamil sci-fi films starring Rajinikanth.",
+      "movies": [
+        { "title": "Enthiran", "year": 2010 },
+        { "title": "2.0", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "singam",
+      "name": "Singam",
+      "aliases": ["Singam Series", "Tamil Singam", "S3"],
+      "description": "The Tamil police action trilogy starring Suriya.",
+      "movies": [
+        { "title": "Singam", "year": 2010 },
+        { "title": "Singam II", "year": 2013 },
+        { "title": "Singam 3", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "kanchana",
+      "name": "Kanchana",
+      "aliases": ["Muni Series", "Raghava Lawrence Horror Comedy"],
+      "description": "The Tamil horror-comedy series starring Raghava Lawrence.",
+      "movies": [
+        { "title": "Muni", "year": 2007 },
+        { "title": "Muni 2: Kanchana", "year": 2011 },
+        { "title": "Kanchana 2", "year": 2015 },
+        { "title": "Kanchana 3", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "lucifer-empuraan",
+      "name": "Lucifer & Empuraan",
+      "aliases": ["Lucifer Series", "L2E", "Stephen Nedumpally"],
+      "description": "The Malayalam political action films starring Mohanlal.",
+      "movies": [
+        { "title": "Lucifer", "year": 2019 },
+        { "title": "L2: Empuraan", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "drishyam-malayalam",
+      "name": "Drishyam (Malayalam)",
+      "aliases": ["Drishyam Series", "Georgekutty"],
+      "description": "The Malayalam thriller films starring Mohanlal.",
+      "movies": [
+        { "title": "Drishyam", "year": 2013 },
+        { "title": "Drishyam 2", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "dhoom",
+      "name": "Dhoom",
+      "aliases": ["Dhoom Series", "Dhoom Trilogy"],
+      "description": "The Bollywood heist action trilogy.",
+      "movies": [
+        { "title": "Dhoom", "year": 2004 },
+        { "title": "Dhoom 2", "year": 2006 },
+        { "title": "Dhoom 3", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "krrish",
+      "name": "Krrish",
+      "aliases": ["Koi... Mil Gaya", "Krrish Series", "Bollywood Superhero"],
+      "description": "The Bollywood sci-fi superhero series starring Hrithik Roshan.",
+      "movies": [
+        { "title": "Koi... Mil Gaya", "year": 2003 },
+        { "title": "Krrish", "year": 2006 },
+        { "title": "Krrish 3", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "rohit-shetty-cop-universe",
+      "name": "Rohit Shetty Cop Universe",
+      "aliases": ["Singham Series", "Singham Universe", "Simmba", "Sooryavanshi"],
+      "description": "The Bollywood Cop Universe films in story order.",
+      "movies": [
+        { "title": "Singham", "year": 2011 },
+        { "title": "Singham Returns", "year": 2014 },
+        { "title": "Simmba", "year": 2018 },
+        { "title": "Sooryavanshi", "year": 2021 },
+        { "title": "Singham Again", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "golmaal",
+      "name": "Golmaal",
+      "aliases": ["Golmaal Series", "Rohit Shetty Comedy"],
+      "description": "The Bollywood comedy franchise directed by Rohit Shetty.",
+      "movies": [
+        { "title": "Golmaal: Fun Unlimited", "year": 2006 },
+        { "title": "Golmaal Returns", "year": 2008 },
+        { "title": "Golmaal 3", "year": 2010 },
+        { "title": "Golmaal Again", "year": 2017 }
+      ]
+    },
+    {
+      "slug": "yrf-spy-universe",
+      "name": "YRF Spy Universe",
+      "aliases": ["Tiger Franchise", "War and Pathaan", "Ek Tha Tiger Universe"],
+      "description": "Yash Raj Films' Bollywood spy films in story order.",
+      "movies": [
+        { "title": "Ek Tha Tiger", "year": 2012 },
+        { "title": "Tiger Zinda Hai", "year": 2017 },
+        { "title": "War", "year": 2019 },
+        { "title": "Pathaan", "year": 2023 },
+        { "title": "Tiger 3", "year": 2023 },
+        { "title": "War 2", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "maddock-horror-comedy-universe",
+      "name": "Maddock Horror Comedy Universe",
+      "aliases": ["Stree Universe", "Bollywood Horror Comedy Universe"],
+      "description": "The interconnected Bollywood horror-comedy films from Maddock Films.",
+      "movies": [
+        { "title": "Stree", "year": 2018 },
+        { "title": "Bhediya", "year": 2022 },
+        { "title": "Munjya", "year": 2024 },
+        { "title": "Stree 2: Sarkate Ka Aatank", "year": 2024 },
+        { "title": "Thama", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "bhool-bhulaiyaa",
+      "name": "Bhool Bhulaiyaa",
+      "aliases": ["Bhool Bhulaiya", "Bhool Bhulaiyaa Series"],
+      "description": "The Bollywood horror-comedy series.",
+      "movies": [
+        { "title": "Bhool Bhulaiyaa", "year": 2007 },
+        { "title": "Bhool Bhulaiyaa 2", "year": 2022 },
+        { "title": "Bhool Bhulaiyaa 3", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "housefull",
+      "name": "Housefull",
+      "aliases": ["Housefull Series", "Bollywood Comedy"],
+      "description": "The Bollywood ensemble comedy franchise.",
+      "movies": [
+        { "title": "Housefull", "year": 2010 },
+        { "title": "Housefull 2", "year": 2012 },
+        { "title": "Housefull 3", "year": 2016 },
+        { "title": "Housefull 4", "year": 2019 },
+        { "title": "Housefull 5", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "dabangg",
+      "name": "Dabangg",
+      "aliases": ["Chulbul Pandey", "Dabangg Series"],
+      "description": "The Bollywood action series starring Salman Khan.",
+      "movies": [
+        { "title": "Dabangg", "year": 2010 },
+        { "title": "Dabangg 2", "year": 2012 },
+        { "title": "Dabangg 3", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "race",
+      "name": "Race",
+      "aliases": ["Race Series", "Bollywood Thriller"],
+      "description": "The Bollywood action thriller series.",
+      "movies": [
+        { "title": "Race", "year": 2008 },
+        { "title": "Race 2", "year": 2013 },
+        { "title": "Race 3", "year": 2018 }
+      ]
+    },
+    {
+      "slug": "gadar",
+      "name": "Gadar",
+      "aliases": ["Tara Singh", "Gadar Series"],
+      "description": "The Bollywood action dramas starring Sunny Deol.",
+      "movies": [
+        { "title": "Gadar: Ek Prem Katha", "year": 2001 },
+        { "title": "Gadar 2", "year": 2023 }
+      ]
+    },
+    {
+      "slug": "munna-bhai",
+      "name": "Munna Bhai",
+      "aliases": ["Munna Bhai MBBS", "Lage Raho Munna Bhai"],
+      "description": "Rajkumar Hirani's Bollywood comedy-drama series.",
+      "movies": [
+        { "title": "Munna Bhai M.B.B.S.", "year": 2003 },
+        { "title": "Lage Raho Munna Bhai", "year": 2006 }
+      ]
+    },
+    {
+      "slug": "hera-pheri",
+      "name": "Hera Pheri",
+      "aliases": ["Hera Pheri Series", "Baburao"],
+      "description": "The Bollywood comedy classics.",
+      "movies": [
+        { "title": "Hera Pheri", "year": 2000 },
+        { "title": "Phir Hera Pheri", "year": 2006 }
+      ]
+    },
+    {
+      "slug": "jolly-llb",
+      "name": "Jolly LLB",
+      "aliases": ["Jolly LLB Series", "Courtroom Comedy"],
+      "description": "The Bollywood courtroom comedy-dramas.",
+      "movies": [
+        { "title": "Jolly LLB", "year": 2013 },
+        { "title": "Jolly LLB 2", "year": 2017 },
+        { "title": "Jolly LLB 3", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "raid",
+      "name": "Raid",
+      "aliases": ["Raid Series", "Amay Patnaik"],
+      "description": "The Bollywood period crime thrillers starring Ajay Devgn.",
+      "movies": [
+        { "title": "Raid", "year": 2018 },
+        { "title": "Raid 2", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "mardaani",
+      "name": "Mardaani",
+      "aliases": ["Mardaani Series", "Shivani Shivaji Roy"],
+      "description": "The Bollywood crime thrillers starring Rani Mukerji.",
+      "movies": [
+        { "title": "Mardaani", "year": 2014 },
+        { "title": "Mardaani 2", "year": 2019 }
+      ]
+    },
+    {
+      "slug": "rebuild-of-evangelion",
+      "name": "Rebuild of Evangelion",
+      "aliases": ["Evangelion Rebuild", "Evangelion Movies", "Neon Genesis Evangelion"],
+      "description": "The four-film Evangelion retelling.",
+      "movies": [
+        { "title": "Evangelion: 1.0 You Are (Not) Alone", "year": 2007 },
+        { "title": "Evangelion: 2.0 You Can (Not) Advance", "year": 2009 },
+        { "title": "Evangelion: 3.0 You Can (Not) Redo", "year": 2012 },
+        { "title": "Evangelion: 3.0+1.0 Thrice Upon a Time", "year": 2021 }
+      ]
+    },
+    {
+      "slug": "fate-stay-night-heavens-feel",
+      "name": "Fate/stay night: Heaven's Feel",
+      "aliases": ["Heaven's Feel", "Fate Series Movies"],
+      "description": "The Heaven's Feel anime film trilogy.",
+      "movies": [
+        { "title": "Fate/stay night: Heaven's Feel I. Presage Flower", "year": 2017 },
+        { "title": "Fate/stay night: Heaven's Feel II. Lost Butterfly", "year": 2019 },
+        { "title": "Fate/stay night: Heaven's Feel III. Spring Song", "year": 2020 }
+      ]
+    },
+    {
+      "slug": "demon-slayer-films",
+      "name": "Demon Slayer Films",
+      "aliases": ["Kimetsu no Yaiba Movies", "Mugen Train", "Infinity Castle"],
+      "description": "The Demon Slayer anime theatrical films in story order.",
+      "movies": [
+        { "title": "Demon Slayer: Kimetsu no Yaiba - The Movie: Mugen Train", "year": 2020 },
+        { "title": "Demon Slayer: Kimetsu no Yaiba - The Movie: Infinity Castle", "year": 2025 }
+      ]
+    },
+    {
+      "slug": "dragon-ball-super-films",
+      "name": "Dragon Ball Super Films",
+      "aliases": ["Dragon Ball Movies", "Dragon Ball Z Films", "Goku Movies"],
+      "description": "The modern Dragon Ball theatrical films.",
+      "movies": [
+        { "title": "Dragon Ball Z: Battle of Gods", "year": 2013 },
+        { "title": "Dragon Ball Z: Resurrection 'F'", "year": 2015 },
+        { "title": "Dragon Ball Super: Broly", "year": 2018 },
+        { "title": "Dragon Ball Super: Super Hero", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "naruto-films",
+      "name": "Naruto Films",
+      "aliases": ["Naruto Movies", "Boruto Films"],
+      "description": "The late-era Naruto theatrical films.",
+      "movies": [
+        { "title": "The Last: Naruto the Movie", "year": 2014 },
+        { "title": "Boruto: Naruto the Movie", "year": 2015 }
+      ]
+    },
+    {
+      "slug": "one-piece-films",
+      "name": "One Piece Films",
+      "aliases": ["One Piece Movies", "Straw Hat Pirates"],
+      "description": "The recent One Piece anime theatrical films.",
+      "movies": [
+        { "title": "One Piece Film: Strong World", "year": 2009 },
+        { "title": "One Piece Film: Z", "year": 2012 },
+        { "title": "One Piece Film: Gold", "year": 2016 },
+        { "title": "One Piece: Stampede", "year": 2019 },
+        { "title": "One Piece Film: Red", "year": 2022 }
+      ]
+    },
+    {
+      "slug": "my-hero-academia-films",
+      "name": "My Hero Academia Films",
+      "aliases": ["Boku no Hero Academia Movies", "MHA Movies"],
+      "description": "The My Hero Academia anime theatrical films.",
+      "movies": [
+        { "title": "My Hero Academia: Two Heroes", "year": 2018 },
+        { "title": "My Hero Academia: Heroes Rising", "year": 2019 },
+        { "title": "My Hero Academia: World Heroes' Mission", "year": 2021 },
+        { "title": "My Hero Academia: You're Next", "year": 2024 }
+      ]
+    },
+    {
+      "slug": "ghost-in-the-shell",
+      "name": "Ghost in the Shell",
+      "aliases": ["Mamoru Oshii Ghost in the Shell", "Innocence"],
+      "description": "Mamoru Oshii's cyberpunk anime films.",
+      "movies": [
+        { "title": "Ghost in the Shell", "year": 1995 },
+        { "title": "Ghost in the Shell 2: Innocence", "year": 2004 }
+      ]
+    },
+    {
+      "slug": "madoka-magica-films",
+      "name": "Puella Magi Madoka Magica Films",
+      "aliases": ["Madoka Magica Movies", "Rebellion"],
+      "description": "The Madoka Magica anime films.",
+      "movies": [
+        { "title": "Puella Magi Madoka Magica the Movie: Beginnings", "year": 2012 },
+        { "title": "Puella Magi Madoka Magica the Movie: Eternal", "year": 2012 },
+        { "title": "Puella Magi Madoka Magica the Movie: Rebellion", "year": 2013 }
+      ]
+    },
+    {
+      "slug": "train-to-busan",
+      "name": "Train to Busan",
+      "aliases": ["Busan Universe", "Seoul Station", "Peninsula"],
+      "description": "The Korean zombie films in story order.",
+      "movies": [
+        { "title": "Seoul Station", "year": 2016 },
+        { "title": "Train to Busan", "year": 2016 },
+        { "title": "Peninsula", "year": 2020 }
+      ]
+    }
+  ]
+}
