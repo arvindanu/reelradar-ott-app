@@ -479,6 +479,11 @@ export default function Home() {
     { key: 'bingeclock', label: 'BingeClock', action: () => { window.location.assign('/bingeclock'); } },
     { key: 'actorlens', label: 'ActorLens', action: () => { window.location.assign('/actorlens'); } },
     { key: 'dropclock', label: 'DropClock', action: () => { window.location.assign('/dropclock'); } },
+    {
+  key: 'lookalike',
+  label: 'Lookalike',
+  action: () => { window.location.assign('/lookalike'); }
+},
   ];
 
   useEffect(() => {
