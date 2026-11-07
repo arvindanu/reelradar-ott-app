@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Check, Clapperboard, Dices, ExternalLink, Film, LoaderCircle, RotateCcw, Star, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, Clapperboard, Dices, ExternalLink, Film, LoaderCircle, RotateCcw, Star, Volume2, VolumeX, X } from 'lucide-react';
 import './roulette.css';
 
 type MediaType = 'movie' | 'tv';
@@ -189,15 +189,20 @@ export default function MovieRoulettePage() {
 
   return <main className="roulette-page">
    
-    <header className="roulette-header">
-  <Link className="back-link" href="/" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
-  </Link>
+    <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-  <Link className="wordmark" href="/" aria-label="REELRADAR Home">
-    REEL<span>RADAR</span>
-  </Link>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
 </header>
+
     <div className="roulette-heading"><span className="roulette-kicker">LET FATE PICK YOUR NEXT WATCH</span><h1>MOVIE ROULETTE</h1><p>Set your mood. Spin the wheel. Find your next obsession.</p></div>
 
     <div className="roulette-layout">
