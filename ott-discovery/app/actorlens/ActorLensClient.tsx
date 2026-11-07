@@ -263,10 +263,12 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
   return <main className="actorlens-page">
     <div className="al-grid-bg" aria-hidden="true" />
     <header className="al-topbar">
-      <Link href="/" className="al-back-link"><ArrowLeft size={16} /> REELRADAR</Link>
-      <span className="al-brand"><ScanEye size={19} /> ACTOR<span>LENS</span></span>
-      <span className="al-top-status"><i /> TMDB DATABASE ONLINE</span>
-    </header>
+  <Link href="/" className="al-back-link" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </Link>
+
+  <span className="al-brand">REELRADAR</span>
+</header>
 
     {!actorId ? <section className="al-landing">
       <div className="al-kicker"><span /> PERSONNEL DATABASE / 01</div>
