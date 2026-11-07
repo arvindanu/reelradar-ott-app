@@ -205,7 +205,15 @@ export default function BingeClockPage() {
       @media(max-width:600px){.bc-wrap{width:calc(100% - 28px)}.bc-topbar{height:58px}.bc-hero{padding:32px 0 16px}.bc-hero h1{font-size:43px}.bc-hero>p{font-size:12px}.bc-panel{padding:15px;margin-top:14px}.bc-grid{grid-template-columns:1fr;gap:0}.bc-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bc-stat{padding:11px}.bc-stat strong{font-size:17px}.bc-result-top{flex-direction:column}.bc-ring-row{gap:13px;padding:13px}.bc-ring{width:88px;height:88px;flex-basis:88px}.bc-ring svg{width:88px;height:88px}.bc-ring-center strong{font-size:15px}.bc-actions>*{flex:1}.bc-watch-item{padding:9px}.bc-watch-copy strong{font-size:10px}}
       @media(prefers-reduced-motion:reduce){.bc-ring .value,.bc-progress span{transition:none!important}}
     `}</style>
-    <header className="bc-topbar"><Link href="/" className="bc-brand"><span className="bc-brand-mark"><Clock3 size={17}/></span>REEL<b>RADAR</b></Link><Link href="/" className="bc-back"><ArrowLeft size={15}/> Back to Discover</Link></header>
+<header className="bc-topbar">
+  <Link href="/" className="bc-back" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </Link>
+
+  <Link href="/" className="bc-brand">
+    REELRADAR
+  </Link>
+</header>
     <div className="bc-wrap">
       <section className="bc-hero"><span className="bc-kicker"><Hourglass size={14}/> YOUR WATCH-TIME PLANNER</span><h1>BINGE<span>CLOCK</span></h1><p>BingeClock tells you exactly how much to watch each day to finish a franchise or series before your deadline.</p><div className="bc-tagline">Less guessing. Better pacing. One episode at a time.</div>
         <details className="bc-how"><summary>How it works <ChevronDown size={16}/></summary><p>Choose a movie collection or TV series, set your deadline and daily watch time, then BingeClock builds a day-by-day plan from TMDB runtimes. Long movies and episodes stay together instead of being split between days. Tick off titles as you watch; progress is saved on this device.</p></details>
