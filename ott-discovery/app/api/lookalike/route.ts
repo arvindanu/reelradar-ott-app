@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -250,6 +249,304 @@ async function mapLimit<T, R>(
   return results;
 }
 
+function getSource(source: any, type: MediaType) {
+  return {
+    id: source.id,
+    title: source.title ?? source.name ?? 'Selected title',
+    overview: source.overview ?? '',
+    poster: image(source.poster_path),
+    backdrop: image(source.backdrop_path, 'w780'),
+    year: (
+      source.release_date ??
+      source.first_air_date ??
+      ''
+    ).slice(0, 4),
+    mediaType: type,
+  };
+}
+
+async function getPagedTitleResults(
+  basePath: string,
+  type: MediaType,
+  id: number
+) {
+  // Fetch three TMDB pages from both endpoints instead of only page one.
+  const pages = [1, 2, 3];
+
+  const [recommendationPages, similarPages] = await Promise.all([
+    Promise.all(
+      pages.map(page =>
+        tmdb(`${basePath}/recommendations?language=en-US&page=${page}`)
+          .catch(() => ({ results: [] }))
+      )
+    ),
+    Promise.all(
+      pages.map(page =>
+        tmdb(`${basePath}/similar?language=en-US&page=${page}`)
+          .catch(() => ({ results: [] }))
+      )
+    ),
+  ]);
+
+  const candidates = new Map<number, Candidate>();
+
+  recommendationPages.forEach((data: any, pageIndex: number) => {
+    const items = Array.isArray(data.results) ? data.results : [];
+
+    items.forEach((item: any, index: number) => {
+      const candidate = mapCandidate(item, type);
+      if (!candidate.id || candidate.id === id) return;
+
+      candidate.recommendationRank = pageIndex * 20 + index;
+      candidates.set(candidate.id, candidate);
+    });
+  });
+
+  similarPages.forEach((data: any, pageIndex: number) => {
+    const items = Array.isArray(data.results) ? data.results : [];
+
+    items.forEach((item: any, index: number) => {
+      const candidate = mapCandidate(item, type);
+      if (!candidate.id || candidate.id === id) return;
+
+      const rank = pageIndex * 20 + index;
+      const existing = candidates.get(candidate.id);
+
+      if (existing) {
+        existing.similarRank = rank;
+      } else {
+        candidate.similarRank = rank;
+        candidates.set(candidate.id, candidate);
+      }
+    });
+  });
+
+  return Array.from(candidates.values())
+    .sort((a, b) => {
+      const aRank =
+        rankPoints(a.recommendationRank, 32) +
+        rankPoints(a.similarRank, 22);
+      const bRank =
+        rankPoints(b.recommendationRank, 32) +
+        rankPoints(b.similarRank, 22);
+
+      return (
+        bRank - aRank ||
+        b.popularity - a.popularity
+      );
+    })
+    .slice(0, 72);
+}
+
+async function findTagKeywords(query: string) {
+  const terms = Array.from(
+    new Set(
+      query
+        .toLowerCase()
+        .split(/[,;]+|\s+/)
+        .map(term => term.trim())
+        .filter(term => term.length >= 3)
+    )
+  );
+
+  const searchTerms = Array.from(
+    new Set([query.trim(), ...terms])
+  ).slice(0, 8);
+
+  const keywordResults = await Promise.all(
+    searchTerms.map(term =>
+      tmdb(
+        `/search/keyword?query=${encodeURIComponent(term)}&page=1`
+      ).catch(() => ({ results: [] }))
+    )
+  );
+
+  const keywords = new Map<number, string>();
+
+  keywordResults.forEach((data: any) => {
+    const items = Array.isArray(data.results) ? data.results : [];
+
+    items.forEach((item: any) => {
+      const id = Number(item.id);
+      const name = String(item.name ?? '');
+
+      if (Number.isInteger(id) && id > 0 && name) {
+        keywords.set(id, name);
+      }
+    });
+  });
+
+  return {
+    terms,
+    keywords,
+  };
+}
+
+function scoreTagCandidate(
+  candidate: Candidate,
+  keywordNames: string[],
+  terms: string[]
+) {
+  const normalizedKeywords = keywordNames.map(name =>
+    name.toLowerCase()
+  );
+
+  const matchedTerms = terms.filter(term =>
+    normalizedKeywords.some(keyword =>
+      keyword.includes(term) || term.includes(keyword)
+    )
+  );
+
+  const searchableText =
+    `${candidate.title} ${candidate.overview}`.toLowerCase();
+
+  const textMatches = terms.filter(term =>
+    searchableText.includes(term)
+  );
+
+  const keywordCoverage = terms.length
+    ? matchedTerms.length / terms.length
+    : 0;
+
+  const textCoverage = terms.length
+    ? textMatches.length / terms.length
+    : 0;
+
+  const rating = Math.max(
+    0,
+    Math.min(10, candidate.rating ?? 0)
+  ) / 10;
+
+  const voteConfidence = Math.min(
+    1,
+    Math.log10(candidate.voteCount + 1) / 3
+  );
+
+  const qualityPoints = rating * voteConfidence * 5;
+  const score = Math.min(
+    100,
+    Math.round(
+      keywordCoverage * 75 +
+      textCoverage * 20 +
+      qualityPoints
+    )
+  );
+
+  const reasons: string[] = [];
+
+  if (matchedTerms.length > 0) {
+    reasons.push(
+      `${matchedTerms.length} matching tag${matchedTerms.length > 1 ? 's' : ''}`
+    );
+  }
+
+  if (textMatches.length > 0) {
+    reasons.push('Matching title or synopsis');
+  }
+
+  if (candidate.genres.length > 0) {
+    reasons.push('Genre metadata available');
+  }
+
+  return { score, reasons };
+}
+
+async function getTagResults(
+  query: string,
+  type: MediaType
+) {
+  const { terms, keywords } = await findTagKeywords(query);
+
+  if (!keywords.size) {
+    return [];
+  }
+
+  const keywordIds = Array.from(keywords.keys()).slice(0, 20);
+  const keywordFilter = keywordIds.join('|');
+  const pages = [1, 2, 3];
+
+  const discoverPages = await Promise.all(
+    pages.map(page =>
+      tmdb(
+        `/discover/${type}?include_adult=false&language=en-US&sort_by=popularity.desc&with_keywords=${encodeURIComponent(keywordFilter)}&page=${page}`
+      )
+    )
+  );
+
+  const candidates = new Map<number, Candidate>();
+
+  discoverPages.forEach((data: any) => {
+    const items = Array.isArray(data.results) ? data.results : [];
+
+    items.forEach((item: any) => {
+      const candidate = mapCandidate(item, type);
+
+      if (candidate.id) {
+        candidates.set(candidate.id, candidate);
+      }
+    });
+  });
+
+  const candidateList = Array.from(candidates.values()).slice(0, 72);
+
+  const enriched = await mapLimit(
+    candidateList,
+    5,
+    async candidate => {
+      try {
+        const details = await tmdb(
+          `/${type}/${candidate.id}?append_to_response=keywords&language=en-US`
+        );
+
+        const keywordData = details.keywords;
+        const keywordList = Array.isArray(keywordData)
+          ? keywordData
+          : Array.isArray(keywordData?.keywords)
+            ? keywordData.keywords
+            : Array.isArray(keywordData?.results)
+              ? keywordData.results
+              : [];
+
+        const candidateKeywordNames = keywordList
+          .map((item: any) => String(item.name ?? ''))
+          .filter(Boolean);
+
+        const { score, reasons } = scoreTagCandidate(
+          candidate,
+          candidateKeywordNames,
+          terms
+        );
+
+        return {
+          ...candidate,
+          score,
+          reasons,
+          matchType: 'similar' as const,
+        };
+      } catch {
+        const { score, reasons } = scoreTagCandidate(
+          candidate,
+          [],
+          terms
+        );
+
+        return {
+          ...candidate,
+          score,
+          reasons,
+          matchType: 'similar' as const,
+        };
+      }
+    }
+  );
+
+  return enriched.sort((a, b) =>
+    b.score - a.score ||
+    b.voteCount - a.voteCount ||
+    b.popularity - a.popularity
+  );
+}
+
 export async function GET(request: NextRequest) {
   if (!token && !apiKey) {
     return NextResponse.json(
@@ -320,6 +617,35 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const type: MediaType = body.type === 'tv' ? 'tv' : 'movie';
+
+    if (body.mode === 'tags') {
+      const query = typeof body.query === 'string'
+        ? body.query.trim()
+        : '';
+
+      if (query.length < 2 || query.length > 100) {
+        return NextResponse.json(
+          { error: 'Enter tags between 2 and 100 characters.' },
+          { status: 400 }
+        );
+      }
+
+      const results = await getTagResults(query, type);
+
+      return NextResponse.json({
+        source: {
+          id: 0,
+          title: query,
+          overview: '',
+          poster: null,
+          backdrop: null,
+          year: '',
+          mediaType: type,
+        },
+        results,
+      });
+    }
+
     const id = Number(body.id);
 
     if (!Number.isInteger(id) || id <= 0) {
@@ -331,61 +657,14 @@ export async function POST(request: NextRequest) {
 
     const basePath = `/${type}/${id}`;
 
-    const [source, recommendations, similar] = await Promise.all([
+    const [source, candidateList] = await Promise.all([
       tmdb(`${basePath}?append_to_response=keywords&language=en-US`),
-      tmdb(`${basePath}/recommendations?language=en-US&page=1`)
-        .catch(() => ({ results: [] })),
-      tmdb(`${basePath}/similar?language=en-US&page=1`)
-        .catch(() => ({ results: [] })),
+      getPagedTitleResults(basePath, type, id),
     ]);
-
-    const recommendationItems = Array.isArray(recommendations.results)
-      ? recommendations.results
-      : [];
-
-    const similarItems = Array.isArray(similar.results)
-      ? similar.results
-      : [];
-
-    const candidates = new Map<number, Candidate>();
-
-    recommendationItems.forEach((item: any, index: number) => {
-      const candidate = mapCandidate(item, type);
-      if (!candidate.id || candidate.id === id) return;
-
-      candidate.recommendationRank = index;
-      candidates.set(candidate.id, candidate);
-    });
-
-    similarItems.forEach((item: any, index: number) => {
-      const candidate = mapCandidate(item, type);
-      if (!candidate.id || candidate.id === id) return;
-
-      const existing = candidates.get(candidate.id);
-
-      if (existing) {
-        existing.similarRank = index;
-      } else {
-        candidate.similarRank = index;
-        candidates.set(candidate.id, candidate);
-      }
-    });
-
-    const candidateList = Array.from(candidates.values()).slice(0, 30);
 
     if (!candidateList.length) {
       return NextResponse.json({
-        source: {
-          id: source.id,
-          title: source.title ?? source.name ?? 'Selected title',
-          poster: image(source.poster_path),
-          year: (
-            source.release_date ??
-            source.first_air_date ??
-            ''
-          ).slice(0, 4),
-          mediaType: type,
-        },
+        source: getSource(source, type),
         results: [],
       });
     }
@@ -451,23 +730,10 @@ export async function POST(request: NextRequest) {
         b.score - a.score ||
         b.voteCount - a.voteCount ||
         b.popularity - a.popularity
-      )
-      .slice(0, 24);
+      );
 
     return NextResponse.json({
-      source: {
-        id: source.id,
-        title: source.title ?? source.name ?? 'Selected title',
-        overview: source.overview ?? '',
-        poster: image(source.poster_path),
-        backdrop: image(source.backdrop_path, 'w780'),
-        year: (
-          source.release_date ??
-          source.first_air_date ??
-          ''
-        ).slice(0, 4),
-        mediaType: type,
-      },
+      source: getSource(source, type),
       results,
     });
   } catch (error) {
