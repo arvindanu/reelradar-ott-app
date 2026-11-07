@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass, ScanEye, CalendarClock } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
@@ -96,7 +96,7 @@ function normalizeTitle(value: unknown): Title | null {
   };
 }
 
-function Poster({ item, onOpen, selectionMode = false, selectedIndex = -1, onToggleSelect }: { item: Title; onOpen: (x: Title) => void; selectionMode?: boolean; selectedIndex?: number; onToggleSelect?: (x: Title) => void }) {
+const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selectedIndex = -1, onToggleSelect }: { item: Title; onOpen: (x: Title) => void; selectionMode?: boolean; selectedIndex?: number; onToggleSelect?: (x: Title) => void }) {
   const trailerUrl = item.trailerKey
     ? `https://www.youtube.com/watch?v=${item.trailerKey}`
     : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
@@ -119,7 +119,7 @@ function Poster({ item, onOpen, selectionMode = false, selectedIndex = -1, onTog
       ? <img key={p.id} src={p.logo} alt={p.name} title={p.name} />
       : <span key={p.id} title={p.name}>{p.name.slice(0, 1)}</span>) : <span className="provider-empty">No OTT data</span>}</div><span className="card-arrow"><ArrowUpRight size={15} /></span></div>
   </article>;
-}
+});
 
 function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { item: Title; close: () => void; region: string; isWishlisted: boolean; onToggleWishlist: (item: Title) => void }) {
   const [details, setDetails] = useState<FullDetails | null>(null);
@@ -129,14 +129,29 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
   const trailer = item.trailerKey ? `https://www.youtube.com/watch?v=${item.trailerKey}` : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
 
   useEffect(() => {
-    let active = true;
-    setDetailLoading(true); setDetailError('');
-    fetch(`/api/details?type=${item.mediaType}&id=${item.id}&region=${region}`)
-      .then(async r => { const data = await r.json(); if (!r.ok) throw new Error(data.error || 'Could not load title details'); return data as FullDetails; })
-      .then(data => { if (active) setDetails(data); })
-      .catch(e => { if (active) setDetailError(e instanceof Error ? e.message : 'Could not load full details.'); })
-      .finally(() => { if (active) setDetailLoading(false); });
-    return () => { active = false; };
+    const controller = new AbortController();
+    setDetails(null);
+    setDetailLoading(true);
+    setDetailError('');
+
+    fetch(`/api/details?type=${item.mediaType}&id=${item.id}&region=${region}`, {
+      signal: controller.signal,
+    })
+      .then(async r => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Could not load title details');
+        return data as FullDetails;
+      })
+      .then(data => setDetails(data))
+      .catch(error => {
+        if (error instanceof Error && error.name === 'AbortError') return;
+        setDetailError(error instanceof Error ? error.message : 'Could not load full details.');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setDetailLoading(false);
+      });
+
+    return () => controller.abort();
   }, [item.id, item.mediaType, region]);
 
   const line = (label: string, value?: string | number | null) => value !== undefined && value !== null && value !== ''
@@ -257,18 +272,32 @@ export default function Home() {
   const [items, setItems] = useState<Title[]>([]);
   const [featuredTitles, setFeaturedTitles] = useState<Title[]>([]);
   const [mobileFeaturedIndex, setMobileFeaturedIndex] = useState(0);
-  const [mobileTouchStartX, setMobileTouchStartX] = useState<number | null>(null);
+  const mobileTouchStartX = useRef<number | null>(null);
+  const featuredTimerRef = useRef<number | null>(null);
 
-  // Automatically advance the coverflow after 2 seconds without touch input.
-  useEffect(() => {
-    if (featuredTitles.length < 2 || mobileTouchStartX !== null) return;
+  // Keep the coverflow timer outside React state to avoid touch-triggered renders.
+  const scheduleFeaturedAdvance = useCallback(() => {
+    if (featuredTimerRef.current !== null) {
+      window.clearTimeout(featuredTimerRef.current);
+      featuredTimerRef.current = null;
+    }
 
-    const timer = window.setTimeout(() => {
+    if (featuredTitles.length < 2 || mobileTouchStartX.current !== null) return;
+
+    featuredTimerRef.current = window.setTimeout(() => {
       setMobileFeaturedIndex(current => (current + 1) % featuredTitles.length);
     }, 2000);
+  }, [featuredTitles.length]);
 
-    return () => window.clearTimeout(timer);
-  }, [featuredTitles.length, mobileFeaturedIndex, mobileTouchStartX]);
+  useEffect(() => {
+    scheduleFeaturedAdvance();
+    return () => {
+      if (featuredTimerRef.current !== null) {
+        window.clearTimeout(featuredTimerRef.current);
+        featuredTimerRef.current = null;
+      }
+    };
+  }, [scheduleFeaturedAdvance, mobileFeaturedIndex]);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
@@ -374,34 +403,63 @@ export default function Home() {
     }
   }, [wishlist, wishlistReady]);
 
-  const toggleWishlist = (item: Title) => {
+  const toggleWishlist = useCallback((item: Title) => {
     setWishlist(current => current.some(saved => saved.id === item.id && saved.mediaType === item.mediaType)
       ? current.filter(saved => !(saved.id === item.id && saved.mediaType === item.mediaType))
       : [item, ...current]);
-  };
+  }, []);
 
-  const load = useCallback(async () => {
-    setLoading(true); setError('');
+  const wishlistKeys = useMemo(
+    () => new Set(wishlist.map(item => `${item.mediaType}-${item.id}`)),
+    [wishlist]
+  );
+
+  const load = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true);
+    setError('');
+
     try {
-      const params = new URLSearchParams({ type: mode, language, region, query: search, filter, page: String(page), availability, genre, provider });
-      const res = await fetch(`/api/discover?${params.toString()}`, { cache: 'no-store' });
+      const params = new URLSearchParams({
+        type: mode,
+        language,
+        region,
+        query: search,
+        filter,
+        page: String(page),
+        availability,
+        genre,
+        provider,
+      });
+      const res = await fetch(`/api/discover?${params.toString()}`, {
+        cache: 'no-store',
+        ...(signal ? { signal } : {}),
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not load titles.');
+
       const safeItems: Title[] = Array.isArray(data.results)
-  ? (data.results as unknown[])
-      .map(normalizeTitle)
-      .filter((x: Title | null): x is Title => x !== null)
-  : [];
+        ? (data.results as unknown[])
+            .map(normalizeTitle)
+            .filter((x: Title | null): x is Title => x !== null)
+        : [];
+
       setItems(safeItems);
       setTotalPages(Math.max(1, Number(data.totalPages) || 1));
       setTotalResults(Math.max(0, Number(data.totalResults) || safeItems.length));
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong.');
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
+      setError(error instanceof Error ? error.message : 'Something went wrong.');
       setItems([]);
-    } finally { setLoading(false); }
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, [mode, language, region, search, filter, page, availability, genre, provider]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const controller = new AbortController();
+    void load(controller.signal);
+    return () => controller.abort();
+  }, [load]);
   useEffect(() => {
     if (!loading && showSplash) {
       const timer = window.setTimeout(() => setShowSplash(false), 1000);
@@ -454,20 +512,24 @@ export default function Home() {
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
-  const moveFeatured = (direction: number) => {
+  const moveFeatured = useCallback((direction: number) => {
     if (featuredTitles.length < 2) return;
     setMobileFeaturedIndex(current =>
       (current + direction + featuredTitles.length) % featuredTitles.length
     );
-  };
-  const visibleFeaturedOffsets = [0, -1, 1, -2, 2]
-    .filter((offset, index, offsets) => {
-      const itemIndex = (mobileFeaturedIndex + offset + featuredTitles.length) % featuredTitles.length;
-      return offsets.findIndex(candidate =>
-        (mobileFeaturedIndex + candidate + featuredTitles.length) % featuredTitles.length === itemIndex
-      ) === index;
-    })
-    .sort((a, b) => a - b);
+  }, [featuredTitles.length]);
+
+  const visibleFeaturedOffsets = useMemo(() => {
+    const seen = new Set<number>();
+    return [0, -1, 1, -2, 2]
+      .filter(offset => {
+        const itemIndex = (mobileFeaturedIndex + offset + featuredTitles.length) % featuredTitles.length;
+        if (seen.has(itemIndex)) return false;
+        seen.add(itemIndex);
+        return true;
+      })
+      .sort((a, b) => a - b);
+  }, [mobileFeaturedIndex, featuredTitles.length]);
 
   return <main className="site-shell">
     {showSplash && <div
@@ -540,18 +602,30 @@ export default function Home() {
         <div
           className="rr-featured-rail"
           aria-label="Popular movies and series. Swipe to explore."
-          onTouchStart={event => setMobileTouchStartX(event.touches[0].clientX)}
+          onTouchStart={event => {
+            mobileTouchStartX.current = event.touches[0].clientX;
+            if (featuredTimerRef.current !== null) {
+              window.clearTimeout(featuredTimerRef.current);
+              featuredTimerRef.current = null;
+            }
+          }}
           onTouchEnd={event => {
-            if (mobileTouchStartX === null) return;
-            const delta = event.changedTouches[0].clientX - mobileTouchStartX;
+            const startX = mobileTouchStartX.current;
+            if (startX === null) return;
+            const delta = event.changedTouches[0].clientX - startX;
+            mobileTouchStartX.current = null;
             if (Math.abs(delta) > 35) moveFeatured(delta < 0 ? 1 : -1);
-            setMobileTouchStartX(null);
+            else scheduleFeaturedAdvance();
+          }}
+          onTouchCancel={() => {
+            mobileTouchStartX.current = null;
+            scheduleFeaturedAdvance();
           }}
         >
           {featuredTitles.length ? visibleFeaturedOffsets.map(offset => {
             const itemIndex = (mobileFeaturedIndex + offset + featuredTitles.length) % featuredTitles.length;
             const item = featuredTitles[itemIndex];
-            const isWishlisted = wishlist.some(saved => saved.id === item.id && saved.mediaType === item.mediaType);
+            const isWishlisted = wishlistKeys.has(`${item.mediaType}-${item.id}`);
             return <div
               className={`rr-featured-card rr-featured-card-${offset + 2} rr-featured-cover-card rr-cover-position-${offset + 2}`}
               key={`${item.mediaType}-${item.id}`}
@@ -896,6 +970,6 @@ export default function Home() {
     MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
   </span>
 </footer>
-    {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlist.some(saved => saved.id === selected.id && saved.mediaType === selected.mediaType)} onToggleWishlist={toggleWishlist} />}
+    {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlistKeys.has(`${selected.mediaType}-${selected.id}`)} onToggleWishlist={toggleWishlist} />}
   </main>;
 }
