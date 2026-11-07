@@ -76,14 +76,18 @@ export default function MovieCollidePage() {
   };
 
   return <main className="collide-page">
-    <header className="collide-header">
-  <Link className="back-link" href="/" aria-label="Back to Discover">
-    <ArrowLeft size={18} />
-  </Link>
+    <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-  <Link className="wordmark" href="/" aria-label="REELRADAR Home">
-    REEL<span>RADAR</span>
-  </Link>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
 </header>
     <section className="collide-hero"><div className="hero-glow"/><span className="eyebrow"></span><h1><span>MOVIE</span> COLLIDE</h1><p>Two movies. One unexpected connection. Discover the film that sits between your favourites.</p><div className="hero-mark"><GitMerge size={25}/><span>SELECT TWO MOVIES TO BEGIN</span></div></section>
     <section className="collide-content">
