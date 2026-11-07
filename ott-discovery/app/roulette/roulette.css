@@ -40,3 +40,19 @@
 @media(max-width:850px){.roulette-route-nav{display:none}.roulette-layout{grid-template-columns:1fr}.roulette-layout>.roulette-filters{display:none}.roulette-mobile-filter-panel{display:block;width:100%;margin:0 auto 24px}.roulette-filter-card{width:100%;padding:22px;border-radius:18px}.roulette-filter-card .roulette-chips{max-height:190px}.roulette-filter-card .roulette-type-row button,.roulette-filter-card .roulette-chip{min-height:40px}.roulette-card-stage{height:430px}.roulette-heading{margin-top:8px}.roulette-result{grid-template-columns:130px 1fr;gap:15px;padding:16px}.roulette-result>img{max-height:240px}}
 @media(max-width:480px){.roulette-result-meta{gap:7px;margin:9px 0}.roulette-result-meta span{min-height:30px;padding:6px 9px;gap:6px;font-size:10px}.roulette-result-actions{gap:8px}.roulette-result-actions a,.roulette-result-actions button{min-height:40px;padding:10px 11px;font-size:10px}.roulette-provider-row{gap:7px}.roulette-provider-row a{min-height:36px;padding:5px 8px;font-size:10px}.roulette-page{padding:18px 14px 48px}.roulette-filter-card{padding:18px 15px}.roulette-filter-card .roulette-field{margin-bottom:19px}.roulette-filter-card .roulette-type-row button{padding:11px 8px}.roulette-filter-card .roulette-chip{padding:9px 10px}.roulette-top{margin-bottom:18px}.roulette-brand{font-size:10px}.roulette-heading h1{font-size:34px}.roulette-heading p{font-size:12px}.roulette-card-stage{height:390px}.roulette-movie-card{width:174px;height:278px}.roulette-spin{padding:14px 42px}.roulette-result{display:block}.roulette-result>img{width:104px;height:150px;float:left;margin:0 14px 8px 0}.roulette-result h2{padding-right:24px}.roulette-result p{clear:both;padding-top:8px}.roulette-result-actions a,.roulette-result-actions button{padding:9px 10px}.roulette-result-backdrop{padding:10px}}
 @media(prefers-reduced-motion:reduce){.roulette-result-backdrop,.roulette-result{animation:none!important}.roulette-spin:not(:disabled):hover{transform:none}}
+
+.roulette-header {
+  height: 72px;
+  padding: 0 max(5vw, 22px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff12;
+  background: #0b0d12;
+}
+
+@media (max-width: 600px) {
+  .roulette-header {
+    height: 62px;
+  }
+}

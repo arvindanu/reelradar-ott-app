@@ -189,7 +189,15 @@ export default function MovieRoulettePage() {
 
   return <main className="roulette-page">
    
-    <header className="roulette-top"><Link href="/" className="roulette-back"><ArrowLeft size={16}/></Link><span className="roulette-brand">REELRADAR</span></header>
+    <header className="roulette-header">
+  <Link className="back-link" href="/" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </Link>
+
+  <Link className="wordmark" href="/" aria-label="REELRADAR Home">
+    REEL<span>RADAR</span>
+  </Link>
+</header>
     <div className="roulette-heading"><span className="roulette-kicker">LET FATE PICK YOUR NEXT WATCH</span><h1>MOVIE ROULETTE</h1><p>Set your mood. Spin the wheel. Find your next obsession.</p></div>
 
     <div className="roulette-layout">
