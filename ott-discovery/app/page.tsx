@@ -3,7 +3,7 @@
 import './home.css';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass, ScanEye, ScanSearch, CalendarClock } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, HomeIcon, Dices, Hourglass, ScanEye, ScanSearch, CalendarClock } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 
@@ -580,7 +580,7 @@ export default function Home() {
       }}
       type="button"
     >
-      {item.key === 'all' && <Compass size={17} />}
+      {item.key === 'all' && <HomeIcon size={17} />}
       {item.key === 'wishlist' && <Heart size={17} />}
       {item.key === 'collide' && <GitMerge size={17} />}
       {item.key === 'roulette' && <Dices size={17} />}
