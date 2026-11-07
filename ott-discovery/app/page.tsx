@@ -288,7 +288,7 @@ export default function Home() {
 
     featuredTimerRef.current = window.setTimeout(() => {
       setMobileFeaturedIndex(current => (current + 1) % featuredTitles.length);
-    }, 2000);
+    }, 4000);
   }, [featuredTitles.length]);
 
   useEffect(() => {
