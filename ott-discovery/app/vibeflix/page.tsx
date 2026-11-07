@@ -156,7 +156,15 @@ export default function VibeFlixPage() {
       @media(prefers-reduced-motion:reduce){.vf-page *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
     `}</style>
     <div className="vf-shell">
-      <header className="vf-nav"><Link className="vf-brand" href="/">REELRADAR <b>×</b> VIBEFLIX</Link><Link className="back" href="/"><ArrowLeft size={15}/> Back to ReelRadar</Link></header>
+     <header className="vf-nav">
+  <Link className="back" href="/" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </Link>
+
+  <Link className="vf-brand" href="/">
+    REELRADAR
+  </Link>
+</header>
       {screen === 'intro' && <section className="vf-hero">
         <div className="vf-orb">🎬</div><span className="vf-kicker">YOUR MOOD. YOUR MOVIE.</span><h1>FIND YOUR<br/><span>VIBE.</span></h1>
         <p>Not sure what to watch? Tell us how you feel, what kind of night you want, and we will find a movie or series that fits. No endless scrolling. Just your next favourite.</p>
