@@ -1,6 +1,6 @@
 
 "use client";
-import './timeliner/timeliner.css';
+
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
