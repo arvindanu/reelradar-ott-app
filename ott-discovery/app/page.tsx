@@ -3,7 +3,7 @@
 import './home.css';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass, ScanEye, CalendarClock } from 'lucide-react';
+import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, Compass, Dices, Hourglass, ScanEye, ScanSearch, CalendarClock } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
 
@@ -479,11 +479,7 @@ export default function Home() {
     { key: 'bingeclock', label: 'BingeClock', action: () => { window.location.assign('/bingeclock'); } },
     { key: 'actorlens', label: 'ActorLens', action: () => { window.location.assign('/actorlens'); } },
     { key: 'dropclock', label: 'DropClock', action: () => { window.location.assign('/dropclock'); } },
-    {
-  key: 'lookalike',
-  label: 'Lookalike',
-  action: () => { window.location.assign('/lookalike'); }
-},
+    { key: 'lookalike', label: 'Lookalike', action: () => { window.location.assign('/lookalike'); }},
   ];
 
   useEffect(() => {
@@ -561,7 +557,7 @@ export default function Home() {
     </div>}
     <header className="topbar">
       <a className="brand" href="/"><span className="brand-mark"><Clapperboard size={19} strokeWidth={1.7} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
+      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'lookalike'? pathname === '/lookalike' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
           {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
@@ -593,6 +589,7 @@ export default function Home() {
       {item.key === 'bingeclock' && <Hourglass size={17} />}
       {item.key === 'actorlens' && <ScanEye size={17} />}
       {item.key === 'dropclock' && <CalendarClock size={17} />}
+      {item.key === 'lookalike' && <ScanSearch size={17} />}
       {item.label}
     </button>
   ))}
