@@ -1,9 +1,19 @@
 
 "use client";
-
+import './timeliner/timeliner.css';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, ChevronDown, Clapperboard, Clock3, Film, ListFilter, Search, Sparkles, X } from 'lucide-react';
+import {
+  ArrowUpRight,
+  ChevronDown,
+  Clapperboard,
+  Clock3,
+  Film,
+  ListFilter,
+  Search,
+  Sparkles,
+  X,
+} from 'lucide-react';
 import TimelinerHeader from './TimelinerHeader';
 
 type Franchise = {
@@ -132,13 +142,6 @@ export default function TimelinerPage() {
 
   return (
     <main className="tl-page">
-      <style jsx global>{`
-        .tl-page{min-height:100vh;background:#08090d;color:#f6f7fb;padding:0 0 56px;font-family:inherit}.tl-topbar{height:66px;padding:0 clamp(16px,4vw,56px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(8,9,13,.88);position:sticky;top:0;z-index:20;backdrop-filter:blur(18px)}.tl-wordmark b{color:#dfff00}.tl-back{color:#fff!important}.tl-wrap{width:min(1240px,calc(100% - 40px));margin:0 auto}.tl-hero{padding:48px 0 28px}.tl-kicker{color:#dfff00;font-size:10px;font-weight:800;letter-spacing:2px}.tl-hero h1{font-size:clamp(34px,5vw,58px);letter-spacing:-2px;margin:9px 0 8px}.tl-hero>p{color:#aab0bd;margin:0;max-width:700px;line-height:1.7;font-size:14px}.tl-intro{margin-top:22px;padding:22px;border:1px solid rgba(223,255,0,.18);border-radius:18px;background:linear-gradient(120deg,rgba(223,255,0,.07),rgba(255,255,255,.025));position:relative}.tl-intro-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.tl-intro h2{font-size:17px;margin:0}.tl-intro p{color:#aeb3bf;font-size:13px;line-height:1.65;margin:10px 0 0;max-width:850px}.tl-close{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cdd1d9;border-radius:8px;padding:7px;cursor:pointer}.tl-steps{display:flex;gap:26px;flex-wrap:wrap;margin-top:17px}.tl-step{display:flex;align-items:center;gap:9px;color:#e8eaf0;font-size:12px;font-weight:700}.tl-step svg{color:#dfff00}.tl-intro-reopen{margin:18px 0 0;background:transparent;border:0;color:#dfff00;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;cursor:pointer}.tl-controls{display:grid;grid-template-columns:minmax(220px,1fr) 180px;gap:12px;margin:30px 0 22px}.tl-search,.tl-select{height:46px;border:1px solid rgba(255,255,255,.12);background:#11141c;border-radius:11px;color:#f6f7fb;display:flex;align-items:center;gap:10px;padding:0 13px}.tl-search svg{color:#8d95a5;flex-shrink:0}.tl-search input{background:transparent;border:0;outline:0;color:#fff;width:100%;font:inherit;font-size:13px}.tl-select{width:100%;font-size:12px}.tl-select select{background:transparent;border:0;outline:0;color:#fff;width:100%;font:inherit;appearance:none}.tl-select option{background:#11141c}.tl-results-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px;color:#aeb3bf;font-size:11px}.tl-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}.tl-card{min-width:0;text-decoration:none;color:#fff;border-radius:13px;overflow:hidden;background:#11141c;border:1px solid rgba(255,255,255,.07);transition:transform .2s,border-color .2s,box-shadow .2s}.tl-card:hover{transform:translateY(-4px);border-color:rgba(223,255,0,.45);box-shadow:0 12px 35px rgba(0,0,0,.3)}.tl-poster{aspect-ratio:2/3;background:#1b202b;position:relative;overflow:hidden}.tl-poster img{width:100%;height:100%;object-fit:cover;display:block}.tl-count{position:absolute;right:9px;bottom:9px;background:rgba(8,9,13,.88);border:1px solid rgba(223,255,0,.35);color:#dfff00;padding:6px 8px;border-radius:7px;font-size:10px;font-weight:800;backdrop-filter:blur(10px)}.tl-card-copy{padding:12px 12px 14px}.tl-card h3{font-size:13px;margin:0 0 5px;line-height:1.35}.tl-card-copy span{font-size:10px;color:#9da5b4}.tl-arrow{float:right;color:#dfff00}.tl-state{padding:55px 20px;text-align:center;border:1px dashed rgba(255,255,255,.15);border-radius:16px;color:#aeb3bf;font-size:13px}.tl-state strong{display:block;color:#fff;font-size:17px;margin-bottom:8px}.tl-pagination{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:24px;color:#aeb3bf;font-size:12px}.tl-pagination button{border:1px solid rgba(255,255,255,.14);background:#11141c;color:#f6f7fb;border-radius:8px;padding:9px 14px;cursor:pointer}.tl-pagination button:disabled{opacity:.35;cursor:not-allowed}.tl-attribution{margin-top:42px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;color:#8f97a6;font-size:10px;text-align:center}.tl-attribution img{width:78px;height:auto}
-        @media(max-width:900px){.tl-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.tl-controls{grid-template-columns:1fr 1fr}.tl-search{grid-column:1/-1}}
-        @media(max-width:620px){.tl-topbar{height:58px}.tl-wrap{width:calc(100% - 28px)}.tl-hero{padding:32px 0 15px}.tl-hero h1{font-size:38px}.tl-hero>p{font-size:12px}.tl-intro{padding:16px}.tl-intro p{font-size:12px}.tl-steps{gap:13px;flex-direction:column}.tl-controls{grid-template-columns:1fr 1fr;gap:9px;margin:22px 0 18px}.tl-search{grid-column:1/-1}.tl-select{height:43px;padding:0 9px}.tl-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tl-card-copy{padding:10px}.tl-card h3{font-size:12px}.tl-results-head{font-size:10px}}
-        @media(prefers-reduced-motion:reduce){.tl-card{transition:none}.tl-card:hover{transform:none}}
-      `}</style>
-
       <TimelinerHeader />
 
       <div className="tl-wrap">
@@ -172,9 +175,15 @@ export default function TimelinerPage() {
               </p>
 
               <div className="tl-steps">
-                <span className="tl-step"><Film size={18} /> 1. Pick a franchise</span>
-                <span className="tl-step"><ListFilter size={18} /> 2. Choose your order</span>
-                <span className="tl-step"><Sparkles size={18} /> 3. Start watching</span>
+                <span className="tl-step">
+                  <Film size={18} /> 1. Pick a franchise
+                </span>
+                <span className="tl-step">
+                  <ListFilter size={18} /> 2. Choose your order
+                </span>
+                <span className="tl-step">
+                  <Sparkles size={18} /> 3. Start watching
+                </span>
               </div>
             </div>
           ) : (

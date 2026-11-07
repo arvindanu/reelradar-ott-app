@@ -1,20 +1,23 @@
 
 import Link from 'next/link';
-import { ArrowLeft, Film } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Clapperboard, Film } from 'lucide-react';
 
 export default function TimelinerHeader() {
   return (
     <>
-      <header className="tl-topbar">
-        <Link href="/" className="tl-back">
-          <ArrowLeft size={17} />
-          <span></span>
-        </Link>
+       <header className="page-header">
+  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
+    <span className="page-header-brand-icon">
+      <Clapperboard size={20} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
 
-        <Link href="/" className="tl-wordmark">          
-          <span>REELRADAR</span>
-        </Link>
-      </header>
+  <a href="/" className="page-header-back">
+    <ArrowUpRight size={15} />
+    Back to Discover
+  </a>
+</header>
 
       <style jsx>{`
         .tl-topbar {
