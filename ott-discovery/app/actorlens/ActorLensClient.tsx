@@ -351,12 +351,7 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
               <div className="al-credit-info"><strong>{credit.title}</strong><div className="al-credit-meta"><span>{credit.year || 'Year unknown'}</span>{credit.rating !== null && credit.rating > 0 && <span><Star size={11} fill="currentColor" /> {credit.rating.toFixed(1)}</span>}</div><small>{roleMode === 'acting' ? (credit.character ? `as ${credit.character}` : 'Acting credit') : (credit.job || credit.department || 'Crew credit')}</small></div>
             </button>)}</div> : <div className="al-empty-credits"><ScanEye size={28} /><h3>No credits in this view</h3><p>Try another tab, role type, or filter. TMDB may not have a complete credit record for this person.</p><button type="button" onClick={() => { setTab('all'); setRoleMode('acting'); setDecade('all'); setGenre('all'); setActiveYear(null); setHideNoise(false); }}>RESET FILTERS</button></div>}
           </section>
-          <p className="al-tmdb-note al-profile-tmdb"><img className="al-tmdb-wordmark" src="https://image.tmdb.org/t/p/w200/wwemzKWzjKYJFfCeiB57q3r4Bcm.svg" alt="TMDB" /> This product uses the TMDB API but is not endorsed or certified by TMDB. Filmography and ratings are based on data supplied by TMDB.</p>
-        </div>
-      </>}
-    </section>}
-
-    <footer className="footer">
+         <footer className="footer">
   <a className="brand" href="/">
     <span className="brand-mark">
       <Clapperboard size={17} strokeWidth={1.7} />
@@ -370,5 +365,10 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
     MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
   </span>
 </footer>
+        </div>
+      </>}
+    </section>}
+
+    
   </main>;
 }

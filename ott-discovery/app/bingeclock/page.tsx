@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowUpRight, CalendarDays, Check, ChevronDown, Clock3, Film, Hourglass, Search, Share2, Sparkles, Tv, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CalendarDays, Check, ChevronDown, Clapperboard, Clock3, Film, Hourglass, Search, Share2, Sparkles, Tv, X } from 'lucide-react';
 
 type Mode = 'collection' | 'series';
 type SearchItem = { id: number; title: string; overview: string; poster: string | null; backdrop: string | null; year: string; mediaType: string };
@@ -250,7 +250,22 @@ export default function BingeClockPage() {
         {schedule.days.map(day => <article className="bc-day" key={day.date}><div className="bc-day-head"><span>{prettyDate(day.date, {weekday:'short',month:'short',day:'numeric'})}</span><small>{day.items.length} {mode === 'series' ? 'episodes' : 'movies'} · {formatTime(day.minutes)}</small></div>{day.items.map(item => { const isDone = done.includes(item.key); return <label className={`bc-watch-item ${isDone ? 'bc-done' : ''}`} key={item.key}><input type="checkbox" checked={isDone} onChange={() => toggleDone(item.key)} aria-label={`Mark ${item.title} as ${isDone ? 'not watched' : 'watched'}`}/>{item.poster && <img src={item.poster} alt="" loading="lazy"/>}<span className="bc-watch-copy"><strong>{item.title}</strong><small>{item.label}</small></span><span className="bc-watch-runtime">{formatTime(item.runtime)}</span></label>; })}</article>)}
         <p className="bc-note">{schedule.days.some(day => day.minutes > dailyHours * 60) ? 'Some individual titles are longer than your daily limit. They remain whole in the schedule and will require extra time on those days.' : 'Each movie or episode stays together in one day. If the next title does not fit, it rolls over to the next available watch day.'} Progress is saved locally in this browser.</p>
       </section>}
-      <footer className="bc-attribution"><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue.svg" alt="TMDB"/><span>This product uses the TMDB API but is not endorsed or certified by TMDB.</span></footer>
+
+      <footer className="footer">
+  <a className="brand" href="/">
+    <span className="brand-mark">
+      <Clapperboard size={17} strokeWidth={1.7} />
+    </span>
+    <span>REEL<span>RADAR</span></span>
+  </a>
+
+  <p>One place for everything worth watching.</p>
+
+  <span className="footer-credit">
+    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
+  </span>
+</footer>
+
     </div>
   </main>;
 }
