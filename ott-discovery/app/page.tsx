@@ -491,7 +491,7 @@ export default function Home() {
       <p>PREPARING YOUR NEXT WATCH</p>
     </div>}
     <header className="topbar">
-      <a className="brand" href="/"><span className="brand-mark"><Radio size={19} /></span><span>REEL<span>RADAR</span></span><i /></a>
+      <a className="brand" href="/"><span className="brand-mark"><Clapperboard size={19} strokeWidth={1.7} /></span><span>REEL<span>RADAR</span></span><i /></a>
       <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
       <div className="header-actions"><label className="region-select"><Globe2 size={15} />
         <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
