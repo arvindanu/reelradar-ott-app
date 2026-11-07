@@ -76,7 +76,7 @@ export default function MovieCollidePage() {
   };
 
   return <main className="collide-page">
-     <header className="lookalike-header">
+     <header className="-header">
         <a href="/" className="lookalike-brand">
           <span className="lookalike-brand-icon">
             <Clapperboard size={20} />
