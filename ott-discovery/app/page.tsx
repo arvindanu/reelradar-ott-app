@@ -470,7 +470,7 @@ export default function Home() {
   }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
   const menuItems = [
-    { key: 'all', label: 'Discover', action: () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setPage(1); } },
+    { key: 'all', label: 'Home', action: () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setPage(1); } },
     { key: 'wishlist', label: 'My Watchlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
     { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
     { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
