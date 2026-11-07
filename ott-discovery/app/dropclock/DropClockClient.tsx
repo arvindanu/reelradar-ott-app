@@ -506,13 +506,14 @@ export default function DropClockClient() {
     <div className="dc-grid-bg"/>
 
     <header className="dc-topbar">
-      <a href="/" className="dc-brand">
-        <span><Radio size={18}/></span> REEL<span>RADAR</span>
-      </a>
-      <a href="/" className="dc-back">
-        <ArrowLeft size={15}/> BACK TO DISCOVER
-      </a>
-    </header>
+  <a href="/" className="dc-back" aria-label="Back to Discover">
+    <ArrowLeft size={18} />
+  </a>
+
+  <a href="/" className="dc-brand">
+    REELRADAR
+  </a>
+</header>
 
     <div className="dc-wrap">
       <section className="dc-hero">
