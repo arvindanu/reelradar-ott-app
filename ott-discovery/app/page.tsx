@@ -301,9 +301,28 @@ export default function Home() {
     };
   }, [scheduleFeaturedAdvance, mobileFeaturedIndex]);
   const [loading, setLoading] = useState(true);
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   const [error, setError] = useState('');
+  // Show the splash screen only on the first visit in this tab session.
+useEffect(() => {
+  const splashKey = 'reelradar-splash-shown';
+
+  try {
+    const alreadyShown = window.sessionStorage.getItem(splashKey);
+
+    if (alreadyShown) return;
+
+    window.sessionStorage.setItem(splashKey, 'true');
+    setShowSplash(true);
+  } catch {
+    // If session storage is unavailable, show the splash normally.
+    setShowSplash(true);
+  }
+}, []);
+
+
+
   const [selected, setSelected] = useState<Title | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
