@@ -1683,8 +1683,11 @@
 }
 
 .tl-page button:focus-visible,
-.tl-page a:focus-visible,
-.tl-page input:focus-visible {
+.tl-page a:focus-visible {
   outline: 2px solid var(--tl-lime);
   outline-offset: 3px;
+}
+
+.tl-page input:focus-visible {
+  outline: none;
 }
