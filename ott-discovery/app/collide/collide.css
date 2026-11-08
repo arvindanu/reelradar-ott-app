@@ -198,3 +198,95 @@
     font-size: 10px;
   }
 }
+
+
+/* Gemini cinematic collision explanation */
+
+.collision-explanation {
+  position: relative;
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid rgba(223, 255, 0, .25);
+  border-radius: 13px;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(223, 255, 0, .075),
+      rgba(255, 255, 255, .025)
+    );
+  overflow: hidden;
+}
+
+.explanation-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.explanation-icon {
+  width: 39px;
+  height: 39px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(223, 255, 0, .25);
+  border-radius: 10px;
+  color: #DFFF00;
+  background: rgba(223, 255, 0, .08);
+}
+
+.explanation-heading h4 {
+  margin: 5px 0 0;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.collision-explanation > p {
+  margin: 0;
+  max-width: 850px;
+  color: #c0c6d0;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.ai-powered-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 15px;
+  padding: 7px 10px;
+  border: 1px solid rgba(223, 255, 0, .2);
+  border-radius: 999px;
+  background: rgba(223, 255, 0, .06);
+  color: #dfff00;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.ai-powered-label > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dfff00;
+  box-shadow: 0 0 9px #dfff00;
+}
+
+@media(max-width:600px) {
+  .collision-explanation {
+    padding: 15px;
+    margin-top: 18px;
+  }
+
+  .explanation-heading h4 {
+    font-size: 15px;
+  }
+
+  .collision-explanation > p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+}

@@ -11,7 +11,18 @@ type Movie = {
   rating: number | null; language: string; genres: number[]; trailerKey: string | null;
   trailerThumb: string | null; providers: { id: number; name: string; logo: string | null }[]; watchLink: string | null;
 };
-type CollisionResult = { match: (Movie & { genreNames?: string[] }) | null; runnersUp: Movie[]; reasonA: string[]; reasonB: string[]; selected?: { id: number; title: string }[] };
+
+type CollisionResult = {
+  match: (Movie & { genreNames?: string[] }) | null;
+  runnersUp: Movie[];
+  reasonA: string[];
+  reasonB: string[];
+  collisionExplanation?: string;
+  confidence?: number;
+  aiUsed?: boolean;
+  selected?: { id: number; title: string }[];
+};
+
 
 function normalizeMovie(value: unknown): Movie | null {
   if (!value || typeof value !== 'object') return null;
@@ -99,6 +110,38 @@ export default function MovieCollidePage() {
       {collisionLoading && !animating && <p className="waiting"><LoaderCircle className="spin" size={17}/> Finding the strongest connection…</p>}
       {animating && <div className="collision-stage" role="status"><div className="flying-poster left">{selected[0]?.poster && <img src={selected[0].poster} alt=""/>}</div><div className="impact"><i/><i/><i/></div><div className="flying-poster right">{selected[1]?.poster && <img src={selected[1].poster} alt=""/>}</div><strong>FINDING YOUR PERFECT MATCH</strong></div>}
       {result?.match && !collisionLoading && <section className="result-panel"><div className="result-main"><div className="result-poster">{result.match.poster && <img src={result.match.poster} alt={`${result.match.title} poster`}/>}</div><div><span className="eyebrow">YOUR COLLISION MATCH</span><h3>{result.match.title}</h3><p className="result-meta">{result.match.year || 'Year unavailable'} · {result.match.rating !== null ? `★ ${result.match.rating.toFixed(1)}` : 'Not rated'} · {result.match.genreNames?.join(' · ') || 'Movie'}</p><p>{result.match.overview || 'Overview unavailable.'}</p><a className="tmdb-link" href={`https://www.themoviedb.org/movie/${result.match.id}`} target="_blank" rel="noreferrer">View on TMDB <ArrowUpRight size={14}/></a></div></div>
+
+
+<div className="collision-explanation">
+  <div className="explanation-heading">
+    <span className="explanation-icon">
+      <GitMerge size={17} />
+    </span>
+    <div>
+      <span className="eyebrow">
+        {result.aiUsed
+          ? 'GEMINI CINEMATIC ANALYSIS'
+          : 'CINEMATIC ANALYSIS'}
+      </span>
+      <h4>Why these movies collided</h4>
+    </div>
+  </div>
+
+  <p>
+    {result.collisionExplanation ||
+      'This movie connects the cinematic characteristics of both selected films.'}
+  </p>
+
+  {result.aiUsed && (
+    <span className="ai-powered-label">
+      <span />
+      Powered by Gemini AI
+    </span>
+  )}
+</div>
+
+
+
         <div className="why-match"><h4>Why this match</h4><div><strong>{selected[0]?.title}</strong><p>{result.reasonA?.join(' · ') || 'Shared cinematic themes and discovery signals'}</p></div><div><strong>{selected[1]?.title}</strong><p>{result.reasonB?.join(' · ') || 'Shared cinematic themes and discovery signals'}</p></div></div>
         {!!result.runnersUp?.length && <div className="runner-ups"><h4>More possible matches</h4><div>{result.runnersUp.map(movie => <a href={`https://www.themoviedb.org/movie/${movie.id}`} target="_blank" rel="noreferrer" key={movie.id}><span>{movie.poster && <img src={movie.poster} alt=""/>}</span><strong>{movie.title}</strong><small>{movie.year} {movie.rating !== null ? `· ★ ${movie.rating.toFixed(1)}` : ''}</small></a>)}</div></div>}
         <div className="result-actions"><button type="button" onClick={() => void runCollision()}>Collide again</button><button type="button" onClick={() => void share()}><Share2 size={15}/> Share match</button></div>{shareMessage && <p className="share-message" role="status">{shareMessage}</p>}</section>}
