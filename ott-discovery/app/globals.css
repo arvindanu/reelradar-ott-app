@@ -82,62 +82,59 @@
 
 
 
+
 /* =========================================
-   REELRADAR — CINEMATIC PAGE TRANSITIONS
+   REELRADAR — CINEMATIC SLIDE TRANSITIONS
 ========================================= */
 
-/* Enable transitions between full-page navigations */
 @view-transition {
   navigation: auto;
 }
 
-/* Keep the transition layer above page content */
 ::view-transition {
   background: #08090d;
 }
 
 ::view-transition-old(root) {
-  animation: rr-page-exit 180ms ease-in both;
+  animation: rr-slide-out 300ms cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 ::view-transition-new(root) {
-  animation: rr-page-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rr-slide-in 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes rr-page-enter {
+/* New page slides in from the right */
+@keyframes rr-slide-in {
   from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.992);
-    filter: blur(3px);
+    opacity: 0.7;
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translateX(0);
   }
 }
 
-@keyframes rr-page-exit {
+/* Previous page slides out to the left */
+@keyframes rr-slide-out {
   from {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translateX(0);
   }
   to {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.995);
-    filter: blur(2px);
+    opacity: 0.7;
+    transform: translateX(-25%);
   }
 }
 
 /* Mobile optimization */
 @media (max-width: 760px) {
   ::view-transition-old(root) {
-    animation-duration: 130ms;
+    animation-duration: 220ms;
   }
 
   ::view-transition-new(root) {
-    animation-duration: 320ms;
+    animation-duration: 350ms;
   }
 }
 
