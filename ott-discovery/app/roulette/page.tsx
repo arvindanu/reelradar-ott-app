@@ -238,7 +238,7 @@ export default function MovieRoulettePage() {
             })}
           </div>
           <div className="roulette-carousel-centerline"/>
-          
+          <div className="roulette-carousel-caption"><span className="roulette-live-dot"/>{spinning ? 'SCANNING YOUR NEXT WATCH' : ''}</div>
         </div>
         {loading ? <p className="roulette-status"><span className="roulette-loading"><LoaderCircle size={16}/> Building your wheel…</span></p> : error ? <div className="roulette-empty roulette-error">{error}</div> : pool.length < 2 ? <div className="roulette-empty">No titles found for these filters. Try widening your year range or removing a genre.</div> : <>
           <button className="roulette-spin" type="button" disabled={spinning || loading} onClick={() => spin()}>{spinning ? 'SPINNING…' : <><Dices size={18}/> SPIN</>}</button>
