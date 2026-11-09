@@ -119,12 +119,21 @@ const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selec
       <div className="poster-info"><h3>{item.title}</h3><p>{item.year || 'Release date TBA'} <span>·</span> {getLanguageLabel(item.language)}</p></div>
     </div>
     <a className="card-trailer" href={trailerUrl} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
-      <span className="trailer-thumb">{item.trailerThumb ? <img
-  src={item.trailerThumb}
-  alt=""
-  loading="lazy"
-  decoding="async"
-/>: <Play size={12} />}<Play size={9} fill="currentColor" /></span>
+      <span className={`trailer-thumb ${!item.trailerThumb ? 'trailer-thumb-empty' : ''}`}>
+  {item.trailerThumb ? (
+    <>
+      <img
+        src={item.trailerThumb}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <Play size={9} fill="currentColor" />
+    </>
+  ) : (
+    <Play size={16} fill="currentColor" />
+  )}
+</span>
       <span>WATCH TRAILER</span><ArrowUpRight size={12} />
     </a>
     <div className="card-meta"><div className="provider-stack">{item.providers.length ? item.providers.slice(0, 3).map(p => p.logo

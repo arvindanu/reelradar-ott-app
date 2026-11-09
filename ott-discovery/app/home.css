@@ -759,3 +759,20 @@
     animation: none !important;
   }
 }
+
+/* Clean fallback for trailers without thumbnails */
+.trailer-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.trailer-thumb-empty svg {
+  position: static !important;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  transform: none !important;
+}
