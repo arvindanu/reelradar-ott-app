@@ -623,18 +623,46 @@
 }
 
 /* Mobile: preserve the 3D card arrangement and its dimensions. */
+
+/* Mobile: lightweight 3-card cinematic coverflow */
 @media (max-width: 760px) {
   .rr-featured-card {
     will-change: auto;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+
+    transition:
+      transform .55s cubic-bezier(.22, 1, .36, 1),
+      opacity .4s ease,
+      border-color .4s ease;
   }
 
   .rr-featured-topline span {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
+
+  /* Hide the two outer cards */
+  .rr-cover-position-0,
+  .rr-cover-position-4 {
+    display: none !important;
+  }
+
+  /* Side cards retain the cinematic 3D appearance */
+  .rr-cover-position-1,
+  .rr-cover-position-3 {
+    box-shadow: 0 14px 32px rgba(0,0,0,.38);
+  }
+
+  /* Preserve the featured center card */
+  .rr-cover-position-2 {
+    box-shadow:
+      0 24px 55px rgba(0,0,0,.55),
+      0 0 24px rgba(223,255,0,.08),
+      inset 0 1px 0 rgba(255,255,255,.2);
+  }
 }
+
 
 /* Respect reduced-motion preferences. */
 @media (prefers-reduced-motion: reduce) {
