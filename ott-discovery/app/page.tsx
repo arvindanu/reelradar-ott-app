@@ -105,7 +105,12 @@ const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selec
   return <article className={`poster-card ${selectionMode && selectedIndex >= 0 ? 'collide-selected' : ''}`} onClick={() => selectionMode && item.mediaType === 'movie' && onToggleSelect ? onToggleSelect(item) : onOpen(item)} tabIndex={0}
     onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectionMode && item.mediaType === 'movie' && onToggleSelect ? onToggleSelect(item) : onOpen(item); } }}>
     <div className="poster-art">
-      {item.poster ? <img src={item.poster} alt={`${item.title} poster`} loading="lazy" /> : <div className="poster-fallback"><Film size={30} /><span>{item.title}</span></div>}
+      {item.poster ? <img
+  src={item.poster}
+  alt={`${item.title} poster`}
+  loading="lazy"
+  decoding="async"
+/> : <div className="poster-fallback"><Film size={30} /><span>{item.title}</span></div>}
       <div className="poster-shade" />
       {selectionMode && <div className={`collide-select-mark ${selectedIndex >= 0 ? 'is-selected' : ''}`} aria-label={selectedIndex >= 0 ? `Selected ${selectedIndex + 1}` : 'Select movie'}>{selectedIndex >= 0 ? <><Check size={15} /> {selectedIndex + 1}</> : <GitMerge size={16} />}</div>}
       <div className="poster-topline"><span className="type-pill">{item.mediaType === 'tv' ? 'SERIES' : 'FILM'}</span>
@@ -114,7 +119,12 @@ const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selec
       <div className="poster-info"><h3>{item.title}</h3><p>{item.year || 'Release date TBA'} <span>·</span> {getLanguageLabel(item.language)}</p></div>
     </div>
     <a className="card-trailer" href={trailerUrl} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
-      <span className="trailer-thumb">{item.trailerThumb ? <img src={item.trailerThumb} alt="" loading="lazy" /> : <Play size={12} />}<Play size={9} fill="currentColor" /></span>
+      <span className="trailer-thumb">{item.trailerThumb ? <img
+  src={item.trailerThumb}
+  alt=""
+  loading="lazy"
+  decoding="async"
+/>: <Play size={12} />}<Play size={9} fill="currentColor" /></span>
       <span>WATCH TRAILER</span><ArrowUpRight size={12} />
     </a>
     <div className="card-meta"><div className="provider-stack">{item.providers.length ? item.providers.slice(0, 3).map(p => p.logo
@@ -675,7 +685,13 @@ useEffect(() => {
             >
               <span className="rr-featured-image">
                 {item.poster || item.backdrop
-                  ? <img src={item.poster || item.backdrop || ''} alt="" loading={offset === 0 ? 'eager' : 'lazy'} decoding="async" />
+                  ? <img
+  src={item.poster || item.backdrop || ''}
+  alt=""
+  loading={offset === 0 ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchPriority={offset === 0 ? 'high' : 'low'}
+/>
                   : <span className="rr-featured-fallback"><Film size={30} /></span>}
               </span>
               <span className="rr-featured-shade" />
