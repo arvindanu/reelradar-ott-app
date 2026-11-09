@@ -81,18 +81,24 @@ async function tmdb(
   }
 
   let response: Response;
+const revalidate =
+  path.startsWith('/watch/providers/')
+    ? 86400
+    : /^\/(movie|tv)\/\d+$/.test(path)
+      ? 3600
+      : 300;
 
-  try {
-    response = await fetch(url.toString(), {
-      method: 'GET',
-      headers,
-      cache: 'no-store',
-    });
-  } catch {
-    throw new Error(
-      'Could not connect to TMDB. Check the server network connection and try again.'
-    );
-  }
+try {
+  response = await fetch(url.toString(), {
+    method: 'GET',
+    headers,
+    next: { revalidate },
+  });
+} catch {
+  throw new Error(
+    'Could not connect to TMDB. Check the server network connection and try again.'
+  );
+}
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -519,9 +525,9 @@ async function enrich(
   let details: AnyRecord = {};
 
   const append =
-    type === 'movie'
-      ? 'videos,watch/providers,credits,external_ids,keywords,release_dates'
-      : 'videos,watch/providers,credits,external_ids,keywords,content_ratings';
+  type === 'movie'
+    ? 'videos,watch/providers,release_dates'
+    : 'videos,watch/providers,content_ratings';
 
   try {
     details = await tmdb(`/${type}/${item.id}`, {
@@ -838,6 +844,71 @@ async function enrich(
   };
 }
 
+
+function toCompactResult(item: AnyRecord, type: MediaKind) {
+  const date = getReleaseDate(item);
+
+  return {
+    id: item.id,
+    mediaType: type,
+
+    title: item.title ?? item.name ?? 'Untitled',
+    originalTitle: item.original_title ?? item.original_name ?? '',
+    overview: item.overview ?? '',
+
+    poster: getImage(item.poster_path),
+    backdrop: getImage(item.backdrop_path, 'w1280'),
+
+    releaseDate: date,
+    year: date.slice(0, 4),
+
+    originalTitleLanguage: item.original_language ?? '',
+    originalLanguage: item.original_language ?? '',
+    language: item.original_language ?? '',
+
+    originCountry: item.origin_country ?? [],
+
+    rating:
+      typeof item.vote_average === 'number'
+        ? Number(item.vote_average.toFixed(1))
+        : null,
+
+    voteCount: item.vote_count ?? 0,
+    popularity: item.popularity ?? 0,
+
+    genres: (item.genre_ids ?? []).map((id: number) => ({
+      id,
+      name: '',
+    })),
+
+    // These fields are deliberately empty in compact mode.
+    // The featured carousel should not need full details.
+    cast: [],
+    crew: [],
+    directors: [],
+    writers: [],
+    productionCompanies: [],
+    productionCountries: [],
+    spokenLanguages: [],
+    keywords: [],
+    providers: [],
+
+    trailerKey: null,
+    trailerThumb: null,
+    trailerUrl: null,
+    watchLink: null,
+
+    certification: null,
+    homepage: null,
+    imdbId: null,
+
+    tmdbUrl: `https://www.themoviedb.org/${type}/${item.id}`,
+  };
+}
+
+
+
+
 export async function GET(request: NextRequest) {
   try {
     const search = request.nextUrl.searchParams;
@@ -867,6 +938,7 @@ export async function GET(request: NextRequest) {
       : 'IN';
 
     const providersOnly = search.get('providers') === '1';
+    const compact = search.get('compact') === '1';
 
     if (providersOnly) {
       const [moviesFirst, seriesFirst] = await Promise.all([
@@ -1081,42 +1153,78 @@ export async function GET(request: NextRequest) {
       })
       .slice(0, 18);
 
-    const enriched = await Promise.all(
-      raw.map(item =>
-        enrich(
-          item,
-          item._kind as MediaKind,
-          region
-        )
-      )
-    );
-    const providerFiltered = provider
-      ? enriched.filter((item: AnyRecord) => (item.providers ?? []).some((entry: AnyRecord) => entry.id === Number(provider)))
-      : enriched;
-    const results = availability === 'ott'
-      ? providerFiltered.filter((item: AnyRecord) => (item.providers ?? []).length > 0).slice(0, 18)
-      : providerFiltered.slice(0, 18);
+   // Compact mode: return basic TMDB data without making
+// additional detail requests for every title.
+if (compact) {
+  const compactResults = raw.map(item =>
+    toCompactResult(item, item._kind as MediaKind)
+  );
 
-    return NextResponse.json(
-      {
-        results,
-        page,
-        totalPages,
-        totalResults,
-        availability,
-        region,
-        language,
-        filter,
-        notes,
-        fetchedAt: new Date().toISOString(),
+  return NextResponse.json(
+    {
+      results: compactResults,
+      page,
+      totalPages,
+      totalResults,
+      availability,
+      region,
+      language,
+      filter,
+      notes,
+      fetchedAt: new Date().toISOString(),
+    },
+    {
+      headers: {
+        'Cache-Control': 's-maxage=1800, stale-while-revalidate=3600',
       },
-      {
-        headers: {
-          'Cache-Control':
-            's-maxage=1800, stale-while-revalidate=3600',
-        },
-      }
-    );
+    }
+  );
+}
+
+// Normal mode: preserve the existing full enrichment.
+const enriched = await Promise.all(
+  raw.map(item =>
+    enrich(
+      item,
+      item._kind as MediaKind,
+      region
+    )
+  )
+);
+
+const providerFiltered = provider
+  ? enriched.filter((item: AnyRecord) =>
+      (item.providers ?? []).some(
+        (entry: AnyRecord) => entry.id === Number(provider)
+      )
+    )
+  : enriched;
+
+const results = availability === 'ott'
+  ? providerFiltered
+      .filter((item: AnyRecord) => (item.providers ?? []).length > 0)
+      .slice(0, 18)
+  : providerFiltered.slice(0, 18);
+
+return NextResponse.json(
+  {
+    results,
+    page,
+    totalPages,
+    totalResults,
+    availability,
+    region,
+    language,
+    filter,
+    notes,
+    fetchedAt: new Date().toISOString(),
+  },
+  {
+    headers: {
+      'Cache-Control': 's-maxage=1800, stale-while-revalidate=3600',
+    },
+  }
+);
   } catch (error) {
     console.error(
       'REELRADAR discovery error:',

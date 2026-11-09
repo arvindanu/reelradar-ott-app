@@ -387,24 +387,51 @@ useEffect(() => {
     return () => { active = false; };
   }, [region]);
 
-  useEffect(() => {
-    let active = true;
-    const params = new URLSearchParams({
-      type: 'all', language: '', region, query: '', filter: 'Trending Now',
-      page: '1', availability: 'all', genre: '', provider: ''
+ useEffect(() => {
+  let active = true;
+
+  const params = new URLSearchParams({
+    type: 'all',
+    language: '',
+    region,
+    query: '',
+    filter: 'Trending Now',
+    page: '1',
+    availability: 'all',
+    genre: '',
+    provider: '',
+    compact: '1',
+  });
+
+  fetch(`/api/discover?${params.toString()}`, {
+    cache: 'no-store',
+  })
+    .then(async response => {
+      if (!response.ok) {
+        throw new Error('Could not load trending titles');
+      }
+
+      const data = await response.json();
+
+      const trending = Array.isArray(data.results)
+        ? data.results
+            .map(normalizeTitle)
+            .filter((item: Title | null): item is Title => item !== null)
+        : [];
+
+      if (active) {
+        setFeaturedTitles(trending.slice(0, 7));
+        setMobileFeaturedIndex(0);
+      }
+    })
+    .catch(() => {
+      if (active) setFeaturedTitles([]);
     });
-    fetch(`/api/discover?${params.toString()}`, { cache: 'no-store' })
-      .then(async response => {
-        if (!response.ok) throw new Error('Could not load trending titles');
-        const data = await response.json();
-        const trending = Array.isArray(data.results)
-          ? data.results.map(normalizeTitle).filter((item: Title | null): item is Title => item !== null)
-          : [];
-        if (active) { setFeaturedTitles(trending.slice(0, 7)); setMobileFeaturedIndex(0); }
-      })
-      .catch(() => { if (active) setFeaturedTitles([]); });
-    return () => { active = false; };
-  }, [region]);
+
+  return () => {
+    active = false;
+  };
+}, [region]);
 
   const [showWishlist, setShowWishlist] = useState(false);
   const [page, setPage] = useState(1);
