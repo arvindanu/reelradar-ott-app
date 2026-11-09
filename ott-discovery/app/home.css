@@ -672,3 +672,90 @@
     animation: none !important;
   }
 }
+
+
+
+/* =========================================
+   REELRADAR — CINEMATIC DETAILS MODAL
+   ========================================= */
+
+/* Modal backdrop */
+.rr-modal-backdrop {
+  animation: rr-backdrop-in 300ms ease-out both;
+}
+
+/* Details modal entrance */
+.rr-modal,
+.rr-details-modal,
+.rr-detail-panel {
+  transform-origin: center center;
+  animation: rr-details-zoom-in 420ms
+    cubic-bezier(.16, 1, .3, 1) both;
+  will-change: transform, opacity;
+}
+
+/* Backdrop fade */
+@keyframes rr-backdrop-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Cinematic zoom-in */
+@keyframes rr-details-zoom-in {
+  0% {
+    opacity: 0;
+    transform: scale(.88) translateY(22px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.015) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Optional zoom-out class before closing */
+.rr-details-closing {
+  animation: rr-details-zoom-out 220ms
+    cubic-bezier(.4, 0, 1, 1) both !important;
+  pointer-events: none;
+}
+
+@keyframes rr-details-zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(.92) translateY(12px);
+  }
+}
+
+/* Mobile: slightly subtler zoom */
+@media (max-width: 760px) {
+  .rr-modal,
+  .rr-details-modal,
+  .rr-detail-panel {
+    animation-duration: 350ms;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .rr-modal-backdrop,
+  .rr-modal,
+  .rr-details-modal,
+  .rr-detail-panel,
+  .rr-details-closing {
+    animation: none !important;
+  }
+}

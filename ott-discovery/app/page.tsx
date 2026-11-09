@@ -420,7 +420,7 @@ useEffect(() => {
         : [];
 
       if (active) {
-        setFeaturedTitles(trending.slice(0, 7));
+        setFeaturedTitles(trending.slice(0, 5));
         setMobileFeaturedIndex(0);
       }
     })
