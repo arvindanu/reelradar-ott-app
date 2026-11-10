@@ -146,3 +146,31 @@
   }
 }
 
+/* =========================================
+   REELRADAR — ROUTE TRANSITIONS
+   Applied by app/template.tsx on App Router navigation.
+   Opacity-only animation avoids transforms/filters that can change the
+   containing block for fixed-position dialogs and overlays.
+========================================= */
+.rr-route-transition {
+  animation: rr-route-fade-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rr-route-fade-in {
+  from { opacity: 0.72; }
+  to { opacity: 1; }
+}
+
+/* Keep the transition quick and lightweight on the primary mobile layout. */
+@media (max-width: 760px) {
+  .rr-route-transition {
+    animation-duration: 180ms;
+  }
+}
+
+/* Respect the visitor's operating-system motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  .rr-route-transition {
+    animation: none;
+  }
+}
