@@ -87,19 +87,7 @@ export default function MovieCollidePage() {
   };
 
   return <main className="collide-page">
-    <header className="page-header">
-  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
-    <span className="page-header-brand-icon">
-      <Clapperboard size={20} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <a href="/" className="page-header-back">
-    <ArrowUpRight size={15} />
-    Back to Discover
-  </a>
-</header>
+    
     <section className="collide-hero"><div className="hero-glow"/><span className="eyebrow"></span><h1><span>MOVIE</span> COLLIDE</h1><p>Two movies. One unexpected connection. Discover the film that sits between your favourites.</p><div className="hero-mark"><GitMerge size={25}/><span>SELECT TWO MOVIES TO BEGIN</span></div></section>
     <section className="collide-content">
       <div className="section-top"><div><span className="eyebrow">THE COLLISION LAB</span><h2>Choose your two movies</h2><p>Select any two films. We’ll find a movie that connects their cinematic DNA.</p></div><div className="selection-count">{selected.length}<span>/2 SELECTED</span></div></div>
@@ -148,19 +136,6 @@ export default function MovieCollidePage() {
       <div className="movie-list-heading"><h3>{search ? `Search results for “${search}”` : 'Trending movies'}</h3><span>TMDB MOVIE DATABASE</span></div>
       {loadingMovies ? <div className="movie-grid">{Array.from({length:10},(_,i)=><div className="skeleton" key={i}/>)}</div> : movieError ? <p className="error-message">{movieError} <button type="button" onClick={() => void loadMovies(search)}>Retry</button></p> : <div className="movie-grid">{movies.map(movie => { const index = selected.findIndex(x => x.id === movie.id); return <button type="button" className={`movie-card ${index >= 0 ? 'chosen' : ''}`} key={movie.id} onClick={() => toggleMovie(movie)}><span className="poster">{movie.poster ? <img src={movie.poster} alt={`${movie.title} poster`} loading="lazy"/> : <Film size={26}/>}<i>{index >= 0 ? `SELECTED ${index+1}` : <GitMerge size={16}/>}</i></span><strong>{movie.title}</strong><small>{movie.year || 'Release date TBA'} {movie.rating !== null && <><span> · </span><Star size={11} fill="currentColor"/> {movie.rating.toFixed(1)}</>}</small></button>; })}</div>}
     </section>
-    <footer className="footer">
-  <a className="brand" href="/">
-    <span className="brand-mark">
-      <Clapperboard size={17} strokeWidth={1.7} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <p>One place for everything worth watching.</p>
-
-  <span className="footer-credit">
-    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-  </span>
-</footer>
+    
   </main>;
 }

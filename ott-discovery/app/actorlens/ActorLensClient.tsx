@@ -262,19 +262,7 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
 
   return <main className="actorlens-page">
     <div className="al-grid-bg" aria-hidden="true" />
-   <header className="page-header">
-  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
-    <span className="page-header-brand-icon">
-      <Clapperboard size={20} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <a href="/" className="page-header-back">
-    <ArrowUpRight size={15} />
-    Back to Discover
-  </a>
-</header>
+   
 
     {!actorId ? <section className="al-landing">
       <div className="al-kicker"><span /> PERSONNEL DATABASE / 01</div>
@@ -357,20 +345,7 @@ export default function ActorLensClient({ actorId = null }: { actorId?: string |
               <div className="al-credit-info"><strong>{credit.title}</strong><div className="al-credit-meta"><span>{credit.year || 'Year unknown'}</span>{credit.rating !== null && credit.rating > 0 && <span><Star size={11} fill="currentColor" /> {credit.rating.toFixed(1)}</span>}</div><small>{roleMode === 'acting' ? (credit.character ? `as ${credit.character}` : 'Acting credit') : (credit.job || credit.department || 'Crew credit')}</small></div>
             </button>)}</div> : <div className="al-empty-credits"><ScanEye size={28} /><h3>No credits in this view</h3><p>Try another tab, role type, or filter. TMDB may not have a complete credit record for this person.</p><button type="button" onClick={() => { setTab('all'); setRoleMode('acting'); setDecade('all'); setGenre('all'); setActiveYear(null); setHideNoise(false); }}>RESET FILTERS</button></div>}
           </section>
-         <footer className="footer">
-  <a className="brand" href="/">
-    <span className="brand-mark">
-      <Clapperboard size={17} strokeWidth={1.7} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <p>One place for everything worth watching.</p>
-
-  <span className="footer-credit">
-    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-  </span>
-</footer>
+         
         </div>
       </>}
     </section>}

@@ -1,8 +1,6 @@
 'use client';
 
-import './home.css';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { usePathname } from 'next/navigation';
 import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, HomeIcon, Dices, Hourglass, ScanEye, ScanSearch, CalendarClock } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
 
@@ -283,10 +281,15 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
 }
 
 export default function Home() {
-  const pathname = usePathname();
   const [mode, setMode] = useState<Mode>('all');
   const [language, setLanguage] = useState('');
   const [region, setRegion] = useState('IN');
+  useEffect(() => {
+    const syncRegion = (event: Event) => { const value = (event as CustomEvent<string>).detail; if (value) setRegion(value); };
+    try { setRegion(localStorage.getItem('reelradar-region') || 'IN'); } catch { /* Storage is optional. */ }
+    window.addEventListener('reelradar-region-change', syncRegion);
+    return () => window.removeEventListener('reelradar-region-change', syncRegion);
+  }, []);
   const [filter, setFilter] = useState<DiscoveryFilter>('');
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
@@ -343,9 +346,6 @@ useEffect(() => {
 
 
   const [selected, setSelected] = useState<Title | null>(null);
-  const [mobileMenu, setMobileMenu] = useState(false);
-  const menuTriggerRef = useRef<HTMLButtonElement>(null);
-  const menuDrawerRef = useRef<HTMLElement>(null);
   const [availability, setAvailability] = useState<Availability>('all');
   const [genre, setGenre] = useState('');
   const [provider, setProvider] = useState('');
@@ -443,9 +443,20 @@ useEffect(() => {
 }, [region]);
 
   const [showWishlist, setShowWishlist] = useState(false);
+  useEffect(() => {
+    const show = () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 100); };
+    if (new URLSearchParams(window.location.search).get('view') === 'watchlist') show();
+    window.addEventListener('reelradar-show-wishlist', show);
+    return () => window.removeEventListener('reelradar-show-wishlist', show);
+  }, []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  useEffect(() => {
+    const reset = () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setShowWishlist(false); setPage(1); };
+    window.addEventListener('reelradar-reset-home', reset);
+    return () => window.removeEventListener('reelradar-reset-home', reset);
+  }, []);
 
   useEffect(() => {
     try {
@@ -534,49 +545,6 @@ useEffect(() => {
     }
   }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
-  const menuItems = [
-    { key: 'all', label: 'Home', action: () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setPage(1); } },
-    { key: 'wishlist', label: 'My Watchlist', action: () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 0); } },
-    { key: 'collide', label: 'Movie Collide', action: () => { window.location.assign('/collide'); } },
-    { key: 'roulette', label: 'Movie Roulette', action: () => { window.location.assign('/roulette'); } },
-    { key: 'timeliner', label: 'Timeliner', action: () => { window.location.assign('/timeliner'); } },
-    { key: 'vibeflix', label: 'VibeFlix', action: () => { window.location.assign('/vibeflix'); } },
-    { key: 'bingeclock', label: 'BingeClock', action: () => { window.location.assign('/bingeclock'); } },
-    { key: 'actorlens', label: 'ActorLens', action: () => { window.location.assign('/actorlens'); } },
-    { key: 'dropclock', label: 'DropClock', action: () => { window.location.assign('/dropclock'); } },
-    { key: 'lookalike', label: 'Lookalike', action: () => { window.location.assign('/lookalike'); }},
-  ];
-
-  useEffect(() => {
-    if (!mobileMenu) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const focusFirst = window.requestAnimationFrame(() => {
-      menuDrawerRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
-    });
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setMobileMenu(false);
-        menuTriggerRef.current?.focus();
-        return;
-      }
-      if (event.key !== 'Tab' || !menuDrawerRef.current) return;
-      const focusable = Array.from(menuDrawerRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'));
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.cancelAnimationFrame(focusFirst);
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
-      menuTriggerRef.current?.focus();
-    };
-  }, [mobileMenu]);
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
@@ -620,46 +588,8 @@ useEffect(() => {
       <div className="splash-loader"><span /></div>
       <p>PREPARING YOUR NEXT WATCH</p>
     </div>}
-    <header className="topbar">
-      <a className="brand" href="/"><span className="brand-mark"><Clapperboard size={19} strokeWidth={1.7} /></span><span>REEL<span>RADAR</span></span><i /></a>
-      <nav className="desktop-nav" aria-label="Main navigation">{menuItems.map(item => <button key={item.key} className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'lookalike'? pathname === '/lookalike' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''} onClick={item.action} type="button">{item.label}</button>)}</nav>
-      <div className="header-actions"><label className="region-select"><Globe2 size={15} />
-        <select value={region} onChange={e => { setRegion(e.target.value); setPage(1); }} aria-label="Streaming country">
-          {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
-        </select><ChevronDown size={13} /></label>
-        <button ref={menuTriggerRef} className="mobile-menu-button" onClick={() => setMobileMenu(open => !open)} aria-label={mobileMenu ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={mobileMenu} aria-controls="mobile-navigation-drawer" type="button"><Menu /></button>
-      </div>
-    </header>
-    <button className={`mobile-drawer-overlay ${mobileMenu ? 'is-open' : ''}`} type="button" aria-label="Close navigation menu" tabIndex={mobileMenu ? 0 : -1} onClick={() => setMobileMenu(false)} />
-    <aside ref={menuDrawerRef} id="mobile-navigation-drawer" className={`mobile-navigation-drawer ${mobileMenu ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!mobileMenu}>
-      <div className="mobile-drawer-header"><span>MENU</span><button type="button" className="mobile-drawer-close" onClick={() => setMobileMenu(false)} aria-label="Close menu"><X size={20} /></button></div>
-     <nav className="mobile-drawer-links" aria-label="Main navigation">
-  {menuItems.map(item => (
-    <button
-      key={item.key}
-      className={(item.key === 'vibeflix' ? pathname === '/vibeflix' : item.key === 'bingeclock' ? pathname === '/bingeclock' : item.key === 'actorlens' ? pathname.startsWith('/actorlens') : item.key === 'dropclock' ? pathname === '/dropclock' : item.key === 'wishlist' ? showWishlist : mode === item.key) ? 'nav-active' : ''}
-      onClick={() => {
-        setMobileMenu(false);
-        if (item.key === 'bingeclock' || item.key === 'actorlens' || item.key === 'dropclock') window.setTimeout(item.action, 180);
-        else item.action();
-      }}
-      type="button"
-    >
-      {item.key === 'all' && <HomeIcon size={17} />}
-      {item.key === 'wishlist' && <Heart size={17} />}
-      {item.key === 'collide' && <GitMerge size={17} />}
-      {item.key === 'roulette' && <Dices size={17} />}
-      {item.key === 'timeliner' && <Clock3 size={17} />}
-      {item.key === 'vibeflix' && <Sparkles size={17} />}
-      {item.key === 'bingeclock' && <Hourglass size={17} />}
-      {item.key === 'actorlens' && <ScanEye size={17} />}
-      {item.key === 'dropclock' && <CalendarClock size={17} />}
-      {item.key === 'lookalike' && <ScanSearch size={17} />}
-      {item.label}
-    </button>
-  ))}
-</nav>
-    </aside>
+    
+
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
       <div className="intro-content rr-showcase-content">
@@ -839,20 +769,7 @@ useEffect(() => {
           <div className="feed-footer"><span>SHOWING {items.length} OF {totalResults.toLocaleString()} TITLES</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
     </section>
 
-    <footer className="footer">
-  <a className="brand" href="/">
-    <span className="brand-mark">
-      <Clapperboard size={17} strokeWidth={1.7} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <p>One place for everything worth watching.</p>
-
-  <span className="footer-credit">
-    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-  </span>
-</footer>
+    
     {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlistKeys.has(`${selected.mediaType}-${selected.id}`)} onToggleWishlist={toggleWishlist} />}
   </main>;
 }

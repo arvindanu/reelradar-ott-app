@@ -201,19 +201,7 @@ export default function BingeClockPage() {
   };
 
   return <main className="bc-page">
-<header className="page-header">
-  <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
-    <span className="page-header-brand-icon">
-      <Clapperboard size={20} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
 
-  <a href="/" className="page-header-back">
-    <ArrowUpRight size={15} />
-    Back to Discover
-  </a>
-</header>
     <div className="bc-wrap">
       <section className="bc-hero"><span className="bc-kicker"><Hourglass size={14}/> YOUR WATCH-TIME PLANNER</span><h1>BINGE<span>CLOCK</span></h1><p>BingeClock tells you exactly how much to watch each day to finish a franchise or series before your deadline.</p><div className="bc-tagline">Less guessing. Better pacing. One episode at a time.</div>
         <details className="bc-how"><summary>How it works <ChevronDown size={16}/></summary><p>Choose a movie collection or TV series, set your deadline and daily watch time, then BingeClock builds a day-by-day plan from TMDB runtimes. Long movies and episodes stay together instead of being split between days. Tick off titles as you watch; progress is saved on this device.</p></details>
@@ -251,20 +239,7 @@ export default function BingeClockPage() {
         <p className="bc-note">{schedule.days.some(day => day.minutes > dailyHours * 60) ? 'Some individual titles are longer than your daily limit. They remain whole in the schedule and will require extra time on those days.' : 'Each movie or episode stays together in one day. If the next title does not fit, it rolls over to the next available watch day.'} Progress is saved locally in this browser.</p>
       </section>}
 
-      <footer className="footer">
-  <a className="brand" href="/">
-    <span className="brand-mark">
-      <Clapperboard size={17} strokeWidth={1.7} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <p>One place for everything worth watching.</p>
-
-  <span className="footer-credit">
-    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-  </span>
-</footer>
+      
 
     </div>
   </main>;

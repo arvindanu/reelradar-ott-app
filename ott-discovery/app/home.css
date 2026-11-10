@@ -80,7 +80,8 @@
     gap:8px;
     padding-top:24px;
   }
-  .mobile-drawer-links button {
+  .mobile-drawer-links button,
+  .mobile-drawer-links a {
     display:flex;
     align-items:center;
     gap:12px;
@@ -97,13 +98,17 @@
   }
   .mobile-drawer-links button:hover,
   .mobile-drawer-links button:focus-visible,
-  .mobile-drawer-links button.nav-active {
+  .mobile-drawer-links button.nav-active,
+  .mobile-drawer-links a:hover,
+  .mobile-drawer-links a:focus-visible,
+  .mobile-drawer-links a.nav-active {
     color:#fff;
     border-color:rgba(223,255,0,.22);
     background:rgba(223,255,0,.07);
     outline:none;
   }
-  .mobile-drawer-links button.nav-active {
+  .mobile-drawer-links button.nav-active,
+  .mobile-drawer-links a.nav-active {
     box-shadow:inset 3px 0 #DFFF00;
   }
 }
@@ -776,3 +781,9 @@
   margin: 0;
   transform: none !important;
 }
+/* Shared navigation uses the same drawer styling on every route. */
+.mobile-drawer-links a { text-decoration:none; }
+.rr-shared-topbar { position:relative; z-index:5; }
+.rr-shared-footer { position:relative; }
+@media (min-width:769px) { .rr-page-content:has(.site-shell) .site-shell { min-height:calc(100vh - 193px); } }
+@media (max-width:768px) { .rr-page-content:has(.site-shell) .site-shell { min-height:calc(100vh - 181px); } }

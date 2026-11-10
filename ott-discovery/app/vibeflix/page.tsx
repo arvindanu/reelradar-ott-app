@@ -353,13 +353,7 @@ export default function VibeFlixPage() {
   return (
     <main className="vf-page">
       <div className="vf-shell">
-        <header className="page-header">
-          <a href="/" className="page-header-brand" aria-label="REELRADAR Home">
-            <span className="page-header-brand-icon"><Clapperboard size={20} /></span>
-            <span>REEL<span>RADAR</span></span>
-          </a>
-          <a href="/" className="page-header-back"><ArrowUpRight size={15} />Back to Discover</a>
-        </header>
+        
 
         {screen === 'intro' && (
           <section className="vf-hero">
@@ -557,14 +551,7 @@ export default function VibeFlixPage() {
           </section>
         )}
 
-        <footer className="footer">
-          <a className="brand" href="/">
-            <span className="brand-mark"><Clapperboard size={17} strokeWidth={1.7} /></span>
-            <span>REEL<span>RADAR</span></span>
-          </a>
-          <p>One place for everything worth watching.</p>
-          <span className="footer-credit">MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT</span>
-        </footer>
+        
       </div>
     </main>
   );

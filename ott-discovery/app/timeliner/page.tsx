@@ -430,43 +430,9 @@ export default function TimelinerPage() {
     }
   };
 
-  const renderHeader = () => (
-    <header className="tl-header">
-      <Link href="/" className="tl-brand">
-        <span className="tl-brand-icon">
-          <Clapperboard size={19} strokeWidth={2.2} />
-        </span>
-        <span>REEL<span>RADAR</span></span>
-      </Link>
-
-      <Link href="/" className="tl-discover-link">
-        <ArrowUpRight size={15} />
-        <span>Back to Discover</span>
-      </Link>
-    </header>
-  );
-
-  const renderFooter = () => (
-     <footer className="footer">
-  <a className="brand" href="/">
-    <span className="brand-mark">
-      <Clapperboard size={17} strokeWidth={1.7} />
-    </span>
-    <span>REEL<span>RADAR</span></span>
-  </a>
-
-  <p>One place for everything worth watching.</p>
-
-  <span className="footer-credit">
-    MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-  </span>
-</footer>
-  );
-
   if (selectedId) {
     return (
       <main className="tl-page tl-detail-page">
-        {renderHeader()}
 
         <div className="tl-detail-wrap">
           <button
@@ -709,14 +675,12 @@ export default function TimelinerPage() {
           )}
         </div>
 
-        {renderFooter()}
       </main>
     );
   }
 
   return (
     <main className="tl-page">
-      {renderHeader()}
 
       <section className="tl-list-hero">
         <div className="tl-list-hero-inner">
@@ -917,7 +881,6 @@ export default function TimelinerPage() {
         )}
       </section>
 
-      {renderFooter()}
 
       {introOpen && (
         <div className="tl-intro-backdrop" role="presentation">

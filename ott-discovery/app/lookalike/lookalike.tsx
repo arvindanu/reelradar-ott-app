@@ -237,18 +237,7 @@ export default function Lookalike() {
 
   return (
     <main className="lookalike-page">
-      <header className="lookalike-header">
-        <a href="/" className="lookalike-brand">
-          <span className="lookalike-brand-icon">
-            <Clapperboard size={20} />
-          </span>
-          <span>REEL<span>RADAR</span></span>
-        </a>
-        <a href="/" className="lookalike-back">
-          <ArrowUpRight size={15} />
-          Back to Discover
-        </a>
-      </header>
+      
 
       <section className="lookalike-hero">
         <div className="lookalike-orb lookalike-orb-one" />
@@ -780,20 +769,7 @@ export default function Lookalike() {
         </section>
       )}
 
-      <footer className="footer">
-        <a className="brand" href="/">
-          <span className="brand-mark">
-            <Clapperboard size={17} strokeWidth={1.7} />
-          </span>
-          <span>REEL<span>RADAR</span></span>
-        </a>
-
-        <p>One place for everything worth watching.</p>
-
-        <span className="footer-credit">
-          MOVIE DATA &amp; IMAGES BY TMDB · NOT AN OFFICIAL TMDB PRODUCT
-        </span>
-      </footer>
+      
     </main>
   );
 }
