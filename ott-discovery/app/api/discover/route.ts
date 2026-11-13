@@ -1066,10 +1066,13 @@ export async function GET(request: NextRequest) {
               kind, filter, language, region, page, documentary,
               availability, genre, provider
             );
-            const regionalParams = { ...config.params, watch_region: region };
-            if (availability === 'all' && !provider) {
-              regionalParams.with_watch_monetization_types = 'flatrate|free|ads|rent|buy';
-            }
+           const regionalParams = {
+  ...config.params,
+  watch_region: region,
+  ...(availability === 'all' && !provider
+    ? { with_watch_monetization_types: 'flatrate|free|ads|rent|buy' }
+    : {}),
+};
             const data = await tmdb(`/discover/${kind}`, regionalParams);
 
             return {
