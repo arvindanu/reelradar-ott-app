@@ -939,6 +939,21 @@ export async function GET(request: NextRequest) {
 
     const providersOnly = search.get('providers') === '1';
     const compact = search.get('compact') === '1';
+    const regionalTrending = search.get('regional_trending') === '1';
+
+    if (search.get('regions') === '1') {
+      const data = await tmdb('/watch/providers/regions', { language: 'en-US' });
+      const countries = (data.results ?? [])
+        .filter((country: AnyRecord) => /^[A-Z]{2}$/.test(country.iso_3166_1 ?? ''))
+        .map((country: AnyRecord) => ({
+          code: country.iso_3166_1,
+          label: country.english_name || country.native_name || country.iso_3166_1,
+        }))
+        .sort((a: { label: string }, b: { label: string }) => a.label.localeCompare(b.label));
+      return NextResponse.json({ countries }, {
+        headers: { 'Cache-Control': 's-maxage=86400, stale-while-revalidate=604800' },
+      });
+    }
 
     if (providersOnly) {
       const [moviesFirst, seriesFirst] = await Promise.all([
@@ -1046,14 +1061,32 @@ export async function GET(request: NextRequest) {
     } else {
       requests = await Promise.all(
         kinds.map(async kind => {
-          if (filter === 'trending' && !genre && !provider) {
-            const data = await tmdb(
-              `/trending/${kind}/week`,
-              {
-                language: 'en-US',
-                page: String(page),
-              }
+          if (filter === 'trending' && regionalTrending) {
+            const config = buildDiscoverParams(
+              kind, filter, language, region, page, documentary,
+              availability, genre, provider
             );
+            const regionalParams = { ...config.params, watch_region: region };
+            if (availability === 'all' && !provider) {
+              regionalParams.with_watch_monetization_types = 'flatrate|free|ads|rent|buy';
+            }
+            const data = await tmdb(`/discover/${kind}`, regionalParams);
+
+            return {
+              items: (data.results ?? []).map((item: AnyRecord) => ({
+                ...item,
+                _kind: kind,
+              })),
+              totalPages: data.total_pages ?? 1,
+              totalResults: data.total_results ?? 0,
+            };
+          }
+
+          if (filter === 'trending' && !genre && !provider) {
+            const data = await tmdb(`/trending/${kind}/week`, {
+              language: 'en-US',
+              page: String(page),
+            });
 
             return {
               items: (data.results ?? [])
@@ -1066,10 +1099,7 @@ export async function GET(request: NextRequest) {
                   !documentary ||
                   (item.genre_ids ?? []).includes(99);
 
-                return (
-                  languageMatches &&
-                  documentaryMatches
-                );
+                return languageMatches && documentaryMatches;
               })
               .map((item: AnyRecord) => ({
                 ...item,

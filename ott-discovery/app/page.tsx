@@ -410,6 +410,7 @@ useEffect(() => {
     genre: '',
     provider: '',
     compact: '1',
+    regional_trending: '1',
   });
 
   fetch(`/api/discover?${params.toString()}`, {
@@ -508,6 +509,9 @@ useEffect(() => {
         genre,
         provider,
       });
+      if (filter.toLowerCase() === 'trending now' && !search) {
+        params.set('regional_trending', '1');
+      }
       const res = await fetch(`/api/discover?${params.toString()}`, {
         cache: 'no-store',
         ...(signal ? { signal } : {}),
@@ -545,7 +549,9 @@ useEffect(() => {
     }
   }, [loading, showSplash]);
   const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
-  const regionLabel = COUNTRIES.find(c => c.code === region)?.label ?? region;
+  const regionLabel = COUNTRIES.find(c => c.code === region)?.label
+    ?? new Intl.DisplayNames(['en'], { type: 'region' }).of(region)
+    ?? region;
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
   const moveFeatured = useCallback((direction: number) => {

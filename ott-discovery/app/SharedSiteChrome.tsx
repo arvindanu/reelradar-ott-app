@@ -28,11 +28,23 @@ export default function SharedSiteChrome({ children }: { children: React.ReactNo
   const isNoir = pathname === '/noir';
   const [menuOpen, setMenuOpen] = useState(false);
   const [region, setRegion] = useState('IN');
+  const [countries, setCountries] = useState<Array<{ code: string; label: string }>>(COUNTRIES.map(country => ({ code: country.code, label: country.label })));
   const triggerRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     try { setRegion(localStorage.getItem('reelradar-region') || 'IN'); } catch { /* Storage is optional. */ }
+    let active = true;
+    fetch('/api/discover?regions=1', { cache: 'force-cache' })
+      .then(async response => {
+        if (!response.ok) throw new Error('Could not load supported countries');
+        const data = await response.json();
+        if (active && Array.isArray(data.countries) && data.countries.length) {
+          setCountries(data.countries);
+        }
+      })
+      .catch(() => { /* Keep the built-in country list if TMDB is unavailable. */ });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -77,7 +89,7 @@ export default function SharedSiteChrome({ children }: { children: React.ReactNo
             try { localStorage.setItem('reelradar-region', nextRegion); } catch { /* Storage is optional. */ }
             window.dispatchEvent(new CustomEvent('reelradar-region-change', { detail: nextRegion }));
           }} aria-label="Streaming country">
-            {COUNTRIES.map(country => <option key={country.code} value={country.code}>{country.label}</option>)}
+            {countries.map(country => <option key={country.code} value={country.code}>{country.label}</option>)}
           </select>
           <ChevronDown size={13} />
         </label>
