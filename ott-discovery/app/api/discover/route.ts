@@ -1066,13 +1066,14 @@ export async function GET(request: NextRequest) {
               kind, filter, language, region, page, documentary,
               availability, genre, provider
             );
-           const regionalParams = {
-  ...config.params,
-  watch_region: region,
-  ...(availability === 'all' && !provider
-    ? { with_watch_monetization_types: 'flatrate|free|ads|rent|buy' }
-    : {}),
-};
+            // Regional homepage trending means titles originating in the selected
+            // country, ranked by TMDB popularity. TMDB does not expose a
+            // country-specific audience-trending endpoint; watch_region only
+            // filters streaming availability and must not be used as a ranking proxy.
+            const regionalParams = {
+              ...config.params,
+              with_origin_country: region,
+            };
             const data = await tmdb(`/discover/${kind}`, regionalParams);
 
             return {
