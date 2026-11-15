@@ -774,31 +774,3 @@ html[data-rr-splash-skip="true"] .rr-cinematic-splash {
   }
 }
 
-/* REELRADAR — Hide scrollbars everywhere, including Android WebView */
-html,
-body,
-*,
-*::before,
-*::after {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar,
-*::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-track,
-*::-webkit-scrollbar-corner {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: transparent !important;
-  border: none !important;
-}
-
-/* Prevent visible overscroll effects */
-html,
-body {
-  overscroll-behavior: none;
-}
