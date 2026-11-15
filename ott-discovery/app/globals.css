@@ -471,3 +471,39 @@ html[data-rr-splash-skip="true"] .splash-screen {
     max-height: calc(100dvh - 108px);
   }
 }
+
+
+/* Compact media detail modal: center it in the viewport without oversized top/bottom gutters. */
+.modal-backdrop {
+  z-index: 1100 !important;
+  padding: 16px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.detail-modal {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 32px) !important;
+  max-height: calc(100dvh - 32px) !important;
+  margin: 0;
+  overscroll-behavior: contain;
+}
+
+.modal-hero {
+  min-height: clamp(190px, 32vh, 270px) !important;
+}
+
+@media (max-width: 760px) {
+  .modal-backdrop {
+    padding: 10px !important;
+  }
+
+  .detail-modal {
+    max-height: calc(100vh - 20px) !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+
+  .modal-hero {
+    min-height: clamp(160px, 27vh, 220px) !important;
+  }
+}
