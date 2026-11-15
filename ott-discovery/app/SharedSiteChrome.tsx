@@ -105,7 +105,7 @@ export default function SharedSiteChrome({ children }: { children: React.ReactNo
         {NAV_ITEMS.map(({ key, label, href, Icon }) => <Link key={key} href={href} className={isActive(key) ? 'nav-active' : ''} onClick={() => { setMenuOpen(false); if (key === 'home') window.dispatchEvent(new Event('reelradar-reset-home')); }}><Icon size={17} />{label}</Link>)}
       </nav>
     </aside>
-    <div className="rr-page-content">{children}</div>
+    <div key={pathname} className="rr-page-content rr-route-transition">{children}</div>
     <footer className={`footer rr-shared-footer${isNoir ? ' rr-noir-chrome' : ''}`}>
       <Link className="brand" href="/"><span className="brand-mark"><Clapperboard size={17} strokeWidth={1.7} /></span><span>REEL<span>RADAR</span></span></Link>
       <p>One place for everything worth watching.</p>

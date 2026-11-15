@@ -323,23 +323,26 @@ export default function Home() {
     };
   }, [scheduleFeaturedAdvance, mobileFeaturedIndex]);
   const [loading, setLoading] = useState(true);
-  const [showSplash, setShowSplash] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   const [error, setError] = useState('');
-  // Show the splash screen only on the first visit in this tab session.
+  // The splash is rendered on the server on the very first paint, so the
+// unstyled page cannot flash before React hydrates. The head script marks
+// returning sessions so their splash stays hidden without a visible flash.
 useEffect(() => {
   const splashKey = 'reelradar-splash-shown';
 
   try {
     const alreadyShown = window.sessionStorage.getItem(splashKey);
 
-    if (alreadyShown) return;
+    if (alreadyShown) {
+      setShowSplash(false);
+      return;
+    }
 
     window.sessionStorage.setItem(splashKey, 'true');
-    setShowSplash(true);
   } catch {
-    // If session storage is unavailable, show the splash normally.
-    setShowSplash(true);
+    // If session storage is unavailable, keep the splash visible for this load.
   }
 }, []);
 

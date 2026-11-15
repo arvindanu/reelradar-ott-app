@@ -394,7 +394,64 @@
   .noir-poster img, .noir-skeleton { transition: none !important; animation: none !important; }
 }
 
-/* Movie detail modal: keep the close control clear of the fixed site header. */
+
+/* REELRADAR MOTION SYSTEM — lightweight route and title-detail entrances. */
+.rr-route-transition {
+  animation: rrRouteEnter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+@keyframes rrRouteEnter {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Movie, series and documentary detail card. */
+.modal-backdrop {
+  animation: rrModalBackdropIn 220ms ease-out both;
+}
+
+.detail-modal {
+  transform-origin: center center;
+  animation: rrModalCardIn 360ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+@keyframes rrModalBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rrModalCardIn {
+  from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.975); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-route-transition,
+  .modal-backdrop,
+  .detail-modal {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+}
+
+
+/* Keep the shared navigation pinned on every route. */
+.rr-shared-topbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 1000 !important;
+}
+
+/* Prevent a returning session's server-rendered splash from flashing before hydration. */
+html[data-rr-splash-skip="true"] .splash-screen {
+  display: none !important;
+}
+
+
+/* Keep the title-detail panel clear of the fixed shared header. */
 .modal-backdrop {
   padding: 100px 20px 24px;
 }
