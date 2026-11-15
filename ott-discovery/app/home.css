@@ -787,3 +787,33 @@
 .rr-shared-footer { position:relative; }
 @media (min-width:769px) { .rr-page-content:has(.site-shell) .site-shell { min-height:calc(100vh - 193px); } }
 @media (max-width:768px) { .rr-page-content:has(.site-shell) .site-shell { min-height:calc(100vh - 181px); } }
+
+/* =========================================================
+   GLOBAL STICKY HEADER
+   Keep the shared navigation visible on every route.
+   ========================================================= */
+.rr-shared-topbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 50;
+}
+
+/* The fixed header no longer occupies normal document flow. */
+.rr-page-content {
+  padding-top: 78px;
+}
+
+/* Keep detail dialogs above the fixed header and mobile navigation. */
+.modal-backdrop {
+  z-index: 110;
+}
+
+@media (max-width: 760px) {
+  .rr-page-content {
+    padding-top: 66px;
+  }
+}
+
