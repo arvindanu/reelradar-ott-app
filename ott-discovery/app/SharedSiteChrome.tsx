@@ -31,6 +31,81 @@ export default function SharedSiteChrome({ children }: { children: React.ReactNo
   const [countries, setCountries] = useState<Array<{ code: string; label: string }>>(COUNTRIES.map(country => ({ code: country.code, label: country.label })));
   const triggerRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
+  const brandMarkRef = useRef<HTMLSpanElement>(null);
+  const splashFlightRef = useRef<HTMLDivElement>(null);
+  const [showCinematicSplash, setShowCinematicSplash] = useState(true);
+  const [splashFlying, setSplashFlying] = useState(false);
+
+  // Play the studio-style intro once per browser tab session, across every route.
+  useEffect(() => {
+    const splashKey = 'reelradar-splash-shown';
+
+    if (document.documentElement.dataset.rrSplashSkip === 'true') {
+      setShowCinematicSplash(false);
+      return;
+    }
+
+    try {
+      if (window.sessionStorage.getItem(splashKey)) {
+        setShowCinematicSplash(false);
+        return;
+      }
+    } catch {
+      // If storage is unavailable, still show the intro for this page load.
+    }
+
+    let startFrame = 0;
+    let travelTimer = 0;
+    let finishTimer = 0;
+    let flightAnimation: Animation | null = null;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Defer session marking by one frame so React Strict Mode's development
+    // effect replay cannot consume the first-run intro before it animates.
+    startFrame = window.requestAnimationFrame(() => {
+      try { window.sessionStorage.setItem(splashKey, 'true'); } catch { /* Storage is optional. */ }
+
+      if (reducedMotion) {
+        setSplashFlying(true);
+        finishTimer = window.setTimeout(() => setShowCinematicSplash(false), 380);
+        return;
+      }
+
+      travelTimer = window.setTimeout(() => {
+        const flight = splashFlightRef.current;
+        const target = brandMarkRef.current;
+        setSplashFlying(true);
+
+        if (!flight || !target) {
+          finishTimer = window.setTimeout(() => setShowCinematicSplash(false), 900);
+          return;
+        }
+
+        const targetRect = target.getBoundingClientRect();
+        const targetCenterX = targetRect.left + targetRect.width / 2;
+        const targetCenterY = targetRect.top + targetRect.height / 2;
+        const dx = targetCenterX - window.innerWidth / 2;
+        const dy = targetCenterY - window.innerHeight / 2;
+        const scale = Math.min(targetRect.width / 76, targetRect.height / 76);
+
+        flightAnimation = flight.animate(
+          [
+            { transform: 'translate(-50%, -50%) scale(1)' },
+            { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${scale})` },
+          ],
+          { duration: 900, easing: 'cubic-bezier(0.72, 0.02, 0.25, 1)', fill: 'forwards' },
+        );
+        flightAnimation.onfinish = () => setShowCinematicSplash(false);
+      }, 820);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(startFrame);
+      window.clearTimeout(travelTimer);
+      window.clearTimeout(finishTimer);
+      flightAnimation?.cancel();
+    };
+  }, []);
 
   useEffect(() => {
     try { setRegion(localStorage.getItem('reelradar-region') || 'IN'); } catch { /* Storage is optional. */ }
@@ -73,9 +148,20 @@ export default function SharedSiteChrome({ children }: { children: React.ReactNo
   };
 
   return <>
+    {showCinematicSplash && <div className={`rr-cinematic-splash${splashFlying ? ' is-flying' : ''}`} role="status" aria-label="Opening REELRADAR">
+      <div className="rr-splash-backdrop" />
+      <div className="rr-splash-flight" ref={splashFlightRef} aria-hidden="true">
+        <span className="rr-splash-logo-mark"><Clapperboard size={45} strokeWidth={1.7} /></span>
+      </div>
+      <div className="rr-splash-copy" aria-hidden="true">
+        <div className="rr-splash-wordmark">REEL<span>RADAR</span></div>
+        <p>YOUR NEXT WATCH STARTS HERE</p>
+        <span className="rr-splash-rule"><i /></span>
+      </div>
+    </div>}
     <header className={`topbar rr-shared-topbar${isNoir ? ' rr-noir-chrome' : ''}`}>
       <Link className="brand" href="/" aria-label="REELRADAR Home">
-        <span className="brand-mark"><Clapperboard size={19} strokeWidth={1.7} /></span>
+        <span className="brand-mark" ref={brandMarkRef}><Clapperboard size={19} strokeWidth={1.7} /></span>
         <span>REEL<span>RADAR</span></span><i />
       </Link>
       <nav className="desktop-nav" aria-label="Main navigation">

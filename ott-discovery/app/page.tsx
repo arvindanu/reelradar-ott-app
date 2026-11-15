@@ -340,27 +340,7 @@ export default function Home() {
   }, [scheduleFeaturedAdvance, mobileFeaturedIndex]);
 
   const [loading, setLoading] = useState(true);
-  const [showSplash, setShowSplash] = useState(true);
-  const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   const [error, setError] = useState('');
-
-  // Keep the splash visible on first visit and skip it on returning sessions.
-  useEffect(() => {
-    const splashKey = 'reelradar-splash-shown';
-
-    try {
-      const alreadyShown = window.sessionStorage.getItem(splashKey);
-
-      if (alreadyShown) {
-        setShowSplash(false);
-        return;
-      }
-
-      window.sessionStorage.setItem(splashKey, 'true');
-    } catch {
-      // If session storage is unavailable, keep the splash visible for this load.
-    }
-  }, []);
 
   const [selected, setSelected] = useState<Title | null>(null);
 
@@ -616,13 +596,6 @@ export default function Home() {
     return () => controller.abort();
   }, [load]);
 
-  useEffect(() => {
-    if (!loading && showSplash) {
-      const timer = window.setTimeout(() => setShowSplash(false), 500);
-      return () => window.clearTimeout(timer);
-    }
-  }, [loading, showSplash]);
-
   const submitSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearch(query.trim());
@@ -656,27 +629,6 @@ export default function Home() {
   }, [mobileFeaturedIndex, featuredTitles.length]);
 
   return <main className="site-shell">
-    {showSplash && <div
-      className="splash-screen"
-      role="status"
-      aria-label="Loading REELRADAR"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 999999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#08090d',
-      }}
-    >
-      <div className="splash-brand-mark"><Clapperboard size={38} strokeWidth={1.7} /></div>
-      <div className="splash-wordmark">REEL<span>RADAR</span></div>
-      <div className="splash-loader"><span /></div>
-      <p>PREPARING YOUR NEXT WATCH</p>
-    </div>}
-
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
       <div className="intro-content rr-showcase-content">

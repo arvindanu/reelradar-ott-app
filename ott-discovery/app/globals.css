@@ -574,3 +574,202 @@ html[data-rr-splash-skip="true"] .splash-screen {
     min-height: clamp(150px, 25vh, 210px) !important;
   }
 }
+
+/* =========================================
+   REELRADAR — CINEMATIC SESSION INTRO
+   Uses the same Lucide Clapperboard mark and
+   lime treatment as the shared header logo.
+========================================= */
+
+.rr-cinematic-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2000000;
+  overflow: hidden;
+  display: block;
+  background: transparent;
+  isolation: isolate;
+  pointer-events: auto;
+}
+
+.rr-splash-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 1;
+  background:
+    radial-gradient(ellipse at 50% 43%, rgba(223,255,0,.105), transparent 34%),
+    radial-gradient(ellipse at 50% 52%, rgba(24,29,17,.72), transparent 62%),
+    #08090d;
+  transition: opacity 900ms cubic-bezier(.7,0,.2,1);
+}
+
+.rr-splash-backdrop::before,
+.rr-splash-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rr-splash-backdrop::before {
+  opacity: .16;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 3px,
+    rgba(255,255,255,.035) 4px
+  );
+}
+
+.rr-splash-backdrop::after {
+  background: radial-gradient(ellipse at center, transparent 24%, rgba(0,0,0,.62) 100%);
+}
+
+.rr-splash-flight {
+  position: fixed;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.rr-splash-logo-mark {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  color: var(--lime, #DFFF00);
+  border: 2.4px solid rgba(223,255,0,.35);
+  border-radius: 24px;
+  background: rgba(223,255,0,.07);
+  box-shadow:
+    0 0 45px rgba(223,255,0,.14),
+    inset 0 0 24px rgba(223,255,0,.035);
+}
+
+.rr-splash-logo-mark svg {
+  display: block;
+  color: inherit;
+  stroke: currentColor;
+  animation: rr-splash-clapper-snap 760ms cubic-bezier(.2,.8,.25,1) 160ms both;
+  transform-origin: 50% 34%;
+}
+
+.rr-splash-copy {
+  position: fixed;
+  z-index: 1;
+  top: calc(50% + 62px);
+  left: 50%;
+  width: min(90vw, 360px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  text-align: center;
+  opacity: 1;
+  transform: translateX(-50%);
+  transition:
+    opacity 260ms ease,
+    transform 420ms cubic-bezier(.2,.8,.2,1);
+}
+
+.rr-splash-wordmark {
+  color: #f7f8f4;
+  font: 700 23px/1.1 'Space Grotesk', sans-serif;
+  letter-spacing: 4px;
+}
+
+.rr-splash-wordmark span {
+  color: var(--lime, #DFFF00);
+}
+
+.rr-splash-copy p {
+  margin: 0;
+  color: #969b8a;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.3px;
+}
+
+.rr-splash-rule {
+  width: 112px;
+  height: 2px;
+  display: block;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255,255,255,.12);
+}
+
+.rr-splash-rule i {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--lime, #DFFF00);
+  box-shadow: 0 0 12px rgba(223,255,0,.7);
+  animation: rr-splash-progress 900ms ease-in-out infinite;
+}
+
+.rr-cinematic-splash.is-flying .rr-splash-backdrop {
+  opacity: 0;
+}
+
+.rr-cinematic-splash.is-flying .rr-splash-copy {
+  opacity: 0;
+  transform: translate(-50%, 12px);
+}
+
+@keyframes rr-splash-clapper-snap {
+  0%, 30% {
+    transform: perspective(260px) rotateX(28deg) translateY(-3px);
+  }
+  58%, 100% {
+    transform: perspective(260px) rotateX(0) translateY(0);
+  }
+}
+
+@keyframes rr-splash-progress {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(340%); }
+}
+
+html[data-rr-splash-skip="true"] .rr-cinematic-splash {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .rr-splash-logo-mark,
+  .rr-splash-flight {
+    width: 76px;
+    height: 76px;
+  }
+
+  .rr-splash-wordmark {
+    font-size: 21px;
+    letter-spacing: 3.5px;
+  }
+
+  .rr-splash-copy p {
+    font-size: 8px;
+    letter-spacing: 1.8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-splash-logo-mark svg,
+  .rr-splash-rule i {
+    animation: none !important;
+  }
+
+  .rr-splash-backdrop,
+  .rr-splash-copy {
+    transition-duration: 180ms !important;
+  }
+}
