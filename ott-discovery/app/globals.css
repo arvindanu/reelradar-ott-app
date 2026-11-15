@@ -775,12 +775,21 @@ html[data-rr-splash-skip="true"] .rr-cinematic-splash {
 }
 
 
-/* Hide scrollbars across the entire app */
+/* REELRADAR — Hide all scrollbars globally */
+html,
+body,
 * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-*::-webkit-scrollbar {
-  display: none;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-track {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+  background: transparent !important;
 }
