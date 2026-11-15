@@ -393,3 +393,24 @@
 @media (prefers-reduced-motion: reduce) {
   .noir-poster img, .noir-skeleton { transition: none !important; animation: none !important; }
 }
+
+/* Movie detail modal: keep the close control clear of the fixed site header. */
+.modal-backdrop {
+  padding: 100px 20px 24px;
+}
+
+.detail-modal {
+  max-height: calc(100vh - 124px);
+  max-height: calc(100dvh - 124px);
+}
+
+@media (max-width: 760px) {
+  .modal-backdrop {
+    padding: 92px 10px 16px;
+  }
+
+  .detail-modal {
+    max-height: calc(100vh - 108px);
+    max-height: calc(100dvh - 108px);
+  }
+}
