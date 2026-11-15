@@ -507,3 +507,70 @@ html[data-rr-splash-skip="true"] .splash-screen {
     min-height: clamp(160px, 27vh, 220px) !important;
   }
 }
+
+/* =========================================
+   REELRADAR — FINAL MEDIA POPUP OVERRIDE
+========================================= */
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 12px !important;
+  margin: 0 !important;
+
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  touch-action: none;
+}
+
+.detail-modal {
+  position: relative !important;
+
+  width: min(760px, calc(100vw - 24px)) !important;
+
+  height: auto !important;
+  max-height: calc(100dvh - 24px) !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
+
+  touch-action: pan-y;
+
+  box-sizing: border-box;
+}
+
+.modal-hero {
+  min-height: clamp(170px, 30vh, 250px) !important;
+}
+
+@media (max-width: 760px) {
+  .modal-backdrop {
+    padding: 8px !important;
+  }
+
+  .detail-modal {
+    width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+  }
+
+  .modal-hero {
+    min-height: clamp(150px, 25vh, 210px) !important;
+  }
+}

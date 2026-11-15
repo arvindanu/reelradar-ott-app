@@ -1,9 +1,10 @@
+
 'use client';
 
+import { createPortal } from 'react-dom';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Search, SlidersHorizontal, Play, Star, ArrowUpRight, Film, Clapperboard, Globe2, Sparkles, ChevronDown, X, Menu, Radio, ExternalLink, CalendarDays, Users, Award, Clock3, Share2, Heart, GitMerge, Check, HomeIcon, Dices, Hourglass, ScanEye, ScanSearch, CalendarClock } from 'lucide-react';
 import { COUNTRIES, LANGUAGES } from '@/lib/catalog';
-
 
 type Provider = { id: number; name: string; logo: string | null };
 type PlatformOption = { id: number; name: string; logo: string | null };
@@ -104,11 +105,11 @@ const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selec
     onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectionMode && item.mediaType === 'movie' && onToggleSelect ? onToggleSelect(item) : onOpen(item); } }}>
     <div className="poster-art">
       {item.poster ? <img
-  src={item.poster}
-  alt={`${item.title} poster`}
-  loading="lazy"
-  decoding="async"
-/> : <div className="poster-fallback"><Film size={30} /><span>{item.title}</span></div>}
+        src={item.poster}
+        alt={`${item.title} poster`}
+        loading="lazy"
+        decoding="async"
+      /> : <div className="poster-fallback"><Film size={30} /><span>{item.title}</span></div>}
       <div className="poster-shade" />
       {selectionMode && <div className={`collide-select-mark ${selectedIndex >= 0 ? 'is-selected' : ''}`} aria-label={selectedIndex >= 0 ? `Selected ${selectedIndex + 1}` : 'Select movie'}>{selectedIndex >= 0 ? <><Check size={15} /> {selectedIndex + 1}</> : <GitMerge size={16} />}</div>}
       <div className="poster-topline"><span className="type-pill">{item.mediaType === 'tv' ? 'SERIES' : 'FILM'}</span>
@@ -118,20 +119,20 @@ const Poster = memo(function Poster({ item, onOpen, selectionMode = false, selec
     </div>
     <a className="card-trailer" href={trailerUrl} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
       <span className={`trailer-thumb ${!item.trailerThumb ? 'trailer-thumb-empty' : ''}`}>
-  {item.trailerThumb ? (
-    <>
-      <img
-        src={item.trailerThumb}
-        alt=""
-        loading="lazy"
-        decoding="async"
-      />
-      <Play size={9} fill="currentColor" />
-    </>
-  ) : (
-    <Play size={16} fill="currentColor" />
-  )}
-</span>
+        {item.trailerThumb ? (
+          <>
+            <img
+              src={item.trailerThumb}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <Play size={9} fill="currentColor" />
+          </>
+        ) : (
+          <Play size={16} fill="currentColor" />
+        )}
+      </span>
       <span>WATCH TRAILER</span><ArrowUpRight size={12} />
     </a>
     <div className="card-meta"><div className="provider-stack">{item.providers.length ? item.providers.slice(0, 3).map(p => p.logo
@@ -145,7 +146,15 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
   const [detailError, setDetailError] = useState('');
   const [detailLoading, setDetailLoading] = useState(true);
   const [expandedReviews, setExpandedReviews] = useState<string[]>([]);
-  const trailer = item.trailerKey ? `https://www.youtube.com/watch?v=${item.trailerKey}` : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
+  const [portalReady, setPortalReady] = useState(false);
+
+  const trailer = item.trailerKey
+    ? `https://www.youtube.com/watch?v=${item.trailerKey}`
+    : `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' official trailer')}`;
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -176,27 +185,30 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
   const line = (label: string, value?: string | number | null) => value !== undefined && value !== null && value !== ''
     ? <p className="detail-line"><strong>{label}:</strong> {value}</p> : null;
 
-  return <div className="modal-backdrop" onMouseDown={close}>
-    <section className="detail-modal" onMouseDown={e => e.stopPropagation()}>
-      <button className="modal-close" onClick={close} aria-label="Close" type="button"><X size={18} /></button>
-      <div className="modal-hero" style={item.backdrop ? { backgroundImage: `linear-gradient(90deg,rgba(8,9,13,.98),rgba(8,9,13,.58)),url(${item.backdrop})` } : {}}>
-        <div className="modal-copy">
-          <span className="eyebrow">{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'} · {item.year || 'Release date TBA'}</span>
-          <h2>{item.title}</h2>
-          <div className="modal-stats">{item.rating !== null && <span><Star size={14} fill="currentColor" /> {item.rating.toFixed(1)} / 10</span>}<span>{getLanguageLabel(item.language)}</span></div>
-          <p>{item.overview || 'Synopsis not available yet.'}</p>
-          <a className="primary-cta" href={trailer} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> Watch trailer on YouTube <ExternalLink size={14} /></a>
+  if (!portalReady) return null;
+
+  return createPortal(
+    <div className="modal-backdrop" onMouseDown={close}>
+      <section className="detail-modal" onMouseDown={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={close} aria-label="Close" type="button"><X size={18} /></button>
+        <div className="modal-hero" style={item.backdrop ? { backgroundImage: `linear-gradient(90deg,rgba(8,9,13,.98),rgba(8,9,13,.58)),url(${item.backdrop})` } : {}}>
+          <div className="modal-copy">
+            <span className="eyebrow">{item.mediaType === 'tv' ? 'SERIES' : 'MOVIE'} · {item.year || 'Release date TBA'}</span>
+            <h2>{item.title}</h2>
+            <div className="modal-stats">{item.rating !== null && <span><Star size={14} fill="currentColor" /> {item.rating.toFixed(1)} / 10</span>}<span>{getLanguageLabel(item.language)}</span></div>
+            <p>{item.overview || 'Synopsis not available yet.'}</p>
+            <a className="primary-cta" href={trailer} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> Watch trailer on YouTube <ExternalLink size={14} /></a>
+          </div>
         </div>
-      </div>
-      <div className="modal-bottom"><div><span className="eyebrow">WHERE TO WATCH</span><h3>Available on your platforms</h3></div>
-        {item.watchLink && <a className="provider-link" href={item.watchLink} target="_blank" rel="noreferrer">All options <ArrowUpRight size={14} /></a>}</div>
-      {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <a className="modal-provider" key={p.id}
+        <div className="modal-bottom"><div><span className="eyebrow">WHERE TO WATCH</span><h3>Available on your platforms</h3></div>
+          {item.watchLink && <a className="provider-link" href={item.watchLink} target="_blank" rel="noreferrer">All options <ArrowUpRight size={14} /></a>}</div>
+        {item.providers.length ? <div className="modal-providers">{item.providers.map(p => <a className="modal-provider" key={p.id}
           href={getProviderWatchUrl(p.name, item.title, item.watchLink)} target="_blank" rel="noopener noreferrer"
           aria-label={`Search for ${item.title} on ${p.name}`} title={`Find ${item.title} on ${p.name}`}>
           {p.logo && <img src={p.logo} alt="" />}<span>{p.name}</span><ExternalLink size={12} />
         </a>)}
         </div> : <p className="no-provider">No streaming availability was returned for this country. Try changing your region.</p>}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 9, padding: '0 24px 18px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 9, padding: '0 24px 18px' }}>
           <button type="button" aria-label={isWishlisted ? `Remove ${item.title} from wishlist` : `Add ${item.title} to wishlist`}
             onClick={() => onToggleWishlist(item)}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: isWishlisted ? '#DFFF00' : '#fff', cursor: 'pointer', fontWeight: 700 }}>
@@ -216,80 +228,84 @@ function DetailModal({ item, close, region, isWishlisted, onToggleWishlist }: { 
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 13px', borderRadius: 8, border: '1px solid rgba(255,255,255,.22)', background: 'rgba(8,9,13,.72)', color: '#fff', cursor: 'pointer', fontWeight: 700 }}>
             <Share2 size={15} /> Share
           </button>
-      </div>
-      {item.trailerThumb && <a className="trailer-preview" href={trailer} target="_blank" rel="noreferrer"><img src={item.trailerThumb} alt="Trailer thumbnail" /><span className="trailer-play"><Play fill="currentColor" /></span><span>PLAY OFFICIAL TRAILER</span></a>}
-
-      <div className="full-details">
-        <div className="details-heading"><h3>Title information</h3><span>{detailLoading ? 'LOADING DETAILS…' : 'TMDB DETAILS'}</span></div>
-        {detailError && <p className="no-provider">{detailError}</p>}
-        {details && <>
-          {line('Original title', details.originalTitle)}
-          {line('Tagline', details.tagline)}
-          {line('Director', details.director?.join(', '))}
-          {line('Creator', details.creators?.join(', '))}
-          {line('Genres', details.genres?.join(', '))}
-          {line('Tags', details.keywords?.join(', '))}
-          {line('Country', details.countries?.join(', '))}
-          {line('Status', details.status)}
-          {item.mediaType === 'tv' ? <>
-            {line('Type', 'TV Series')}
-            {line('Episodes', details.numberOfEpisodes)}
-            {line('Seasons', details.numberOfSeasons)}
-            {line('Aired', [details.firstAirDate, details.lastAirDate].filter(Boolean).join(' – '))}
-            {line('Next episode', details.nextEpisode)}
-            {line('Original network', details.networks?.join(', '))}
-            {line('Episode duration', details.episodeRuntime ? `${details.episodeRuntime} min.` : null)}
-            {line('Content rating', details.contentRating)}
-          </> : <>
-            {line('Release date', item.releaseDate)}
-            {line('Runtime', details.runtime ? `${details.runtime} min.` : null)}
-            {line('Budget', details.budget ? `$${details.budget.toLocaleString()}` : null)}
-            {line('Box office', details.revenue ? `$${details.revenue.toLocaleString()}` : null)}
-          </>}
-          {line('Production companies', details.productionCompanies?.join(', '))}
-          {line('Score', item.rating !== null ? `${item.rating.toFixed(1)} / 10 (${(details.voteCount ?? 0).toLocaleString()} votes)` : null)}
-          {line('Popularity', typeof details.popularity === 'number' ? details.popularity.toFixed(1) : null)}
-          {line('IMDb ID', details.imdbId)}
-          {details.homepage && <p className="detail-line"><strong>Official website:</strong> <a href={details.homepage} target="_blank" rel="noreferrer">{details.homepage}</a></p>}
-        </>}
-        <div className="people-grid">
-          <div><h4><Users size={15} /> Cast</h4>{details?.cast?.length ? details.cast.slice(0, 12).map(person =>
-            <div className="person-row" key={person.id}>{person.profile && <img src={person.profile} alt="" loading="lazy" />}<span><strong>{person.name}</strong><small>{person.character}</small></span></div>
-          ) : <p className="muted-note">Cast information unavailable.</p>}</div>
-          <div><h4><Clapperboard size={15} /> Key crew</h4>{details?.crew?.length ? details.crew.slice(0, 12).map(person =>
-            <div className="person-row" key={`${person.id}-${person.role}`} >{person.profile && <img src={person.profile} alt="" loading="lazy" />}<span><strong>{person.name}</strong><small>{person.role}</small></span></div>
-          ) : <p className="muted-note">Crew information unavailable.</p>}</div>
         </div>
-        <section className="reviews-section">
-          <div className="details-heading"><h3>Audience reviews</h3><span>{details?.reviews?.length ? `${details.reviews.length} REVIEWS` : 'TMDB REVIEWS'}</span></div>
-          {detailLoading ? <p className="muted-note">Loading reviews…</p> : details?.reviews?.length ? details.reviews.map(review => {
-            const expanded = expandedReviews.includes(review.id);
-            const content = review.content ?? '';
-            const needsExpansion = content.length > 420;
-            return <article className="review-card" key={review.id}>
-              <div className="review-top"><div><strong>{review.author}</strong><small>{review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'Review'}</small></div>
-                {typeof review.authorDetails?.rating === 'number' && <span className="review-rating"><Star size={12} fill="currentColor" /> {review.authorDetails.rating}/10</span>}</div>
-              <p>{needsExpansion && !expanded ? `${content.slice(0, 420)}…` : content}</p>
-              <div className="review-actions">{needsExpansion && <button type="button" onClick={() => setExpandedReviews(current => expanded ? current.filter(id => id !== review.id) : [...current, review.id])}>{expanded ? 'Read less' : 'Read more'}</button>}
-                {review.url && <a href={review.url} target="_blank" rel="noreferrer">View on TMDB <ExternalLink size={12} /></a>}</div>
-            </article>;
-          }) : <p className="muted-note">No audience reviews are available for this title yet.</p>}
-        </section>
-      </div>
-    </section>
-  </div>;
+        {item.trailerThumb && <a className="trailer-preview" href={trailer} target="_blank" rel="noreferrer"><img src={item.trailerThumb} alt="Trailer thumbnail" /><span className="trailer-play"><Play fill="currentColor" /></span><span>PLAY OFFICIAL TRAILER</span></a>}
+
+        <div className="full-details">
+          <div className="details-heading"><h3>Title information</h3><span>{detailLoading ? 'LOADING DETAILS…' : 'TMDB DETAILS'}</span></div>
+          {detailError && <p className="no-provider">{detailError}</p>}
+          {details && <>
+            {line('Original title', details.originalTitle)}
+            {line('Tagline', details.tagline)}
+            {line('Director', details.director?.join(', '))}
+            {line('Creator', details.creators?.join(', '))}
+            {line('Genres', details.genres?.join(', '))}
+            {line('Tags', details.keywords?.join(', '))}
+            {line('Country', details.countries?.join(', '))}
+            {line('Status', details.status)}
+            {item.mediaType === 'tv' ? <>
+              {line('Type', 'TV Series')}
+              {line('Episodes', details.numberOfEpisodes)}
+              {line('Seasons', details.numberOfSeasons)}
+              {line('Aired', [details.firstAirDate, details.lastAirDate].filter(Boolean).join(' – '))}
+              {line('Next episode', details.nextEpisode)}
+              {line('Original network', details.networks?.join(', '))}
+              {line('Episode duration', details.episodeRuntime ? `${details.episodeRuntime} min.` : null)}
+              {line('Content rating', details.contentRating)}
+            </> : <>
+              {line('Release date', item.releaseDate)}
+              {line('Runtime', details.runtime ? `${details.runtime} min.` : null)}
+              {line('Budget', details.budget ? `$${details.budget.toLocaleString()}` : null)}
+              {line('Box office', details.revenue ? `$${details.revenue.toLocaleString()}` : null)}
+            </>}
+            {line('Production companies', details.productionCompanies?.join(', '))}
+            {line('Score', item.rating !== null ? `${item.rating.toFixed(1)} / 10 (${(details.voteCount ?? 0).toLocaleString()} votes)` : null)}
+            {line('Popularity', typeof details.popularity === 'number' ? details.popularity.toFixed(1) : null)}
+            {line('IMDb ID', details.imdbId)}
+            {details.homepage && <p className="detail-line"><strong>Official website:</strong> <a href={details.homepage} target="_blank" rel="noreferrer">{details.homepage}</a></p>}
+          </>}
+          <div className="people-grid">
+            <div><h4><Users size={15} /> Cast</h4>{details?.cast?.length ? details.cast.slice(0, 12).map(person =>
+              <div className="person-row" key={person.id}>{person.profile && <img src={person.profile} alt="" loading="lazy" />}<span><strong>{person.name}</strong><small>{person.character}</small></span></div>
+            ) : <p className="muted-note">Cast information unavailable.</p>}</div>
+            <div><h4><Clapperboard size={15} /> Key crew</h4>{details?.crew?.length ? details.crew.slice(0, 12).map(person =>
+              <div className="person-row" key={`${person.id}-${person.role}`} >{person.profile && <img src={person.profile} alt="" loading="lazy" />}<span><strong>{person.name}</strong><small>{person.role}</small></span></div>
+            ) : <p className="muted-note">Crew information unavailable.</p>}</div>
+          </div>
+          <section className="reviews-section">
+            <div className="details-heading"><h3>Audience reviews</h3><span>{details?.reviews?.length ? `${details.reviews.length} REVIEWS` : 'TMDB REVIEWS'}</span></div>
+            {detailLoading ? <p className="muted-note">Loading reviews…</p> : details?.reviews?.length ? details.reviews.map(review => {
+              const expanded = expandedReviews.includes(review.id);
+              const content = review.content ?? '';
+              const needsExpansion = content.length > 420;
+              return <article className="review-card" key={review.id}>
+                <div className="review-top"><div><strong>{review.author}</strong><small>{review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'Review'}</small></div>
+                  {typeof review.authorDetails?.rating === 'number' && <span className="review-rating"><Star size={12} fill="currentColor" /> {review.authorDetails.rating}/10</span>}</div>
+                <p>{needsExpansion && !expanded ? `${content.slice(0, 420)}…` : content}</p>
+                <div className="review-actions">{needsExpansion && <button type="button" onClick={() => setExpandedReviews(current => expanded ? current.filter(id => id !== review.id) : [...current, review.id])}>{expanded ? 'Read less' : 'Read more'}</button>}
+                  {review.url && <a href={review.url} target="_blank" rel="noreferrer">View on TMDB <ExternalLink size={12} /></a>}</div>
+              </article>;
+            }) : <p className="muted-note">No audience reviews are available for this title yet.</p>}
+          </section>
+        </div>
+      </section>
+    </div>,
+    document.body
+  );
 }
 
 export default function Home() {
   const [mode, setMode] = useState<Mode>('all');
   const [language, setLanguage] = useState('');
   const [region, setRegion] = useState('IN');
+
   useEffect(() => {
     const syncRegion = (event: Event) => { const value = (event as CustomEvent<string>).detail; if (value) setRegion(value); };
     try { setRegion(localStorage.getItem('reelradar-region') || 'IN'); } catch { /* Storage is optional. */ }
     window.addEventListener('reelradar-region-change', syncRegion);
     return () => window.removeEventListener('reelradar-region-change', syncRegion);
   }, []);
+
   const [filter, setFilter] = useState<DiscoveryFilter>('');
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
@@ -322,33 +338,73 @@ export default function Home() {
       }
     };
   }, [scheduleFeaturedAdvance, mobileFeaturedIndex]);
+
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   const [error, setError] = useState('');
-  // The splash is rendered on the server on the very first paint, so the
-// unstyled page cannot flash before React hydrates. The head script marks
-// returning sessions so their splash stays hidden without a visible flash.
-useEffect(() => {
-  const splashKey = 'reelradar-splash-shown';
 
-  try {
-    const alreadyShown = window.sessionStorage.getItem(splashKey);
+  // Keep the splash visible on first visit and skip it on returning sessions.
+  useEffect(() => {
+    const splashKey = 'reelradar-splash-shown';
 
-    if (alreadyShown) {
-      setShowSplash(false);
-      return;
+    try {
+      const alreadyShown = window.sessionStorage.getItem(splashKey);
+
+      if (alreadyShown) {
+        setShowSplash(false);
+        return;
+      }
+
+      window.sessionStorage.setItem(splashKey, 'true');
+    } catch {
+      // If session storage is unavailable, keep the splash visible for this load.
     }
-
-    window.sessionStorage.setItem(splashKey, 'true');
-  } catch {
-    // If session storage is unavailable, keep the splash visible for this load.
-  }
-}, []);
-
-
+  }, []);
 
   const [selected, setSelected] = useState<Title | null>(null);
+
+  // Lock background scrolling while the detail popup is open.
+  useEffect(() => {
+    if (!selected) return;
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const html = document.documentElement;
+
+    const previousBodyStyles = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+      paddingRight: body.style.paddingRight,
+    };
+
+    const previousHtmlOverflow = html.style.overflow;
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      body.style.overflow = previousBodyStyles.overflow;
+      body.style.position = previousBodyStyles.position;
+      body.style.top = previousBodyStyles.top;
+      body.style.width = previousBodyStyles.width;
+      body.style.paddingRight = previousBodyStyles.paddingRight;
+      html.style.overflow = previousHtmlOverflow;
+
+      window.scrollTo(0, scrollY);
+    };
+  }, [selected]);
+
   const [availability, setAvailability] = useState<Availability>('all');
   const [genre, setGenre] = useState('');
   const [provider, setProvider] = useState('');
@@ -399,65 +455,79 @@ useEffect(() => {
     return () => { active = false; };
   }, [region]);
 
- useEffect(() => {
-  let active = true;
+  useEffect(() => {
+    let active = true;
 
-  const params = new URLSearchParams({
-    type: 'all',
-    language: '',
-    region,
-    query: '',
-    filter: 'Trending Now',
-    page: '1',
-    availability: 'all',
-    genre: '',
-    provider: '',
-    compact: '1',
-    regional_trending: '1',
-  });
-
-  fetch(`/api/discover?${params.toString()}`, {
-    cache: 'no-store',
-  })
-    .then(async response => {
-      if (!response.ok) {
-        throw new Error('Could not load trending titles');
-      }
-
-      const data = await response.json();
-
-      const trending = Array.isArray(data.results)
-        ? data.results
-            .map(normalizeTitle)
-            .filter((item: Title | null): item is Title => item !== null)
-        : [];
-
-      if (active) {
-        setFeaturedTitles(trending.slice(0, 5));
-        setMobileFeaturedIndex(0);
-      }
-    })
-    .catch(() => {
-      if (active) setFeaturedTitles([]);
+    const params = new URLSearchParams({
+      type: 'all',
+      language: '',
+      region,
+      query: '',
+      filter: 'Trending Now',
+      page: '1',
+      availability: 'all',
+      genre: '',
+      provider: '',
+      compact: '1',
+      regional_trending: '1',
     });
 
-  return () => {
-    active = false;
-  };
-}, [region]);
+    fetch(`/api/discover?${params.toString()}`, {
+      cache: 'no-store',
+    })
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error('Could not load trending titles');
+        }
+
+        const data = await response.json();
+
+        const trending = Array.isArray(data.results)
+          ? data.results
+              .map(normalizeTitle)
+              .filter((item: Title | null): item is Title => item !== null)
+          : [];
+
+        if (active) {
+          setFeaturedTitles(trending.slice(0, 5));
+          setMobileFeaturedIndex(0);
+        }
+      })
+      .catch(() => {
+        if (active) setFeaturedTitles([]);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [region]);
 
   const [showWishlist, setShowWishlist] = useState(false);
+
   useEffect(() => {
-    const show = () => { setShowWishlist(true); setPage(1); window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 100); };
+    const show = () => {
+      setShowWishlist(true);
+      setPage(1);
+      window.setTimeout(() => document.querySelector('.catalog-section')?.scrollIntoView({ behavior: 'smooth' }), 100);
+    };
     if (new URLSearchParams(window.location.search).get('view') === 'watchlist') show();
     window.addEventListener('reelradar-show-wishlist', show);
     return () => window.removeEventListener('reelradar-show-wishlist', show);
   }, []);
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+
   useEffect(() => {
-    const reset = () => { setMode('all'); setSearch(''); setQuery(''); setGenre(''); setShowWishlist(false); setPage(1); };
+    const reset = () => {
+      setMode('all');
+      setSearch('');
+      setQuery('');
+      setGenre('');
+      setShowWishlist(false);
+      setPage(1);
+    };
     window.addEventListener('reelradar-reset-home', reset);
     return () => window.removeEventListener('reelradar-reset-home', reset);
   }, []);
@@ -545,18 +615,27 @@ useEffect(() => {
     void load(controller.signal);
     return () => controller.abort();
   }, [load]);
+
   useEffect(() => {
     if (!loading && showSplash) {
       const timer = window.setTimeout(() => setShowSplash(false), 500);
       return () => window.clearTimeout(timer);
     }
   }, [loading, showSplash]);
-  const submitSearch = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSearch(query.trim()); setPage(1); };
+
+  const submitSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearch(query.trim());
+    setPage(1);
+  };
+
   const regionLabel = COUNTRIES.find(c => c.code === region)?.label
     ?? new Intl.DisplayNames(['en'], { type: 'region' }).of(region)
     ?? region;
+
   const availableGenres = mode === 'movie' ? MOVIE_GENRES : mode === 'tv' ? TV_GENRES : SHARED_GENRES;
   const displayedItems = showWishlist ? wishlist : items;
+
   const moveFeatured = useCallback((direction: number) => {
     if (featuredTitles.length < 2) return;
     setMobileFeaturedIndex(current =>
@@ -597,7 +676,6 @@ useEffect(() => {
       <div className="splash-loader"><span /></div>
       <p>PREPARING YOUR NEXT WATCH</p>
     </div>}
-    
 
     <section className="intro rr-showcase-intro" id="top">
       <div className="intro-orb orb-one" /><div className="intro-orb orb-two" />
@@ -668,12 +746,12 @@ useEffect(() => {
               <span className="rr-featured-image">
                 {item.poster || item.backdrop
                   ? <img
-  src={item.poster || item.backdrop || ''}
-  alt=""
-  loading={offset === 0 ? 'eager' : 'lazy'}
-  decoding="async"
-  fetchPriority={offset === 0 ? 'high' : 'low'}
-/>
+                    src={item.poster || item.backdrop || ''}
+                    alt=""
+                    loading={offset === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchPriority={offset === 0 ? 'high' : 'low'}
+                  />
                   : <span className="rr-featured-fallback"><Film size={30} /></span>}
               </span>
               <span className="rr-featured-shade" />
@@ -716,6 +794,7 @@ useEffect(() => {
         <div className="intro-foot"><span><span className="live-dot" /> FRESH RELEASES</span><span>11 LANGUAGES</span><span>ONE DISCOVERY SPACE</span></div>
       </div>
     </section>
+
     <section className="catalog-section">
       <div className="section-heading"><div><div className="eyebrow">THE DISCOVERY FEED</div>
         <h2>{showWishlist ? 'My Watchlist' : search ? `Results for “${search}”` : filter || 'All picks'}</h2>
@@ -730,6 +809,7 @@ useEffect(() => {
         </div>
         <div className="region-note"><Globe2 size={13} /> {regionLabel}</div>
       </div>
+
       <div className="desktop-discovery-controls">
         <div className="catalog-controls">
           <div className="availability-toggle" role="group" aria-label="Availability filter">
@@ -739,20 +819,20 @@ useEffect(() => {
           </div>
         </div>
         <div className="discovery-filter-wrap">
-        <label htmlFor="discovery-filter">Browse by</label>
-        <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => { setFilter(e.target.value as DiscoveryFilter); setPage(1); }}>
-          <option value="">All picks</option>
-          {DISCOVERY_FILTERS.map(name => <option key={name} value={name}>{name}</option>)}
-        </select>
-      </div>
-      <div className="discovery-filter-wrap">
-        <label htmlFor="genre-filter">Genre</label>
-        <select id="genre-filter" className="discovery-filter-select" value={genre} disabled={mode === 'documentary'}
-          onChange={e => { setGenre(e.target.value); setPage(1); setShowWishlist(false); }}>
-          <option value="">{mode === 'documentary' ? 'Documentaries only' : 'All genres'}</option>
-          {availableGenres.slice(0, 8).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}
-        </select>
-      </div>
+          <label htmlFor="discovery-filter">Browse by</label>
+          <select id="discovery-filter" className="discovery-filter-select" value={filter} onChange={e => { setFilter(e.target.value as DiscoveryFilter); setPage(1); }}>
+            <option value="">All picks</option>
+            {DISCOVERY_FILTERS.map(name => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </div>
+        <div className="discovery-filter-wrap">
+          <label htmlFor="genre-filter">Genre</label>
+          <select id="genre-filter" className="discovery-filter-select" value={genre} disabled={mode === 'documentary'}
+            onChange={e => { setGenre(e.target.value); setPage(1); setShowWishlist(false); }}>
+            <option value="">{mode === 'documentary' ? 'Documentaries only' : 'All genres'}</option>
+            {availableGenres.slice(0, 8).map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}
+          </select>
+        </div>
         <div className="discovery-filter-wrap">
           <label htmlFor="platform-filter">Streaming platform</label>
           <select id="platform-filter" className="discovery-filter-select" value={provider}
@@ -762,6 +842,7 @@ useEffect(() => {
           </select>
         </div>
       </div>
+
       {showWishlist ? (displayedItems.length === 0
         ? <div className="empty-state"><div className="empty-icon"><Heart size={25} /></div><h3>Your wishlist is empty</h3><p>Save movies and series with the heart button. Your list stays on this device and does not require an account.</p><button className="retry-button" onClick={() => setShowWishlist(false)} type="button">Explore titles</button></div>
         : <div className="poster-grid">{displayedItems.map(item => <Poster key={`${item.mediaType}-${item.id}`} item={item} onOpen={setSelected} />)}</div>)
@@ -785,7 +866,12 @@ useEffect(() => {
           <div className="feed-footer"><span>SHOWING {items.length} OF {totalResults.toLocaleString()} TITLES</span><span>UPDATED LIVE FROM TMDB <span className="live-dot" /></span></div></>}
     </section>
 
-    
-    {selected && <DetailModal item={selected} close={() => setSelected(null)} region={region} isWishlisted={wishlistKeys.has(`${selected.mediaType}-${selected.id}`)} onToggleWishlist={toggleWishlist} />}
+    {selected && <DetailModal
+      item={selected}
+      close={() => setSelected(null)}
+      region={region}
+      isWishlisted={wishlistKeys.has(`${selected.mediaType}-${selected.id}`)}
+      onToggleWishlist={toggleWishlist}
+    />}
   </main>;
 }
