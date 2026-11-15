@@ -773,3 +773,14 @@ html[data-rr-splash-skip="true"] .rr-cinematic-splash {
     transition-duration: 180ms !important;
   }
 }
+
+
+/* Hide scrollbars across the entire app */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
