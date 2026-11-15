@@ -1,19 +1,21 @@
 
 'use client';
 
-import { useCallback, useEffect, useMemo, useState, type MouseEvent, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type CSSProperties } from 'react';
 import { ArrowLeft, Bell, CalendarPlus, CalendarClock, ChevronDown, Film, Globe2, RefreshCw, Radio, RotateCcw, Clapperboard, ArrowUpRight } from 'lucide-react';
 import './dropclock.css';
 
 type Drop = {
   id: number; mediaType: 'movie' | 'tv'; title: string; overview: string; poster: string | null; backdrop: string | null;
-  releaseDate: string; year: string; rating: number | null; language: string; popularity: number;
+  releaseDate: string; year: string; rating: number | null; language: string; languageName?: string; popularity: number;
   releaseType: 'theatre' | 'ott'; contentType: 'movie' | 'series' | 'documentary';
   seasonNumber: number | null; episodeNumber: number | null; episodeTitle: string | null; episodeOverview: string | null;
   exactTime?: string; timeZone?: string;
 };
 
-type FeedData = { items: Drop[]; awaited: Drop[]; region: string; updatedAt: string };
+type RegionOption = { code: string; name: string };
+type LanguageOption = { code: string; name: string };
+type FeedData = { items: Drop[]; awaited: Drop[]; region: string; regions: RegionOption[]; languages: LanguageOption[]; updatedAt: string };
 type ContentFilter = 'all' | 'movie' | 'series' | 'documentary';
 type ReleaseFilter = 'all' | 'theatre' | 'ott';
 
@@ -282,7 +284,7 @@ function DropCard({ item, index, now, changed }: { item: Drop; index: number; no
       </div>
 
       <div className="dc-card-meta">
-        <span>{LANGUAGES.find(([code])=>code===item.language)?.[1] || item.language.toUpperCase() || 'Language TBA'}</span>
+        <span>{item.languageName || LANGUAGES.find(([code])=>code===item.language)?.[1] || item.language.toUpperCase() || 'Language TBA'}</span>
         {clock && !outNow && (target !== null && target-now <= 24*60*60*1000) &&
           <strong>in {clock.short}</strong>}
       </div>
@@ -377,6 +379,7 @@ export default function DropClockClient() {
   const [now,setNow] = useState(Date.now());
   const [changedIds,setChangedIds] = useState<string[]>([]);
   const [lastUpdated,setLastUpdated] = useState('');
+  const didDetectRegion = useRef(false);
 
   const load = useCallback(async (manual = false) => {
     if (manual) setRefreshing(true);
@@ -414,6 +417,7 @@ export default function DropClockClient() {
       }
 
       setData(next);
+      if (next.region && next.region !== region) setRegion(next.region);
 
       setLastUpdated(
         new Date(next.updatedAt).toLocaleTimeString(undefined,{
@@ -431,13 +435,14 @@ export default function DropClockClient() {
   },[region,data]);
 
   useEffect(()=>{
-    const locale = navigator.language || '';
-    const detected = locale.split('-')[1]?.toUpperCase();
+    if (!data?.regions?.length || didDetectRegion.current) return;
+    didDetectRegion.current = true;
 
-    if (detected && REGIONS.some(([code])=>code===detected)) {
+    const detected = (navigator.language || '').split('-')[1]?.toUpperCase();
+    if (detected && data.regions.some(option => option.code === detected) && detected !== region) {
       setRegion(detected);
     }
-  },[]);
+  },[data?.regions,region]);
 
   useEffect(()=>{
     void load();
@@ -473,6 +478,7 @@ export default function DropClockClient() {
     const nextWeekEnd=shiftDate(today,14);
 
     const buckets: Record<string,Drop[]> = {
+      'Now Showing':[],
       'Today':[],
       'Tomorrow':[],
       'This Week':[],
@@ -483,7 +489,8 @@ export default function DropClockClient() {
     for(const item of filtered){
       const date=item.releaseDate;
 
-      if(date===today)buckets.Today.push(item);
+      if(item.releaseType==='theatre' && date<today)buckets['Now Showing'].push(item);
+      else if(date===today)buckets.Today.push(item);
       else if(date===tomorrow)buckets.Tomorrow.push(item);
       else if(date<=weekEnd)buckets['This Week'].push(item);
       else if(date<=nextWeekEnd)buckets['Next Week'].push(item);
@@ -492,6 +499,11 @@ export default function DropClockClient() {
 
     return Object.entries(buckets).filter(([,items])=>items.length);
   },[filtered,now]);
+
+  const regionOptions = data?.regions?.length ? data.regions : REGIONS.map(([code,name])=>({code,name}));
+  const languageOptions = data?.languages?.length
+    ? [{code:'',name:'All languages'}, ...data.languages]
+    : LANGUAGES.map(([code,name])=>({code,name}));
 
   const reset=()=>{
     setLanguage('');
@@ -532,14 +544,14 @@ export default function DropClockClient() {
           <label className="dc-region">
             <Globe2 size={15}/>
             <select value={region} onChange={e=>setRegion(e.target.value)} aria-label="Release region">
-              {REGIONS.map(([code,name])=><option key={code} value={code}>{name}</option>)}
+              {regionOptions.map(option=><option key={option.code} value={option.code}>{option.name}</option>)}
             </select>
             <ChevronDown size={13}/>
           </label>
 
           <label className="dc-language">
             <select value={language} onChange={e=>setLanguage(e.target.value)} aria-label="Filter by original language">
-              {LANGUAGES.map(([code,name])=><option key={code} value={code}>{name}</option>)}
+              {languageOptions.map(option=><option key={option.code || 'all'} value={option.code}>{option.name}</option>)}
             </select>
             <ChevronDown size={13}/>
           </label>
